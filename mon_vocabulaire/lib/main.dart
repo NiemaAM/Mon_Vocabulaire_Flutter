@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Widgets/palette.dart';
+
+import 'Widgets/button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -22,9 +26,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.pink,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Mon Vocabulaire'),
     );
   }
 }
@@ -61,8 +65,24 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Color color = Palette.lightGrey;
+  Color color2 = Palette.lightGrey;
+  bool _isEnabled = true;
+  void call() {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text("Button pressed !")));
+    setState(() {
+      color = Palette.darkGreen;
+      color2 = Palette.red;
+      _isEnabled = false;
+    });
+  }
+
+  void song() {}
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -75,40 +95,138 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: Column(
+            // Column is also a layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const SizedBox(
+                height: 20,
+              ),
+              Button(
+                label: false,
+                callback: song,
+                isImage: false,
+                icon: const Icon(
+                  Icons.volume_up,
+                  color: Palette.white,
+                  size: 50,
+                ),
+                width: 100,
+                heigth: 100,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                'Foular',
+                style: TextStyle(fontSize: 40),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Button(
+                        enabled: _isEnabled,
+                        isImage: true,
+                        image:
+                            "https://cdn-icons-png.flaticon.com/512/1386/1386975.png",
+                        color: color,
+                        callback: call,
+                        heigth: width / 2.1,
+                        width: width / 2.1,
+                        label: false,
+                        radius: 30,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Button(
+                        enabled: _isEnabled,
+                        isImage: true,
+                        image:
+                            "https://cdn-icons-png.flaticon.com/512/2806/2806170.png",
+                        color: color2,
+                        callback: call,
+                        heigth: width / 2.1,
+                        width: width / 2.1,
+                        label: false,
+                        radius: 30,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Button(
+                        enabled: _isEnabled,
+                        isImage: true,
+                        image:
+                            "https://cdn-icons-png.flaticon.com/512/2300/2300218.png",
+                        color: color2,
+                        callback: call,
+                        heigth: width / 2.1,
+                        width: width / 2.1,
+                        label: false,
+                        radius: 30,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Button(
+                        enabled: _isEnabled,
+                        isImage: true,
+                        image:
+                            "https://cdn-icons-png.flaticon.com/512/2806/2806186.png",
+                        color: color2,
+                        callback: call,
+                        heigth: width / 2.1,
+                        width: width / 2.1,
+                        label: false,
+                        radius: 30,
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: () {
+          setState(() {
+            color = Palette.lightGrey;
+            color2 = Palette.lightGrey;
+            _isEnabled = true;
+          });
+        },
+        tooltip: 'Clear',
+        child: const Icon(Icons.minimize_outlined),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
