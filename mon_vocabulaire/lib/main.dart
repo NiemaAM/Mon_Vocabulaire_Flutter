@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/pages/quiz_page.dart';
+import 'package:mon_vocabulaire/Widgets/palette.dart';
+import 'Widgets/button.dart';
 
 void main() {
   runApp(const MyApp());
