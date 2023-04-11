@@ -30,13 +30,15 @@ class _QuizAppBarState extends State<QuizAppBar> {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: LinearPercentIndicator(
-                  padding: const EdgeInsets.all(0),
-                  animation: true,
-                  lineHeight: 14.0,
-                  animationDuration: 1000,
-                  percent: 0.7,
-                  barRadius: const Radius.circular(100),
-                  progressColor: Palette.blue),
+                padding: const EdgeInsets.all(0),
+                animation: true,
+                lineHeight: 14.0,
+                animationDuration: 1000,
+                percent: 0.7,
+                barRadius: const Radius.circular(100),
+                progressColor: Palette.lightGreen,
+                backgroundColor: Palette.lightGrey,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
