@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  @override
+   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     goHome();
@@ -46,19 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedOpacity(
-              duration: const Duration(seconds: 1),
-              opacity: _opacity,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5, top: 50),
-                child: Image.asset(
-                  'assets/logo_ministere.png',
-                ),
-              ),
-            ),
-            const Expanded(
-              child: SizedBox(),
-            ),
+            Expanded(child: Container()),
             AnimatedOpacity(
               duration: const Duration(seconds: 1),
               opacity: _opacity,
@@ -88,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             const Expanded(
-              flex: 3,
+              flex: 2,
               child: SizedBox(),
             ),
             const CircularProgressIndicator(),
