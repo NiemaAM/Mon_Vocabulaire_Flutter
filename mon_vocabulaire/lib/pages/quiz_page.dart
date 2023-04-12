@@ -50,7 +50,7 @@ class _QuizState extends State<Quiz> {
         shadowColor: Palette.magenta,
         backgroundColor: Palette.pink,
         centerTitle: true,
-        title: const Column(
+        title: Column(
           children: [
             Text("3/15"),
             Text(
