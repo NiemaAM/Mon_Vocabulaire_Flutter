@@ -64,9 +64,9 @@ flutter:
     - assets/
     - assets/themes_images/
     - assets/images/
-    - assets/audios/
-    - assets/sfx/
-    - assets/mascotte/
+    #- assets/audios/
+    #- assets/sfx/
+   # - assets/mascotte/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
