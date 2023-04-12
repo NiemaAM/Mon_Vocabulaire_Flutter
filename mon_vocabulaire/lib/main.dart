@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/pages/quiz_page.dart';
-import 'package:mon_vocabulaire/Widgets/palette.dart';
-import 'Widgets/button.dart';
+import 'package:mon_vocabulaire/View/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Quiz(),
+      home: const Home(),
     );
   }
 }
