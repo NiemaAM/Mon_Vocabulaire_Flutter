@@ -14,7 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Widget> page = [const Themes(), const Profil(), const Games()];
+  List<Widget> page = [const Themes(), const ProfilePage(), const Games()];
   int _selectedIndex = 0;
   bool _isHome = true;
   bool _isProfil = false;
