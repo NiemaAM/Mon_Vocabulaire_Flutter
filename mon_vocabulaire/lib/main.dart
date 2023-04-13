@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'View/Quiz/drag_and_drop.dart';
 import 'View/splash_screen.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SplashScreen(),
+      home: const DragAndDrop(),
     );
   }
 }

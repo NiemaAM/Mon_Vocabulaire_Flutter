@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "mon_vocabulaire",
+            "cwd": "mon_vocabulaire",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "mon_vocabulaire (profile mode)",
+            "cwd": "mon_vocabulaire",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "mon_vocabulaire (release mode)",
+            "cwd": "mon_vocabulaire",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
