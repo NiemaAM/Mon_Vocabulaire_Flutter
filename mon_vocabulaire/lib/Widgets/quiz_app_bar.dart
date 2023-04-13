@@ -97,8 +97,8 @@ class _QuizAppBarState extends State<QuizAppBar> {
                       const SizedBox(
                         width: 8,
                       ),
-                      Image.network(
-                        'https://cdn-icons-png.flaticon.com/512/1490/1490850.png',
+                      Image.asset(
+                        'assets/themes_images/coin.png',
                         scale: 20,
                       ),
                     ],

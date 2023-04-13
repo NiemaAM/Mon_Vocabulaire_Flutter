@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/account.dart';
-import 'package:mon_vocabulaire/View/games.dart';
-import 'package:mon_vocabulaire/View/profil.dart';
-import 'package:mon_vocabulaire/View/themes.dart';
+import 'package:mon_vocabulaire/View/Account/accounts.dart';
+import 'package:mon_vocabulaire/View/Games/jeux.dart';
+import 'package:mon_vocabulaire/View/Account/profil.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
+
+import 'Themes/themes.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -56,11 +57,15 @@ class _HomeState extends State<Home> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Palette.blue,
-          title: const Text("Mon Parcours"),
+          title: _selectedIndex == 0
+              ? const Text("Mon Parcours")
+              : _selectedIndex == 1
+                  ? const Text("Mon Profil")
+                  : const Text("Mes Jeux"),
           actions: [
             IconButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const Accounts(),
@@ -112,7 +117,7 @@ class _HomeState extends State<Home> {
                   backgroundColor: Palette.blue,
                   child: ClipOval(
                     child: Image.network(
-                      "https://cdn-icons-png.flaticon.com/512/3371/3371919.png",
+                      "https://cdn-icons-png.flaticon.com/512/3371/3371919.png", //TODO: change this to images from gallery
                       fit: BoxFit.cover,
                       width: 100.0,
                       height: 100.0,

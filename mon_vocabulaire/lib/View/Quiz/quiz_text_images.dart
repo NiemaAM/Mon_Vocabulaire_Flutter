@@ -17,10 +17,10 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   Color color2 = Palette.lightGrey;
   int chances = 3;
   Map<String, String> data = {
-    "Foulard": "https://cdn-icons-png.flaticon.com/512/2507/2507657.png",
-    "B": "https://cdn-icons-png.flaticon.com/512/2806/2806170.png",
-    "C": "https://cdn-icons-png.flaticon.com/512/2300/2300218.png",
-    "D": "https://cdn-icons-png.flaticon.com/512/2806/2806186.png"
+    "Foulard": "assets/images/184.png",
+    "B": "assets/images/185.png",
+    "C": "assets/images/186.png",
+    "D": "assets/images/187.png"
   };
   String correct = 'Foulard';
 
@@ -118,8 +118,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                             child: Align(
                               alignment: Alignment.center,
                               child: Button(
-                                content: Image.network(
-                                    "https://cdn-icons-png.flaticon.com/512/6024/6024384.png"),
+                                content: Image.asset(
+                                    "assets/themes_images/snail.png"),
                                 color: Colors.pink,
                                 callback: song,
                                 heigth: 35,
@@ -149,7 +149,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                     return Center(
                       child: Button(
                         enabled: _isEnabled,
-                        content: Image.network(value),
+                        content: Image.asset(value),
                         color: Palette.white,
                         callback: () {
                           if (key == correct) {
