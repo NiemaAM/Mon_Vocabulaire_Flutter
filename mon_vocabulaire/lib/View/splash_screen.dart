@@ -38,53 +38,67 @@ class _SplashScreenState extends State<SplashScreen> {
     double width = MediaQuery.of(context).size.width;
     goHome();
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        width: double.maxFinite,
-        height: double.maxFinite,
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(child: Container()),
-            AnimatedOpacity(
-              duration: const Duration(seconds: 1),
-              opacity: _opacity,
-              child: Column(
-                children: [
-                  Container(
-                    width: width / 3,
-                    height: width / 3,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          // ignore: unnecessary_string_interpolations
-                          image: AssetImage("assets/logo.png"),
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "Mon vocabulaire",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          Container(
+            color: Colors.white,
+            width: double.maxFinite,
+            height: double.maxFinite,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(child: Container()),
+                AnimatedOpacity(
+                  duration: const Duration(seconds: 1),
+                  opacity: _opacity,
+                  child: Column(
+                    children: [
+                      Container(
+                        width: width / 3,
+                        height: width / 3,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              // ignore: unnecessary_string_interpolations
+                              image: AssetImage("assets/logo.png"),
+                              fit: BoxFit.cover),
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                      const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          "Mon vocabulaire",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const Expanded(
+                  flex: 2,
+                  child: SizedBox(),
+                ),
+                const CircularProgressIndicator(),
+                const SizedBox(
+                  height: 100,
+                )
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 35),
+              child: Image.asset(
+                "assets/logo_ministere.png",
+                scale: 4,
               ),
             ),
-            const Expanded(
-              flex: 2,
-              child: SizedBox(),
-            ),
-            const CircularProgressIndicator(),
-            const SizedBox(
-              height: 100,
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

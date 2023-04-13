@@ -3,6 +3,7 @@ import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/quiz_app_bar.dart';
 
 import '../../Widgets/button.dart';
+import '../../Widgets/end_popup.dart';
 
 class QuizTextImages extends StatefulWidget {
   const QuizTextImages({super.key});
@@ -59,7 +60,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                       height: height / 1.45,
                       width: width,
                       decoration: const BoxDecoration(
-                        color: Colors.blueAccent,
+                        color: Palette.blue,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(100),
                             topRight: Radius.circular(100)),
@@ -99,7 +100,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                             child: Align(
                               alignment: Alignment.center,
                               child: Button(
-                                color: Colors.blueAccent,
+                                color: Palette.blue,
                                 content: const Icon(
                                   Icons.volume_up,
                                   color: Palette.white,
@@ -153,6 +154,11 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                         color: Palette.white,
                         callback: () {
                           if (key == correct) {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const EndPopup();
+                                });
                           } else {
                             if (chances == 0) {
                               setState(() {

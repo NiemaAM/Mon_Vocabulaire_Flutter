@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Account/accounts.dart';
 import 'package:mon_vocabulaire/View/Games/jeux.dart';
 import 'package:mon_vocabulaire/View/Account/profil.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
+import '../Widgets/app_bar.dart';
 import 'Themes/themes.dart';
 
 class Home extends StatefulWidget {
@@ -55,28 +55,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Palette.blue,
-          title: _selectedIndex == 0
-              ? const Text("Mon Parcours")
-              : _selectedIndex == 1
-                  ? const Text("Mon Profil")
-                  : const Text("Mes Jeux"),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Accounts(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.logout),
-              tooltip: "Changer de compte",
-            )
-          ],
-        ),
+        appBar: _selectedIndex == 0 || _selectedIndex == 2
+            ? AppBar(
+                backgroundColor: Colors.white,
+                automaticallyImplyLeading: false,
+                elevation: 1,
+                title: const AppBarHome(),
+              )
+            : null,
         body: page[_selectedIndex],
         bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),

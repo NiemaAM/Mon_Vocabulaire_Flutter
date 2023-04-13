@@ -26,6 +26,7 @@ class Bubble extends StatefulWidget {
 class _BubbleState extends State<Bubble> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Column(
       children: [
         Button(
@@ -46,7 +47,7 @@ class _BubbleState extends State<Bubble> {
                   alignment: Alignment.center,
                   child: CircularPercentIndicator(
                     animation: true,
-                    radius: 68.0,
+                    radius: width >= 500 ? 90 : 68,
                     lineWidth: 10,
                     percent: widget.stage / 100,
                     progressColor: widget.color,
@@ -58,8 +59,6 @@ class _BubbleState extends State<Bubble> {
                   child: Padding(
                     padding: const EdgeInsets.all(18),
                     child: Container(
-                      height: 100,
-                      width: 100,
                       decoration: const BoxDecoration(
                         // ignore: unnecessary_const
                         borderRadius: BorderRadius.all(
@@ -68,7 +67,7 @@ class _BubbleState extends State<Bubble> {
                       ),
                       child: Image.asset(
                         widget.image,
-                        scale: 6,
+                        scale: width >= 500 ? 4 : 6,
                       ),
                     ),
                   ),
@@ -93,8 +92,8 @@ class _BubbleState extends State<Bubble> {
               ],
             ),
           ),
-          heigth: 155,
-          width: 155,
+          heigth: width >= 500 ? 200 : 155,
+          width: width >= 500 ? 200 : 155,
           color: Colors.white,
           radius: 100,
         ),
@@ -108,7 +107,7 @@ class _BubbleState extends State<Bubble> {
                 widget.text,
                 textAlign: TextAlign.center,
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
             ),
           ),

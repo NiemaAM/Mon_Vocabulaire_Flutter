@@ -6,14 +6,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
-class CreateAccount extends StatefulWidget {
-  const CreateAccount({super.key});
+class EditAccount extends StatefulWidget {
+  const EditAccount({super.key});
 
   @override
-  State<CreateAccount> createState() => _CreateAccountState();
+  State<EditAccount> createState() => _EditAccountState();
 }
 
-class _CreateAccountState extends State<CreateAccount> {
+class _EditAccountState extends State<EditAccount> {
   // ignore: non_constant_identifier_names
   final TextEditingController _TextController = TextEditingController();
   int size = 0;
@@ -35,10 +35,16 @@ class _CreateAccountState extends State<CreateAccount> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Créer un compte"),
-        backgroundColor: Palette.blue,
-        elevation: 1,
-      ),
+          title: const Text("Modifier mon compte"),
+          backgroundColor: Palette.blue,
+          elevation: 1,
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.save),
+              tooltip: "Enregistrer",
+            ),
+          ]),
       body: ListView(children: [
         Center(
           child: Padding(
@@ -151,21 +157,6 @@ class _CreateAccountState extends State<CreateAccount> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 50),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Button(
-                callback: () {
-                  Navigator.pop(context);
-                },
-                content: const Center(
-                    child: Text(
-                  "Valider",
-                  style: TextStyle(color: Palette.white, fontSize: 16),
-                ))),
-          ),
-        )
       ]),
     );
   }

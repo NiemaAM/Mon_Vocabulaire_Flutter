@@ -1,5 +1,4 @@
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter/material.dart';
 
 class DragAndDrop extends StatefulWidget {
   const DragAndDrop({super.key});
@@ -11,6 +10,8 @@ class DragAndDrop extends StatefulWidget {
 class _DragAndDropState extends State<DragAndDrop> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Center(
+      child: Text("data"),
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/home.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import 'Palette.dart';
 import 'button.dart';
@@ -57,46 +58,70 @@ class _AccountBlocState extends State<AccountBloc> {
                       ),
                     ],
                   )),
-              Row(
+              Column(
                 children: [
-                  CircleAvatar(
-                    radius: 50.0,
-                    backgroundColor: Palette.blue,
-                    child: ClipOval(
-                      child: Image.network(
-                        widget.avatar,
-                        fit: BoxFit.cover,
-                        width: 100.0,
-                        height: 100.0,
+                  Padding(
+                    padding: EdgeInsets.only(bottom: width / 25, left: 12),
+                    child: LinearPercentIndicator(
+                      width: width - 120,
+                      animation: true,
+                      lineHeight: 25.0,
+                      animationDuration: 1000,
+                      percent: 0.7,
+                      barRadius: const Radius.circular(100),
+                      progressColor: Palette.lightGreen,
+                      backgroundColor: Palette.lightGrey,
+                      center: const Text(
+                        "150/240 mots",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.nom,
-                          style: const TextStyle(
-                              color: Palette.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: width / 11,
+                        backgroundColor: Palette.blue,
+                        child: ClipOval(
+                          child: Image.network(
+                            widget.avatar,
+                            fit: BoxFit.cover,
+                            width: width / 4,
+                            height: width / 4,
+                          ),
                         ),
-                        Text(
-                          widget.level,
-                          style: const TextStyle(
-                              color: Palette.white, fontSize: 18),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 50),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.nom,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: width / 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              widget.level,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: width / 25),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ],
           ),
         ),
-        color: Palette.pink,
+        color: Palette.white,
         heigth: width / 2.5,
         width: width - 20,
         radius: 20,

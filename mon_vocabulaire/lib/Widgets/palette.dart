@@ -8,11 +8,11 @@ class Palette {
   static const red = Color.fromARGB(255, 255, 34, 0);
   static const lightRed = Color.fromARGB(255, 255, 106, 60);
   static const orange = Color.fromARGB(255, 255, 123, 0);
-  static const pink = Colors.pink;
+  static const pink = Color.fromARGB(255, 246, 55, 118);
   static const magenta = Color.fromARGB(255, 129, 0, 127);
   static const indigo = Color.fromARGB(255, 0, 99, 199);
   static const blue = Colors.blueAccent;
-  static const lightBlue = Color.fromARGB(255, 162, 192, 245);
+  static const lightBlue = Color.fromARGB(255, 98, 152, 245);
   static const darkGreen = Color.fromARGB(255, 0, 171, 0);
   static const lightGreen = Color.fromARGB(255, 10, 202, 10);
   static const lighterGreen = Color.fromARGB(255, 95, 228, 74);
