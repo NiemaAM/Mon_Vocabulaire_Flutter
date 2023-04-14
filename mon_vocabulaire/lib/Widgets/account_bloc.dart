@@ -2,20 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/home.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../Model/user.dart';
 import 'Palette.dart';
 import 'button.dart';
 
 class AccountBloc extends StatefulWidget {
-  final String avatar;
-  final int coins;
-  final String level;
-  final String nom;
-  const AccountBloc(
-      {super.key,
-      required this.avatar,
-      required this.coins,
-      required this.level,
-      required this.nom});
+  final User user;
+  const AccountBloc({super.key, required this.user});
 
   @override
   State<AccountBloc> createState() => _AccountBlocState();
@@ -32,7 +25,9 @@ class _AccountBlocState extends State<AccountBloc> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const Home(), //TODO: Add account id
+              builder: (context) => Home(
+                user: widget.user,
+              ),
             ),
           );
         },
@@ -46,7 +41,7 @@ class _AccountBlocState extends State<AccountBloc> {
                   child: Row(
                     children: [
                       Text(
-                        widget.coins.toString(),
+                        widget.user.coins.toString(),
                         style: const TextStyle(color: Palette.yellow),
                       ),
                       const SizedBox(
@@ -61,19 +56,21 @@ class _AccountBlocState extends State<AccountBloc> {
               Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: width / 25, left: 12),
+                    padding: EdgeInsets.only(bottom: width / 25),
                     child: LinearPercentIndicator(
-                      width: width - 120,
+                      width: width - 110,
                       animation: true,
-                      lineHeight: 25.0,
+                      lineHeight: width / 17,
                       animationDuration: 1000,
-                      percent: 0.7,
+                      percent: widget.user
+                              .words_per_level[widget.user.current_level]! /
+                          240,
                       barRadius: const Radius.circular(100),
                       progressColor: Palette.lightGreen,
                       backgroundColor: Palette.lightGrey,
-                      center: const Text(
-                        "150/240 mots",
-                        style: TextStyle(
+                      center: Text(
+                        "${widget.user.words_per_level[widget.user.current_level]}/240 mots",
+                        style: const TextStyle(
                           fontSize: 14.0,
                           color: Colors.white,
                         ),
@@ -87,7 +84,7 @@ class _AccountBlocState extends State<AccountBloc> {
                         backgroundColor: Palette.blue,
                         child: ClipOval(
                           child: Image.network(
-                            widget.avatar,
+                            widget.user.image,
                             fit: BoxFit.cover,
                             width: width / 4,
                             height: width / 4,
@@ -100,16 +97,16 @@ class _AccountBlocState extends State<AccountBloc> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              widget.nom,
+                              widget.user.name,
                               style: TextStyle(
-                                  color: Colors.black,
+                                  color: Palette.white,
                                   fontSize: width / 20,
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              widget.level,
+                              "Niveau ${(widget.user.current_level).toString()} - CE${widget.user.current_level.toString()}",
                               style: TextStyle(
-                                  color: Colors.black, fontSize: width / 25),
+                                  color: Palette.white, fontSize: width / 25),
                             ),
                           ],
                         ),
@@ -121,7 +118,7 @@ class _AccountBlocState extends State<AccountBloc> {
             ],
           ),
         ),
-        color: Palette.white,
+        color: Palette.pink,
         heigth: width / 2.5,
         width: width - 20,
         radius: 20,

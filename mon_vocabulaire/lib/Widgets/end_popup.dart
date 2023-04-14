@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/home.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
 import 'button.dart';
@@ -178,12 +177,6 @@ class _EndPopupState extends State<EndPopup> {
                       Navigator.pop(context);
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Home(),
-                        ),
-                      );
                     },
                     content: const Icon(
                       Icons.home_rounded,

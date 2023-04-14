@@ -15,6 +15,8 @@ class Button extends StatefulWidget {
   //si le boutton est actif
   final bool enabled;
   final Widget content;
+  final Color borders;
+  final bool isBorder;
   const Button(
       {super.key,
       this.width = 200,
@@ -23,7 +25,9 @@ class Button extends StatefulWidget {
       this.color = Palette.blue,
       this.radius = 50,
       this.enabled = true,
-      required this.content});
+      required this.content,
+      this.borders = Colors.white,
+      this.isBorder = false});
 
   @override
   State<Button> createState() => _ButtonState();
@@ -94,11 +98,13 @@ class _ButtonState extends State<Button> {
                 height: widget.heigth,
                 width: widget.width,
                 decoration: BoxDecoration(
-                  color: widget.color,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(widget.radius),
-                  ),
-                ),
+                    color: widget.color,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(widget.radius),
+                    ),
+                    border: widget.isBorder
+                        ? Border.all(color: widget.borders, width: 3)
+                        : null),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: widget.content,

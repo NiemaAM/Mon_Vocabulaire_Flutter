@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../Model/user.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/game_bloc.dart';
 
 class Games extends StatefulWidget {
-  const Games({super.key});
+  final User user;
+  const Games({super.key, required this.user});
 
   @override
   State<Games> createState() => _GamesState();
@@ -45,18 +47,6 @@ class _GamesState extends State<Games> {
             image: "assets/themes_images/cloud.png",
             price: '80',
             text: "Jeu 4",
-          ),
-          GameBloc(
-            color: Palette.purple,
-            image: "assets/themes_images/puzzel.png",
-            price: '100',
-            text: "Jeu 5",
-          ),
-          GameBloc(
-            color: Palette.blue,
-            image: "assets/themes_images/clouds.png",
-            price: '10',
-            text: "Jeu 6",
           ),
         ],
       ),
