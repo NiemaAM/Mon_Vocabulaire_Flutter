@@ -1,24 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Account/accounts.dart';
+import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/View/Games/jeux.dart';
 import 'package:mon_vocabulaire/View/Account/profil.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
+import '../Widgets/app_bar.dart';
 import 'Themes/themes.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final User user;
+  const Home({super.key, required this.user});
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  List<Widget> page = [const Themes(), const Profil(), const Games()];
+  List<Widget> page = [];
   int _selectedIndex = 0;
   bool _isHome = true;
   bool _isProfil = false;
   bool _isGames = false;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      page = [
+        Themes(user: widget.user),
+        Profil(user: widget.user),
+        Games(user: widget.user)
+      ];
+    });
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -29,7 +44,6 @@ class _HomeState extends State<Home> {
             _isProfil = false;
             _isGames = false;
           });
-
           break;
         case 1:
           setState(() {
@@ -37,7 +51,6 @@ class _HomeState extends State<Home> {
             _isProfil = true;
             _isGames = false;
           });
-
           break;
         case 2:
           setState(() {
@@ -45,7 +58,6 @@ class _HomeState extends State<Home> {
             _isProfil = false;
             _isGames = true;
           });
-
           break;
         default:
       }
@@ -55,28 +67,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Palette.blue,
-          title: _selectedIndex == 0
-              ? const Text("Mon Parcours")
-              : _selectedIndex == 1
-                  ? const Text("Mon Profil")
-                  : const Text("Mes Jeux"),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Accounts(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.logout),
-              tooltip: "Changer de compte",
-            )
-          ],
-        ),
+        appBar: _selectedIndex == 0 || _selectedIndex == 2
+            ? AppBar(
+                backgroundColor: Colors.white,
+                automaticallyImplyLeading: false,
+                elevation: 1,
+                title: AppBarHome(user: widget.user),
+              )
+            : null,
         body: page[_selectedIndex],
         bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),
@@ -117,7 +115,8 @@ class _HomeState extends State<Home> {
                   backgroundColor: Palette.blue,
                   child: ClipOval(
                     child: Image.network(
-                      "https://cdn-icons-png.flaticon.com/512/3371/3371919.png", //TODO: change this to images from gallery
+                      widget.user
+                          .image, //TODO: change this to images from gallery
                       fit: BoxFit.cover,
                       width: 100.0,
                       height: 100.0,

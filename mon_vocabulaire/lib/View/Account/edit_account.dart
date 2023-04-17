@@ -6,14 +6,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
-class CreateAccount extends StatefulWidget {
-  const CreateAccount({super.key});
+import '../../Model/user.dart';
+
+class EditAccount extends StatefulWidget {
+  final User user;
+  const EditAccount({super.key, required this.user});
 
   @override
-  State<CreateAccount> createState() => _CreateAccountState();
+  State<EditAccount> createState() => _EditAccountState();
 }
 
-class _CreateAccountState extends State<CreateAccount> {
+class _EditAccountState extends State<EditAccount> {
   // ignore: non_constant_identifier_names
   final TextEditingController _TextController = TextEditingController();
   int size = 0;
@@ -35,7 +38,7 @@ class _CreateAccountState extends State<CreateAccount> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Créer un compte"),
+        title: const Text("Modifier mon compte"),
         backgroundColor: Palette.blue,
         elevation: 1,
       ),
@@ -53,11 +56,10 @@ class _CreateAccountState extends State<CreateAccount> {
                           backgroundColor: Palette.blue,
                           backgroundImage: FileImage(_image!),
                         )
-                      : const CircleAvatar(
+                      : CircleAvatar(
                           radius: 100,
                           backgroundColor: Palette.blue,
-                          backgroundImage: NetworkImage(
-                              'https://cdn-icons-png.flaticon.com/512/3371/3371919.png'),
+                          backgroundImage: NetworkImage(widget.user.image),
                         ),
                   Positioned(
                     bottom: 15,
@@ -139,13 +141,13 @@ class _CreateAccountState extends State<CreateAccount> {
               LengthLimitingTextInputFormatter(50),
             ],
             maxLines: 1,
-            decoration: const InputDecoration(
-              labelText: 'Pseudo',
-              labelStyle: TextStyle(color: Colors.blue),
-              border: OutlineInputBorder(
+            decoration: InputDecoration(
+              labelText: widget.user.name,
+              labelStyle: const TextStyle(color: Colors.blue),
+              border: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.blue),
               ),
-              focusedBorder: OutlineInputBorder(
+              focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.blue, width: 2),
               ),
             ),
@@ -161,7 +163,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 },
                 content: const Center(
                     child: Text(
-                  "Créer",
+                  "Enregistrer",
                   style: TextStyle(color: Palette.white, fontSize: 16),
                 ))),
           ),

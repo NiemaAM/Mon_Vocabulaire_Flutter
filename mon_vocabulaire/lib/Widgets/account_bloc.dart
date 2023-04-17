@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/home.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../Model/user.dart';
 import 'Palette.dart';
 import 'button.dart';
 
 class AccountBloc extends StatefulWidget {
-  final String avatar;
-  final int coins;
-  final String level;
-  final String nom;
-  const AccountBloc(
-      {super.key,
-      required this.avatar,
-      required this.coins,
-      required this.level,
-      required this.nom});
+  final User user;
+  const AccountBloc({super.key, required this.user});
 
   @override
   State<AccountBloc> createState() => _AccountBlocState();
@@ -31,7 +25,9 @@ class _AccountBlocState extends State<AccountBloc> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const Home(), //TODO: Add account id
+              builder: (context) => Home(
+                user: widget.user,
+              ),
             ),
           );
         },
@@ -45,7 +41,7 @@ class _AccountBlocState extends State<AccountBloc> {
                   child: Row(
                     children: [
                       Text(
-                        widget.coins.toString(),
+                        widget.user.coins.toString(),
                         style: const TextStyle(color: Palette.yellow),
                       ),
                       const SizedBox(
@@ -57,39 +53,65 @@ class _AccountBlocState extends State<AccountBloc> {
                       ),
                     ],
                   )),
-              Row(
+              Column(
                 children: [
-                  CircleAvatar(
-                    radius: 50.0,
-                    backgroundColor: Palette.blue,
-                    child: ClipOval(
-                      child: Image.network(
-                        widget.avatar,
-                        fit: BoxFit.cover,
-                        width: 100.0,
-                        height: 100.0,
+                  Padding(
+                    padding: EdgeInsets.only(bottom: width / 25),
+                    child: LinearPercentIndicator(
+                      width: width - 110,
+                      animation: true,
+                      lineHeight: width / 17,
+                      animationDuration: 1000,
+                      percent: widget.user
+                              .words_per_level[widget.user.current_level]! /
+                          240,
+                      barRadius: const Radius.circular(100),
+                      progressColor: Palette.lightGreen,
+                      backgroundColor: Palette.lightGrey,
+                      center: Text(
+                        "${widget.user.words_per_level[widget.user.current_level]}/240 mots",
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.nom,
-                          style: const TextStyle(
-                              color: Palette.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: width / 11,
+                        backgroundColor: Palette.blue,
+                        child: ClipOval(
+                          child: Image.network(
+                            widget.user.image,
+                            fit: BoxFit.cover,
+                            width: width / 4,
+                            height: width / 4,
+                          ),
                         ),
-                        Text(
-                          widget.level,
-                          style: const TextStyle(
-                              color: Palette.white, fontSize: 18),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 50),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.user.name,
+                              style: TextStyle(
+                                  color: Palette.white,
+                                  fontSize: width / 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Niveau ${(widget.user.current_level).toString()} - CE${widget.user.current_level.toString()}",
+                              style: TextStyle(
+                                  color: Palette.white, fontSize: width / 25),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),

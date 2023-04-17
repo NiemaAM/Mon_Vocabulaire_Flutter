@@ -1,11 +1,18 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Model/quiz_model.dart';
+import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/quiz_app_bar.dart';
-
 import '../../Widgets/button.dart';
 
 class QuizTextImages extends StatefulWidget {
-  const QuizTextImages({super.key});
+  final int subTheme;
+  final User user;
+  const QuizTextImages({super.key, required this.subTheme, required this.user});
 
   @override
   State<QuizTextImages> createState() => _QuizTextImagesState();
@@ -16,13 +23,86 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   Color color = Palette.lightGrey;
   Color color2 = Palette.lightGrey;
   int chances = 3;
-  Map<String, String> data = {
-    "Foulard": "assets/images/184.png",
-    "B": "assets/images/185.png",
-    "C": "assets/images/186.png",
-    "D": "assets/images/187.png"
-  };
-  String correct = 'Foulard';
+  String correct = '';
+  String theme = '';
+  String subTheme = '';
+  getTheme() {
+    switch (widget.subTheme) {
+      case 1:
+        setState(() {
+          theme = "École";
+          subTheme = "Eléments";
+        });
+        break;
+      case 2:
+        setState(() {
+          theme = 'École';
+          subTheme = 'Personnes';
+        });
+        break;
+      case 3:
+        setState(() {
+          theme = 'Maison et Famille';
+          subTheme = 'Maison';
+        });
+        break;
+      case 4:
+        setState(() {
+          theme = 'Maison et Famille';
+          subTheme = 'Famille';
+        });
+        break;
+      case 5:
+        setState(() {
+          theme = 'Cuisine et aliments';
+          subTheme = 'Cuisine';
+        });
+        break;
+      case 6:
+        setState(() {
+          theme = 'Cuisine et aliments';
+          subTheme = 'Aliments';
+        });
+        break;
+      case 7:
+        setState(() {
+          theme = 'Animaux';
+          subTheme = 'Mammifères';
+        });
+        break;
+      case 8:
+        setState(() {
+          theme = 'Animaux';
+          subTheme = 'Oiseaux et autres';
+        });
+        break;
+      case 9:
+        setState(() {
+          theme = 'Mon corps et mes habits';
+          subTheme = 'Mon corps';
+        });
+        break;
+      case 10:
+        setState(() {
+          theme = 'Mon corps et mes habits';
+          subTheme = 'Mes habits';
+        });
+        break;
+      case 11:
+        setState(() {
+          theme = 'Sports et loisirs';
+          subTheme = 'Sports';
+        });
+        break;
+      case 12:
+        setState(() {
+          theme = 'Sports et loisirs';
+          subTheme = 'Loisirs';
+        });
+        break;
+      default:
+    }
+  }
 
   void song() async {}
 
@@ -32,6 +112,54 @@ class _QuizTextImagesState extends State<QuizTextImages> {
       color = Palette.darkGreen;
       color2 = Palette.lightRed;
     });
+  }
+
+  int duration = 30;
+  void startTimer() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (duration > 0) {
+          duration -= 1; // decrement the duration every second
+        } else {
+          timer.cancel(); // stop the timer when the duration reaches 0
+          testGetRandomWords(); // execute the function after the timer is done
+          duration = 30;
+          startTimer();
+        }
+      });
+    });
+  }
+
+  QuizModel quizModel = QuizModel();
+  List<String> images = [];
+  List<String> mots = [];
+  List<String> reponse = [];
+  testGetRandomWords() async {
+    await quizModel.getRandomWords(theme, subTheme);
+    List<String> _images = quizModel
+        .getPropositionImages()
+        .map((element) => element.toString())
+        .toList();
+    List<String> _mots = quizModel
+        .getProposition()
+        .map((element) => element.toString())
+        .toList();
+    List<String> _reponse =
+        quizModel.getReponse().map((element) => element.toString()).toList();
+    setState(() {
+      images = _images;
+      mots = _mots;
+      reponse = _reponse;
+      correct = _reponse[3];
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getTheme();
+    testGetRandomWords();
+    startTimer();
   }
 
   @override
@@ -45,7 +173,11 @@ class _QuizTextImagesState extends State<QuizTextImages> {
           iconTheme: const IconThemeData(color: Colors.black),
           automaticallyImplyLeading: false,
           titleSpacing: 0,
-          title: QuizAppBar(chances: chances)),
+          title: QuizAppBar(
+            chances: chances,
+            duration: duration,
+            user: widget.user,
+          )),
       body: Stack(
         children: [
           Stack(
@@ -59,7 +191,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                       height: height / 1.45,
                       width: width,
                       decoration: const BoxDecoration(
-                        color: Colors.blueAccent,
+                        color: Palette.blue,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(100),
                             topRight: Radius.circular(100)),
@@ -99,7 +231,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                             child: Align(
                               alignment: Alignment.center,
                               child: Button(
-                                color: Colors.blueAccent,
+                                color: Palette.blue,
                                 content: const Icon(
                                   Icons.volume_up,
                                   color: Palette.white,
@@ -120,7 +252,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                               child: Button(
                                 content: Image.asset(
                                     "assets/themes_images/snail.png"),
-                                color: Colors.pink,
+                                color: Palette.pink,
                                 callback: song,
                                 heigth: 35,
                                 width: 35,
@@ -142,22 +274,85 @@ class _QuizTextImagesState extends State<QuizTextImages> {
               child: GridView.count(
                 crossAxisCount: 2,
                 children: List.generate(
-                  data.length,
+                  mots.length,
                   (int index) {
-                    String key = data.keys.elementAt(index);
-                    String value = data[key]!;
+                    String key = mots[index];
+                    String value = images[index];
                     return Center(
                       child: Button(
                         enabled: _isEnabled,
-                        content: Image.asset(value),
+                        content: Image.asset(
+                          value,
+                          scale: 5,
+                        ),
                         color: Palette.white,
                         callback: () {
                           if (key == correct) {
+                            testGetRandomWords();
+                            setState(() {
+                              duration = 30;
+                            });
                           } else {
-                            if (chances == 0) {
+                            if (chances == 1) {
                               setState(() {
-                                chances = 3; //TODO: chage this to popup
+                                chances -= 1;
                               });
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      // <-- SEE HERE
+                                      title: const Text('Oh non ...'),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: const <Widget>[
+                                            Text("Tu n'as plus de coeurs :("),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            TextButton(
+                                              child: const Text('Retour'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Text('Accueil'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Text('Réessayer'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        QuizTextImages(
+                                                      subTheme: widget.subTheme,
+                                                      user: widget.user,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  });
                             } else {
                               setState(() {
                                 chances -= 1;
