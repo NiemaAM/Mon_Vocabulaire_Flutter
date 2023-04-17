@@ -52,57 +52,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       backgroundImage: NetworkImage(
                           'https://cdn-icons-png.flaticon.com/512/163/163847.png'),
                     ),
-              // Positioned(
-              //     bottom: -1,
-              //     left: 100,
-              //     child: CircleAvatar(
-              //     radius: 20,
-              //     backgroundColor: Colors.blue, //<-- SEE HERE
-              //
-              //         child: IconButton(
-              //          onPressed: () {
-              //          showDialog(
-              //          context: context,
-              //          builder: (BuildContext context) {
-              //           return AlertDialog(
-              //              title: const Text('Selectioner une image'),
-              //              content: Column(
-              //                mainAxisSize: MainAxisSize.min,
-              //                children: <Widget>[
-              //                  ListTile(
-              //                    leading: const Icon(Icons.camera_alt),
-              //                    title: const Text('Depuis la camera'),
-              //                    onTap: () {
-              //                    _getImage(ImageSource.camera);
-              //                     Navigator.pop(context);
-              //           },
-              //         ),
-              //                  ListTile(
-              //                    leading: const Icon(Icons.image),
-              //                    title: const Text('Depuis la gallerie'),
-              //                     onTap: () {
-              //                     _getImage(ImageSource.gallery);
-              //                      Navigator.pop(context);
-              //           },
-              //         ),
-              //                  ListTile(
-              //                    leading: const Icon(Icons.account_circle),
-              //                    title: const Text('Choisir un avatar'),
-              //                     onTap: () {
-              //                     _getImage(ImageSource.gallery);
-              //                     Navigator.pop(context);
-              //           },
-              //         ),
-              //       ],
-              //     ),
-              //   );},);},
-              //           icon: const Icon(
-              //           Icons.add_a_photo,
-              //           color: Colors.white,
-              //        ),
-              //     )
-              //    )
-              // ),
             ],
           ),
         ),

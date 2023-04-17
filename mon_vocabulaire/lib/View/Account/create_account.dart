@@ -55,53 +55,57 @@ class _RegistrationState extends State<Registration> {
                           'https://cdn-icons-png.flaticon.com/512/3177/3177440.png'),
                     ),
               Positioned(
-                  bottom: -3,
-                  left: 35,
-                  child: IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Selectioner une image'),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                ListTile(
-                                  leading: const Icon(Icons.camera_alt),
-                                  title: const Text('Depuis la camera'),
-                                  onTap: () {
-                                    _getImage(ImageSource.camera);
-                                    Navigator.pop(context);
-                                  },
+                  bottom: -1,
+                  left: 80,
+                  child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.blue, //<-- SEE HERE
+
+                      child: IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Selectioner une image'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    ListTile(
+                                      leading: const Icon(Icons.camera_alt),
+                                      title: const Text('Depuis la camera'),
+                                      onTap: () {
+                                        _getImage(ImageSource.camera);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(Icons.image),
+                                      title: const Text('Depuis la gallerie'),
+                                      onTap: () {
+                                        _getImage(ImageSource.gallery);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(Icons.account_circle),
+                                      title: const Text('Choisir un avatar'),
+                                      onTap: () {
+                                        _getImage(ImageSource.gallery);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                ListTile(
-                                  leading: const Icon(Icons.image),
-                                  title: const Text('Depuis la gallerie'),
-                                  onTap: () {
-                                    _getImage(ImageSource.gallery);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                ListTile(
-                                  leading: const Icon(Icons.account_circle),
-                                  title: const Text('Choisir un avatar'),
-                                  onTap: () {
-                                    _getImage(ImageSource.gallery);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            ),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.add_a_photo,
-                      color: Colors.white,
-                    ),
-                  ))
+                        icon: const Icon(
+                          Icons.add_a_photo,
+                          color: Colors.white,
+                        ),
+                      ))),
             ],
           ),
         ),
@@ -141,33 +145,6 @@ class _RegistrationState extends State<Registration> {
                 color: Color.fromARGB(255, 44, 115, 210), fontSize: 12),
           ),
         ),
-        // Padding(
-        //   padding: const EdgeInsets.only(bottom: 40, top: 40),
-        //   child: Row(
-        //     crossAxisAlignment: CrossAxisAlignment.center,
-        //     children: const [
-        //       Expanded(flex: 6, child: SizedBox()),
-        //       Icon(
-        //         Icons.circle,
-        //         size: 10,
-        //         color: Color.fromARGB(255, 203, 203, 203),
-        //       ),
-        //       Expanded(child: SizedBox()),
-        //       Icon(
-        //         Icons.circle,
-        //         size: 10,
-        //         color: Color.fromARGB(255, 203, 203, 203),
-        //       ),
-        //       Expanded(child: SizedBox()),
-        //       Icon(
-        //         Icons.circle,
-        //         size: 10,
-        //         color: Color.fromARGB(255, 0, 105, 242),
-        //       ),
-        //       Expanded(flex: 6, child: SizedBox()),
-        //     ],
-        //   ),
-        // ),
         Center(
           child: SizedBox(
             width: 200,

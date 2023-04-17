@@ -78,42 +78,18 @@ class _LevelState extends State<Level> {
             height: widget.heigth * 0.4,
             width: widget.width * 0.7,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.text,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold),
-                ),
-                Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 0, bottom: 0, right: 12, top: 0),
-                          child: Text(
-                            "${widget.coins}",
-                            style: TextStyle(
-                                color: Colors.yellow,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 0, bottom: 0, right: 12, top: 0),
-                          child: Image.network(
-                            'https://cdn-icons-png.flaticon.com/512/1490/1490850.png',
-                            scale: 20,
-                          ),
-                        ),
-                      ],
-                    )),
-              ],
-            ),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                      padding: EdgeInsets.only(left: 70, right: 50),
+                      child: Text(
+                        widget.text,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
+                      )),
+                ]),
           ),
         ),
         Positioned(
