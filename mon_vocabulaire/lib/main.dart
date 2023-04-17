@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/View/message_mascotte.dart';
 import 'View/splash_screen.dart';
-
-import 'View/account.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,12 +13,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Mon vocabulaire',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const SplashScreen(),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Mon vocabulaire',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: BubbleMessage(
+            message:
+                "Nous devons prendre soin des animaux en les traitant avec gentillesse et respect !"));
   }
 }
