@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
 import 'package:mon_vocabulaire/View/Quiz/quiz_text_images.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
-import 'package:mon_vocabulaire/Widgets/dot.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
+
+import '../Quiz/drag_and_drop.dart';
+import '../Quiz/quiz_articles.dart';
+import '../Quiz/quiz_image_texts.dart';
 
 class LessonPath extends StatefulWidget {
   final String title;
-  const LessonPath({super.key, required this.title});
+  final int subTheme;
+  final String image;
+  final User user;
+  const LessonPath(
+      {super.key,
+      required this.title,
+      required this.subTheme,
+      required this.image,
+      required this.user});
 
   @override
   State<LessonPath> createState() => _LessonPathState();
@@ -16,13 +29,26 @@ class _LessonPathState extends State<LessonPath> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 83, 146, 255),
       appBar: AppBar(
-        backgroundColor: Palette.white,
+        backgroundColor: const Color.fromARGB(255, 83, 146, 255),
         elevation: 2,
-        iconTheme: const IconThemeData(color: Colors.black),
-        title: Text(
-          widget.title,
-          style: const TextStyle(color: Colors.black),
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: Colors.transparent,
+              child: Image.asset(
+                widget.image,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                widget.title,
+              ),
+            ),
+          ],
         ),
       ),
       body: SingleChildScrollView(
@@ -84,132 +110,149 @@ class _LessonPathState extends State<LessonPath> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
               child: Stack(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 170, left: 20),
-                    child: Align(alignment: Alignment.center, child: Dot()),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Button(
+                          callback: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LessonPage(),
+                              ),
+                            );
+                          },
+                          content: Image.asset(
+                            "assets/themes_images/lesson.png",
+                            scale: 5,
+                          ),
+                          heigth: 150,
+                          width: 150,
+                          radius: 200,
+                          color: Palette.pink),
+                    ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 190, left: 45),
-                    child: Align(alignment: Alignment.center, child: Dot()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 210, left: 60),
-                    child: Align(alignment: Alignment.center, child: Dot()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 370, left: 60),
-                    child: Align(alignment: Alignment.center, child: Dot()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 390, left: 60),
-                    child: Align(alignment: Alignment.center, child: Dot()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 410, left: 45),
-                    child: Align(alignment: Alignment.center, child: Dot()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 430, left: 20),
-                    child: Align(alignment: Alignment.center, child: Dot()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 610, right: 20),
-                    child: Align(alignment: Alignment.center, child: Dot()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 630, right: 35),
-                    child: Align(alignment: Alignment.center, child: Dot()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 650, right: 60),
-                    child: Align(alignment: Alignment.center, child: Dot()),
-                  ),
-                  Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20, top: 120),
+                    child: Align(
+                        alignment: Alignment.centerRight,
                         child: Button(
-                            callback: () {},
-                            content: Image.asset(
-                              "assets/themes_images/lesson.png",
-                              scale: 4,
-                            ),
-                            heigth: 150,
-                            width: 150,
-                            radius: 20,
-                            color: Palette.blue),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 50, top: 220),
-                        child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Button(
-                                callback: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const QuizTextImages(),
-                                    ),
-                                  );
-                                },
-                                content: Opacity(
-                                  opacity: 0.8,
-                                  child: Image.asset(
-                                    "assets/themes_images/song.png",
-                                    scale: 4,
+                            callback: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => QuizTextImages(
+                                    subTheme: widget.subTheme,
+                                    user: widget.user,
                                   ),
                                 ),
-                                heigth: 150,
-                                width: 150,
-                                radius: 20,
-                                color: Palette.white)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 440),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Button(
-                            callback: () {},
+                              );
+                            },
                             content: Opacity(
                               opacity: 0.8,
                               child: Image.asset(
-                                "assets/themes_images/images.png",
-                                scale: 4,
+                                "assets/themes_images/song.png",
+                                scale: 5,
                               ),
                             ),
                             heigth: 150,
                             width: 150,
-                            radius: 20,
-                            color: Palette.white,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 50, top: 660),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Button(
-                            callback: () {},
-                            content: Opacity(
-                              opacity: 0.8,
-                              child: Image.asset(
-                                "assets/themes_images/drag_and_drop.png",
-                                scale: 4,
-                              ),
-                            ),
-                            heigth: 150,
-                            width: 150,
-                            radius: 20,
-                            color: Palette.white,
-                          ),
-                        ),
-                      )
-                    ],
+                            radius: 200,
+                            color: Palette.white)),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 250, left: 20),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Button(
+                        callback: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuizImageTexts(
+                                subTheme: widget.subTheme,
+                                user: widget.user,
+                              ),
+                            ),
+                          );
+                        },
+                        content: Opacity(
+                          opacity: 0.8,
+                          child: Image.asset(
+                            "assets/themes_images/images.png",
+                            scale: 5,
+                          ),
+                        ),
+                        heigth: 150,
+                        width: 150,
+                        radius: 200,
+                        color: Palette.white,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20, top: 380),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Button(
+                        callback: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DragAndDrop(
+                                user: widget.user,
+                              ),
+                            ),
+                          );
+                        },
+                        content: Opacity(
+                          opacity: 0.8,
+                          child: Image.asset(
+                            "assets/themes_images/drag_and_drop.png",
+                            scale: 6,
+                          ),
+                        ),
+                        heigth: 150,
+                        width: 150,
+                        radius: 200,
+                        color: Palette.white,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, top: 500, bottom: 25),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Button(
+                        callback: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuizArticles(
+                                user: widget.user,
+                              ),
+                            ),
+                          );
+                        },
+                        content: Opacity(
+                          opacity: 0.8,
+                          child: Image.asset(
+                            "assets/themes_images/articles.png",
+                            scale: 7,
+                          ),
+                        ),
+                        heigth: 150,
+                        width: 150,
+                        radius: 200,
+                        color: Palette.white,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

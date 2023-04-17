@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class QuizAppBar extends StatefulWidget {
   final int chances;
-  const QuizAppBar({super.key, required this.chances});
+  final int duration;
+  final User user;
+  const QuizAppBar(
+      {super.key,
+      required this.chances,
+      this.duration = 0,
+      required this.user});
 
   @override
   State<QuizAppBar> createState() => _QuizAppBarState();
@@ -33,8 +40,8 @@ class _QuizAppBarState extends State<QuizAppBar> {
                 padding: const EdgeInsets.all(0),
                 animation: true,
                 lineHeight: 14.0,
-                animationDuration: 1000,
-                percent: 0.7,
+                animationDuration: 0,
+                percent: widget.duration / 30,
                 barRadius: const Radius.circular(100),
                 progressColor: Palette.lightGreen,
                 backgroundColor: Palette.lightGrey,
@@ -87,9 +94,9 @@ class _QuizAppBarState extends State<QuizAppBar> {
                   const Expanded(child: SizedBox()),
                   Row(
                     children: [
-                      const Text(
-                        "20",
-                        style: TextStyle(
+                      Text(
+                        widget.user.coins.toString(),
+                        style: const TextStyle(
                             color: Palette.indigo,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Widgets/palette.dart';
+import '../Widgets/palette.dart';
 
 class Button extends StatefulWidget {
   //la largeure du boutton
@@ -15,19 +15,19 @@ class Button extends StatefulWidget {
   //si le boutton est actif
   final bool enabled;
   final Widget content;
-  final Color borders;
-  final bool isBorder;
+  final String text;
+  final String coin;
   const Button(
       {super.key,
       this.width = 200,
       this.heigth = 60,
       required this.callback,
       this.color = Palette.blue,
-      this.radius = 50,
+      this.radius = 35,
       this.enabled = true,
       required this.content,
-      this.borders = Colors.white,
-      this.isBorder = false});
+      required this.text,
+      required this.coin});
 
   @override
   State<Button> createState() => _ButtonState();
@@ -98,16 +98,56 @@ class _ButtonState extends State<Button> {
                 height: widget.heigth,
                 width: widget.width,
                 decoration: BoxDecoration(
-                    color: widget.color,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(widget.radius),
+                  color: widget.color,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(widget.radius),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: widget.content,
                     ),
-                    border: widget.isBorder
-                        ? Border.all(color: widget.borders, width: 3)
-                        : null),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: widget.content,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          widget.coin,
+                          style: const TextStyle(
+                              color: Palette.yellow,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Image.asset(
+                          'assets/themes_images/coin.png',
+                          scale: 20,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/level-up.png',
+                          scale: 20,
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          widget.text,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
             ),

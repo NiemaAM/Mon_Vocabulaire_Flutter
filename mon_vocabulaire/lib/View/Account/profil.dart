@@ -1,115 +1,87 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:mon_vocabulaire/Widgets/level.dart';
+import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/View/Account/edit_account.dart';
+import 'package:mon_vocabulaire/Widgets/levels.dart';
 
-import 'package:mon_vocabulaire/Widgets/palette.dart';
+import '../../Widgets/Palette.dart';
+import 'accounts.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class Profil extends StatefulWidget {
+  final User user;
+  const Profil({super.key, required this.user});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<Profil> createState() => _ProfilState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  final TextEditingController _DescriptionController = TextEditingController();
-  int size = 0;
-  final ImagePicker _picker = ImagePicker();
-  File? _image;
-
-  Future<void> _getImage(ImageSource source) async {
-    final pickedFile = await _picker.getImage(source: source);
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {}
-    });
-  }
-
+class _ProfilState extends State<Profil> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: ListView(children: [
-        const Center(
-          child: Padding(
-            padding: EdgeInsets.only(top: 4, bottom: 60),
-          ),
+      backgroundColor: Palette.white,
+      appBar: AppBar(
+        backgroundColor: Palette.blue,
+        title: const Text("Mon Profil"),
+        elevation: 1,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Accounts(),
+              ),
+            );
+          },
+          icon: const Icon(Icons.logout),
+          tooltip: "Changer de compte",
         ),
-        Center(
-          child: Stack(
-            children: [
-              _image != null
-                  ? CircleAvatar(
-                      radius: 60,
-                      backgroundImage: FileImage(_image!),
-                    )
-                  : const CircleAvatar(
-                      radius: 80,
-                      backgroundImage: NetworkImage(
-                          'https://cdn-icons-png.flaticon.com/512/163/163847.png'),
-                    ),
-            ],
-          ),
-        ),
-        Column(
-          children: const [
-            SizedBox(
-              width: double.infinity,
-              height: 20,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditAccount(user: widget.user),
+                ),
+              );
+            },
+            icon: const Icon(Icons.edit),
+            tooltip: "Modifier mon compte",
+          )
+        ],
+      ),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 30, bottom: 10),
+            child: CircleAvatar(
+              radius: width / 5,
+              backgroundColor: Palette.blue,
+              child: ClipOval(
+                child: Image.network(
+                  widget.user.image, //TODO: change this to images from gallery
+                  fit: BoxFit.cover,
+                  width: width / 2.5,
+                  height: width / 2.5,
+                ),
+              ),
             ),
-            Text(
-              "Salma Idrissi",
-              style: TextStyle(
-                  color: Color.fromARGB(255, 9, 43, 104),
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
+          ),
+          Center(
+              child: Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: Text(
+              widget.user.name.replaceFirst(widget.user.name.characters.first,
+                  widget.user.name.characters.first.toUpperCase()),
+              style: TextStyle(fontSize: width / 15),
             ),
-          ],
-        ),
-        Level(
-          width: width * 0.9,
-          heigth: height * 0.15,
-          color: Palette.pink,
-          radius: 30,
-          text: "CE1",
-          isImage: true,
-          label: false,
-          mot: "150/240",
-          coins: 20,
-          image: "https://cdn-icons-png.flaticon.com/512/7645/7645294.png",
-          callback: () {},
-        ),
-        Level(
-          width: width * 0.9,
-          heigth: height * 0.15,
-          color: Colors.grey,
-          radius: 30,
-          text: "CE2",
-          isImage: true,
-          label: false,
-          mot: "0/240",
-          coins: 0,
-          image: "https://cdn-icons-png.flaticon.com/512/3064/3064155.png",
-          callback: () {},
-        ),
-        Level(
-          width: width * 0.9,
-          heigth: height * 0.15,
-          color: Colors.grey,
-          radius: 30,
-          text: "CE3",
-          isImage: true,
-          label: false,
-          mot: "0/240",
-          coins: 0,
-          image: "https://cdn-icons-png.flaticon.com/512/3064/3064155.png",
-          callback: () {},
-        ),
-      ]),
+          )),
+          Levels(
+            user: widget.user,
+          )
+        ],
+      ),
     );
   }
 }
