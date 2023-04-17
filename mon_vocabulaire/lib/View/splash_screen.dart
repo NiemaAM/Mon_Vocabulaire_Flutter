@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/home.dart';
 
+import '../Model/user.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -12,6 +14,43 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   double _opacity = 0;
+  //TODO: change this user tester to user from database
+  User user = User(
+      id: 1,
+      name: "salma",
+      image: "https://cdn-icons-png.flaticon.com/512/3371/3371919.png",
+      current_level: 1,
+      words_per_level: {1: 120},
+      coins: 20,
+      words_per_subtheme: {
+        1: 65,
+        2: 25,
+        3: 40,
+        4: 28,
+        5: 33,
+        6: 50,
+        7: 65,
+        8: 25,
+        9: 40,
+        10: 28,
+        11: 33,
+        12: 50,
+      },
+      stars_per_subtheme: {
+        1: true,
+        2: false,
+        3: false,
+        4: true,
+        5: true,
+        6: false,
+        7: true,
+        8: false,
+        9: false,
+        10: true,
+        11: true,
+        12: false,
+      });
+
   @override
   void initState() {
     super.initState();
@@ -27,15 +66,16 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const Home(),
+          builder: (context) => Home(
+            user: user,
+          ),
         ),
       );
     });
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     goHome();
     return Scaffold(
       body: Stack(
@@ -48,15 +88,18 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(child: Container()),
+                const Expanded(
+                  flex: 2,
+                  child: SizedBox(),
+                ),
                 AnimatedOpacity(
                   duration: const Duration(seconds: 1),
                   opacity: _opacity,
                   child: Column(
                     children: [
                       Container(
-                        width: width / 3,
-                        height: width / 3,
+                        width: 100,
+                        height: 100,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                               // ignore: unnecessary_string_interpolations

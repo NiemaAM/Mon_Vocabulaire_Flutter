@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
+import '../Model/user.dart';
 import 'Palette.dart';
 
 class AppBarHome extends StatefulWidget {
-  const AppBarHome({super.key});
+  final User user;
+  const AppBarHome({super.key, required this.user});
 
   @override
   State<AppBarHome> createState() => _AppBarHomeState();
@@ -28,23 +29,24 @@ class _AppBarHomeState extends State<AppBarHome> {
           animation: true,
           lineHeight: 25.0,
           animationDuration: 1000,
-          percent: 0.7,
+          percent:
+              widget.user.words_per_level[widget.user.current_level]! / 240,
           barRadius: const Radius.circular(100),
           progressColor: Palette.lightGreen,
           backgroundColor: Palette.lightGrey,
-          center: const Text(
-            "150/240 mots",
-            style: TextStyle(
+          center: Text(
+            "${widget.user.words_per_level[widget.user.current_level]}/240 mots",
+            style: const TextStyle(
               fontSize: 14,
               color: Colors.white,
             ),
           ),
         ),
         const Expanded(child: SizedBox()),
-        const Text(
-          "20",
-          style: TextStyle(
-              color: Palette.indigo, fontSize: 18, fontWeight: FontWeight.bold),
+        Text(
+          widget.user.coins.toString(),
+          style: const TextStyle(
+              color: Palette.indigo, fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const Expanded(child: SizedBox()),
         Image.asset(

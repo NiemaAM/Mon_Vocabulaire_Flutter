@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
+import 'package:mon_vocabulaire/Widgets/star.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'button.dart';
 
@@ -24,9 +25,17 @@ class Bubble extends StatefulWidget {
 }
 
 class _BubbleState extends State<Bubble> {
+  double size = 0.0;
+  void setsize(double width) {
+    setState(() {
+      size = width / 6.3;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    setsize(width);
     return Column(
       children: [
         Button(
@@ -43,19 +52,25 @@ class _BubbleState extends State<Bubble> {
             width: 150,
             child: Stack(
               children: [
-                Align(
-                  alignment: Alignment.center,
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
                   child: CircularPercentIndicator(
                     animation: true,
-                    radius: width >= 500 ? 90 : 68,
+                    radius: width < 500 ? size : 90,
                     lineWidth: 10,
                     percent: widget.stage / 100,
                     progressColor: widget.color,
                     backgroundColor: Palette.lightGrey,
                   ),
                 ),
-                Align(
-                  alignment: Alignment.center,
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
                   child: Padding(
                     padding: const EdgeInsets.all(18),
                     child: Container(
@@ -67,35 +82,19 @@ class _BubbleState extends State<Bubble> {
                       ),
                       child: Image.asset(
                         widget.image,
-                        scale: width >= 500 ? 4 : 6,
+                        scale: width < 500 ? 6 : 3,
                       ),
                     ),
                   ),
                 ),
-                const Positioned(
-                    bottom: -10,
-                    right: 0,
-                    child: Icon(
-                      Icons.star_border_rounded,
-                      color: Palette.white,
-                      size: 60,
-                    )),
-                Positioned(
-                    bottom: 0,
-                    right: 10,
-                    child: Icon(
-                      Icons.star_rounded,
-                      color:
-                          widget.isStart ? Palette.yellow : Palette.lightGrey,
-                      size: 40,
-                    ))
+                Star(isStar: widget.isStart)
               ],
             ),
           ),
-          heigth: width >= 500 ? 200 : 155,
-          width: width >= 500 ? 200 : 155,
+          heigth: width < 500 ? width / 2.7 : 205,
+          width: width < 500 ? width / 2.7 : 205,
           color: Colors.white,
-          radius: 100,
+          radius: 1000,
         ),
         Padding(
           padding: const EdgeInsets.only(top: 10),

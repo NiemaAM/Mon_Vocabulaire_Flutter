@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/View/Account/edit_account.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
 
@@ -6,7 +7,8 @@ import '../../Widgets/Palette.dart';
 import 'accounts.dart';
 
 class Profil extends StatefulWidget {
-  const Profil({super.key});
+  final User user;
+  const Profil({super.key, required this.user});
 
   @override
   State<Profil> createState() => _ProfilState();
@@ -40,7 +42,7 @@ class _ProfilState extends State<Profil> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const EditAccount(),
+                  builder: (context) => EditAccount(user: widget.user),
                 ),
               );
             },
@@ -58,7 +60,7 @@ class _ProfilState extends State<Profil> {
               backgroundColor: Palette.blue,
               child: ClipOval(
                 child: Image.network(
-                  "https://cdn-icons-png.flaticon.com/512/3371/3371919.png", //TODO: change this to images from gallery
+                  widget.user.image, //TODO: change this to images from gallery
                   fit: BoxFit.cover,
                   width: width / 2.5,
                   height: width / 2.5,
@@ -70,12 +72,13 @@ class _ProfilState extends State<Profil> {
               child: Padding(
             padding: const EdgeInsets.only(bottom: 30),
             child: Text(
-              "Salma",
+              widget.user.name.replaceFirst(widget.user.name.characters.first,
+                  widget.user.name.characters.first.toUpperCase()),
               style: TextStyle(fontSize: width / 15),
             ),
           )),
-          const Levels(
-            level: 2,
+          Levels(
+            user: widget.user,
           )
         ],
       ),

@@ -6,8 +6,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
+import '../../Model/user.dart';
+
 class EditAccount extends StatefulWidget {
-  const EditAccount({super.key});
+  final User user;
+  const EditAccount({super.key, required this.user});
 
   @override
   State<EditAccount> createState() => _EditAccountState();
@@ -35,16 +38,10 @@ class _EditAccountState extends State<EditAccount> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-          title: const Text("Modifier mon compte"),
-          backgroundColor: Palette.blue,
-          elevation: 1,
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.save),
-              tooltip: "Enregistrer",
-            ),
-          ]),
+        title: const Text("Modifier mon compte"),
+        backgroundColor: Palette.blue,
+        elevation: 1,
+      ),
       body: ListView(children: [
         Center(
           child: Padding(
@@ -59,11 +56,10 @@ class _EditAccountState extends State<EditAccount> {
                           backgroundColor: Palette.blue,
                           backgroundImage: FileImage(_image!),
                         )
-                      : const CircleAvatar(
+                      : CircleAvatar(
                           radius: 100,
                           backgroundColor: Palette.blue,
-                          backgroundImage: NetworkImage(
-                              'https://cdn-icons-png.flaticon.com/512/3371/3371919.png'),
+                          backgroundImage: NetworkImage(widget.user.image),
                         ),
                   Positioned(
                     bottom: 15,
@@ -145,18 +141,33 @@ class _EditAccountState extends State<EditAccount> {
               LengthLimitingTextInputFormatter(50),
             ],
             maxLines: 1,
-            decoration: const InputDecoration(
-              labelText: 'Pseudo',
-              labelStyle: TextStyle(color: Colors.blue),
-              border: OutlineInputBorder(
+            decoration: InputDecoration(
+              labelText: widget.user.name,
+              labelStyle: const TextStyle(color: Colors.blue),
+              border: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.blue),
               ),
-              focusedBorder: OutlineInputBorder(
+              focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.blue, width: 2),
               ),
             ),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.only(top: 50),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Button(
+                callback: () {
+                  Navigator.pop(context);
+                },
+                content: const Center(
+                    child: Text(
+                  "Enregistrer",
+                  style: TextStyle(color: Palette.white, fontSize: 16),
+                ))),
+          ),
+        )
       ]),
     );
   }

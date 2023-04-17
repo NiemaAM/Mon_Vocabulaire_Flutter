@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../Model/user.dart';
 import 'Palette.dart';
 import 'button.dart';
 
@@ -9,12 +10,14 @@ class LevelBloc extends StatefulWidget {
   final String text;
   final int words;
   final bool locked;
+  final User user;
   const LevelBloc(
       {super.key,
       required this.image,
       required this.text,
       required this.words,
-      required this.locked});
+      required this.locked,
+      required this.user});
 
   @override
   State<LevelBloc> createState() => _LevelBlocState();
@@ -56,25 +59,31 @@ class _LevelBlocState extends State<LevelBloc> {
                               color: widget.locked
                                   ? const Color.fromARGB(143, 0, 0, 0)
                                   : Palette.white,
-                              fontSize: 20),
+                              fontSize: width / 17),
                         ),
                         const Expanded(
                           flex: 2,
                           child: SizedBox(),
                         ),
                         LinearPercentIndicator(
-                          width: width / 1.5,
+                          width: width / 1.55,
                           animation: true,
-                          lineHeight: width / 15,
+                          lineHeight: width / 17,
                           animationDuration: 1000,
-                          percent: widget.words.toDouble() / 240,
+                          percent: widget.locked
+                              ? 0
+                              : widget.user.words_per_level[
+                                      widget.user.current_level]! /
+                                  240,
                           barRadius: const Radius.circular(100),
                           progressColor: Palette.lightGreen,
                           backgroundColor: widget.locked
                               ? const Color.fromARGB(68, 232, 232, 232)
                               : Palette.lightGrey,
                           center: Text(
-                            "${widget.words}/240 mots",
+                            widget.locked
+                                ? "0/240 mots"
+                                : "${widget.user.words_per_level[widget.user.current_level]!}/240 mots",
                             style: TextStyle(
                               fontSize: 14.0,
                               color: widget.locked

@@ -6,6 +6,8 @@ import 'package:mon_vocabulaire/Widgets/account_bloc.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
+import '../../Model/user.dart';
+
 class Accounts extends StatefulWidget {
   const Accounts({super.key});
 
@@ -14,6 +16,76 @@ class Accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<Accounts> {
+  User user_salam = User(
+      id: 1,
+      name: "salma",
+      image: "https://cdn-icons-png.flaticon.com/512/3371/3371919.png",
+      current_level: 1,
+      words_per_level: {1: 120},
+      coins: 20,
+      words_per_subtheme: {
+        1: 65,
+        2: 25,
+        3: 40,
+        4: 28,
+        5: 33,
+        6: 50,
+        7: 65,
+        8: 25,
+        9: 40,
+        10: 28,
+        11: 33,
+        12: 50,
+      },
+      stars_per_subtheme: {
+        1: true,
+        2: false,
+        3: false,
+        4: true,
+        5: true,
+        6: false,
+        7: true,
+        8: false,
+        9: false,
+        10: true,
+        11: true,
+        12: false,
+      });
+  User user_mehdi = User(
+      id: 2,
+      name: "mehdi",
+      image: "https://cdn-icons-png.flaticon.com/512/3371/3371822.png",
+      current_level: 2,
+      words_per_level: {1: 40, 2: 200},
+      coins: 120,
+      words_per_subtheme: {
+        1: 15,
+        2: 5,
+        3: 25,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+      },
+      stars_per_subtheme: {
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+        6: false,
+        7: false,
+        8: false,
+        9: false,
+        10: false,
+        11: false,
+        12: false,
+      });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,28 +95,17 @@ class _AccountsState extends State<Accounts> {
         title: const Center(child: Text("Mes Comptes")),
       ),
       body: Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: ListView(
-            shrinkWrap: true,
-            children: const [
-              AccountBloc(
-                avatar:
-                    "https://cdn-icons-png.flaticon.com/512/3371/3371919.png",
-                coins: 20,
-                level: 'Niveau 1 - CE1',
-                nom: 'Salma',
-              ),
-              AccountBloc(
-                avatar:
-                    "https://cdn-icons-png.flaticon.com/512/3371/3371822.png",
-                coins: 120,
-                level: 'Niveau 2 - CE2',
-                nom: 'Mehdi',
-              ),
-            ],
-          ),
+        alignment: Alignment.center,
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            AccountBloc(
+              user: user_salam,
+            ),
+            AccountBloc(
+              user: user_mehdi,
+            ),
+          ],
         ),
       ),
       floatingActionButton: Button(
@@ -75,7 +136,7 @@ class _AccountsState extends State<Accounts> {
         ),
         width: 200,
         heigth: 60,
-        color: Palette.pink,
+        color: Palette.blue,
       ),
     );
   }

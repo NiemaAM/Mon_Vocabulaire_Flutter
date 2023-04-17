@@ -65,10 +65,7 @@ flutter:
     - assets/
     - assets/themes_images/
     - assets/images/
-    #- assets/audios/
-    #- assets/sfx/
-    #- assets/mascotte/
-  #   - images/a_dot_ham.jpeg
+   
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

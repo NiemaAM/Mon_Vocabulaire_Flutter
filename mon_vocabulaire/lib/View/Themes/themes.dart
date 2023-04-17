@@ -3,8 +3,11 @@ import 'package:mon_vocabulaire/View/Themes/sub_themes.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
 
+import '../../Model/user.dart';
+
 class Themes extends StatefulWidget {
-  const Themes({super.key});
+  final User user;
+  const Themes({super.key, required this.user});
 
   @override
   State<Themes> createState() => _ThemesState();
@@ -21,48 +24,57 @@ class _ThemesState extends State<Themes> {
         child: Center(
           child: Column(
             children: [
-              const Bubble(
-                image: "assets/themes_images/animaux.png",
-                isStart: true,
-                stage: 20,
-                text: 'Animaux',
+              Bubble(
+                image: "assets/themes_images/ecole.png",
+                isStart: widget.user.stars_per_subtheme[5]! &&
+                    widget.user.stars_per_subtheme[6]!,
+                stage: widget.user.words_per_subtheme[5]! +
+                    widget.user.words_per_subtheme[6]!,
+                text: 'L’école',
                 callback: SubThemes(
-                  title: 'Animaux',
+                  title: 'L’école',
                   theme: 1,
+                  user: widget.user,
                 ),
-                color: Palette.pink,
+                color: Palette.orange,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Expanded(child: SizedBox()),
+                children: [
+                  const Expanded(child: SizedBox()),
                   Bubble(
-                    image: "assets/themes_images/mes_habits.png",
-                    isStart: false,
-                    stage: 60,
-                    text: 'Mon corps et mes habits',
+                    image: "assets/themes_images/maison.png",
+                    isStart: widget.user.stars_per_subtheme[9]! &&
+                        widget.user.stars_per_subtheme[10]!,
+                    stage: widget.user.words_per_subtheme[9]! +
+                        widget.user.words_per_subtheme[10]!,
+                    text: 'Maison et famille',
                     callback: SubThemes(
-                      title: 'Mon corps et mes habits',
+                      title: 'Maison et famille',
                       theme: 2,
+                      user: widget.user,
                     ),
-                    color: Palette.purple,
+                    color: Palette.lightGreen,
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 2,
                     child: SizedBox(),
                   ),
                   Bubble(
-                    image: "assets/themes_images/ecole.png",
-                    isStart: true,
-                    stage: 100,
-                    text: 'L’école',
+                    image: "assets/themes_images/cuisine_et_aliments.png",
+                    isStart: widget.user.stars_per_subtheme[11]! &&
+                        widget.user.stars_per_subtheme[12]!,
+                    stage: widget.user.words_per_subtheme[11]! +
+                        widget.user.words_per_subtheme[12]!,
+                    text: 'Cuisine et aliments',
                     callback: SubThemes(
-                      title: 'L’école',
+                      title: 'Cuisine et aliments',
                       theme: 3,
+                      user: widget.user,
                     ),
-                    color: Palette.orange,
+                    color: Palette.yellow,
                   ),
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                 ],
               ),
               CircleAvatar(
@@ -74,47 +86,56 @@ class _ThemesState extends State<Themes> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Expanded(child: SizedBox()),
+                children: [
+                  const Expanded(child: SizedBox()),
                   Bubble(
-                    image: "assets/themes_images/sports.png",
-                    isStart: false,
-                    stage: 30,
-                    text: 'Sports et loisirs',
+                    image: "assets/themes_images/animaux.png",
+                    isStart: widget.user.stars_per_subtheme[1]! &&
+                        widget.user.stars_per_subtheme[2]!,
+                    stage: widget.user.words_per_subtheme[1]! +
+                        widget.user.words_per_subtheme[2]!,
+                    text: 'Animaux',
                     callback: SubThemes(
-                      title: 'Sports et loisirs',
+                      title: 'Animaux',
                       theme: 4,
+                      user: widget.user,
                     ),
-                    color: Palette.indigo,
+                    color: Palette.pink,
                   ),
-                  Expanded(
+                  const Expanded(
                     flex: 2,
                     child: SizedBox(),
                   ),
                   Bubble(
-                    image: "assets/themes_images/maison.png",
-                    isStart: false,
-                    stage: 80,
-                    text: 'Maison et famille',
+                    image: "assets/themes_images/mes_habits.png",
+                    isStart: widget.user.stars_per_subtheme[3]! &&
+                        widget.user.stars_per_subtheme[4]!,
+                    stage: widget.user.words_per_subtheme[3]! +
+                        widget.user.words_per_subtheme[4]!,
+                    text: 'Mon corps et mes habits',
                     callback: SubThemes(
-                      title: 'Maison et famille',
+                      title: 'Mon corps et mes habits',
                       theme: 5,
+                      user: widget.user,
                     ),
-                    color: Palette.lightGreen,
+                    color: Palette.purple,
                   ),
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                 ],
               ),
-              const Bubble(
-                image: "assets/themes_images/cuisine_et_aliments.png",
-                isStart: false,
-                stage: 20,
-                text: 'Cuisine et aliments',
+              Bubble(
+                image: "assets/themes_images/sports.png",
+                isStart: widget.user.stars_per_subtheme[7]! &&
+                    widget.user.stars_per_subtheme[8]!,
+                stage: widget.user.words_per_subtheme[7]! +
+                    widget.user.words_per_subtheme[8]!,
+                text: 'Sports et loisirs',
                 callback: SubThemes(
-                  title: 'Cuisine et aliments',
+                  title: 'Sports et loisirs',
                   theme: 6,
+                  user: widget.user,
                 ),
-                color: Palette.yellow,
+                color: Palette.indigo,
               ),
               const SizedBox(
                 height: 50,

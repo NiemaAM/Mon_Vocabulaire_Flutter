@@ -161,7 +161,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 },
                 content: const Center(
                     child: Text(
-                  "Valider",
+                  "Créer",
                   style: TextStyle(color: Palette.white, fontSize: 16),
                 ))),
           ),
