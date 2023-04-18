@@ -1,12 +1,10 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/quiz_model.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/quiz_app_bar.dart';
+import '../../Model/audio_player.dart';
 import '../../Widgets/button.dart';
 
 class QuizTextImages extends StatefulWidget {
@@ -104,8 +102,6 @@ class _QuizTextImagesState extends State<QuizTextImages> {
     }
   }
 
-  void song() async {}
-
 //TODO: change this
   void call() {
     setState(() {
@@ -157,6 +153,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   @override
   void initState() {
     super.initState();
+
     getTheme();
     testGetRandomWords();
     startTimer();
@@ -238,7 +235,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                   size: 50,
                                 ),
                                 callback: () {
-                                  song();
+                                  AudioPlayerHelper.play(reponse, 1);
                                 },
                                 width: 100,
                                 heigth: 100,
@@ -253,7 +250,9 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                 content: Image.asset(
                                     "assets/themes_images/snail.png"),
                                 color: Palette.pink,
-                                callback: song,
+                                callback: () {
+                                  AudioPlayerHelper.play(reponse, 0.6);
+                                },
                                 heigth: 35,
                                 width: 35,
                               ),

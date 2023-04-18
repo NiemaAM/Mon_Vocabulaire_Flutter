@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
+import '../../Model/audio_player.dart';
 import '../../Model/quiz_model.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/button.dart';
@@ -269,9 +270,15 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                           fontWeight: FontWeight.bold)),
                                 ),
                                 color: Palette.white,
-                                callback: () {
+                                callback: () async {
                                   if (key == correct) {
-                                    testGetRandomWords();
+                                    await AudioPlayerHelper.play(reponse, 1);
+
+                                    Future.delayed(
+                                        const Duration(milliseconds: 1800), () {
+                                      testGetRandomWords();
+                                    });
+
                                     setState(() {
                                       duration = 30;
                                     });
