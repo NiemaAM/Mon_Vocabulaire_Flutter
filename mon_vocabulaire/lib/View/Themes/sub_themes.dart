@@ -86,19 +86,19 @@ class _SubThemesState extends State<SubThemes> {
             ),
             Bubble(
               image: images[0],
-              isStart: widget.theme == 1
+              nbStars: widget.theme == 1
                   ? widget.user.stars_per_subtheme[1]!
                   : widget.theme == 2
                       ? widget.user.stars_per_subtheme[3]!
                       : widget.theme == 3
-                          ? widget.user.stars_per_subtheme[5]!
+                          ? widget.user.stars_per_subtheme[5]! 
                           : widget.theme == 4
                               ? widget.user.stars_per_subtheme[7]!
                               : widget.theme == 5
                                   ? widget.user.stars_per_subtheme[9]!
                                   : widget.theme == 6
                                       ? widget.user.stars_per_subtheme[11]!
-                                      : false,
+                                      : 0,
               stage: widget.theme == 1
                   ? widget.user.words_per_subtheme[1]!
                   : widget.theme == 2
@@ -132,25 +132,26 @@ class _SubThemesState extends State<SubThemes> {
                 user: widget.user,
               ),
               color: Palette.purple,
+              type: "subtheme",
             ),
             const Expanded(
               child: SizedBox(),
             ),
             Bubble(
               image: images[1],
-              isStart: widget.theme == 1
-                  ? widget.user.stars_per_subtheme[1]!
+              nbStars: widget.theme == 1
+                  ? widget.user.stars_per_subtheme[2]!
                   : widget.theme == 2
-                      ? widget.user.stars_per_subtheme[3]!
+                      ? widget.user.stars_per_subtheme[4]!
                       : widget.theme == 3
-                          ? widget.user.stars_per_subtheme[5]!
+                          ? widget.user.stars_per_subtheme[6]!
                           : widget.theme == 4
-                              ? widget.user.stars_per_subtheme[7]!
+                              ? widget.user.stars_per_subtheme[8]!
                               : widget.theme == 5
-                                  ? widget.user.stars_per_subtheme[9]!
+                                  ? widget.user.stars_per_subtheme[10]!
                                   : widget.theme == 6
-                                      ? widget.user.stars_per_subtheme[11]!
-                                      : false,
+                                      ? widget.user.stars_per_subtheme[12]!
+                                      : 0,
               stage: widget.theme == 1
                   ? widget.user.words_per_subtheme[2]!
                   : widget.theme == 2
@@ -184,6 +185,7 @@ class _SubThemesState extends State<SubThemes> {
                 user: widget.user,
               ),
               color: Palette.orange,
+              type: "subtheme",
             ),
             const Expanded(
               flex: 3,

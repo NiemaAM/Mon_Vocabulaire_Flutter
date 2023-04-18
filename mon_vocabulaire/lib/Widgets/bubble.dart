@@ -8,17 +8,20 @@ class Bubble extends StatefulWidget {
   final String image;
   final String text;
   final int stage;
-  final bool isStart;
+  final int? nbStars;
   final Color color;
   final Widget callback;
+  final String type;
   const Bubble(
       {super.key,
       required this.image,
       required this.stage,
-      required this.isStart,
+      required this.nbStars,
       required this.text,
       required this.callback,
-      required this.color});
+      required this.color,
+      required this.type
+      });
 
   @override
   State<Bubble> createState() => _BubbleState();
@@ -87,7 +90,7 @@ class _BubbleState extends State<Bubble> {
                     ),
                   ),
                 ),
-                Star(isStar: widget.isStart)
+                Star(nbStar: widget.nbStars,typebubble: widget.type,)
               ],
             ),
           ),
