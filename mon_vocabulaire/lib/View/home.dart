@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Model/audio_BK.dart';
+import 'package:mon_vocabulaire/Model/audio_player.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/View/Games/jeux.dart';
 import 'package:mon_vocabulaire/View/Account/profil.dart';
@@ -15,7 +17,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with WidgetsBindingObserver {
   List<Widget> page = [];
   int _selectedIndex = 0;
   bool _isHome = true;
@@ -24,6 +26,8 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    Audio_BK.playBK();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
     setState(() {
       page = [
@@ -32,6 +36,21 @@ class _HomeState extends State<Home> {
         Games(user: widget.user)
       ];
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Audio_BK.disposeBK();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      Audio_BK.pauseBK();
+    } else {
+      Audio_BK.playBK();
+    }
   }
 
   void _onItemTapped(int index) {

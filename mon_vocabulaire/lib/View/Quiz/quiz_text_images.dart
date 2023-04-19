@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Model/audio_BK.dart';
 import 'package:mon_vocabulaire/Model/quiz_model.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
@@ -113,16 +114,18 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   int duration = 30;
   void startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (duration > 0) {
-          duration -= 1; // decrement the duration every second
-        } else {
-          timer.cancel(); // stop the timer when the duration reaches 0
-          testGetRandomWords(); // execute the function after the timer is done
-          duration = 30;
-          startTimer();
-        }
-      });
+      if (mounted) {
+        setState(() {
+          if (duration > 0) {
+            duration -= 1; // decrement the duration every second
+          } else {
+            timer.cancel(); // stop the timer when the duration reaches 0
+            testGetRandomWords(); // execute the function after the timer is done
+            duration = 30;
+            startTimer();
+          }
+        });
+      }
     });
   }
 
@@ -153,6 +156,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   @override
   void initState() {
     super.initState();
+    Audio_BK.pauseBK();
 
     getTheme();
     testGetRandomWords();
@@ -219,6 +223,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                             alignment: Alignment.topRight,
                             child: IconButton(
                                 onPressed: () {
+                                  Audio_BK.playBK();
                                   Navigator.pop(context);
                                 },
                                 icon: const Icon(Icons.close)),
