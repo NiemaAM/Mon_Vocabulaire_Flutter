@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Themes/sub_themes.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
+import 'package:mon_vocabulaire/View/Settings/settingsPage2.dart';
 
 import '../../Model/user.dart';
 
@@ -24,6 +25,19 @@ class _ThemesState extends State<Themes> {
         child: Center(
           child: Column(
             children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SettingsPage2(),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.settings)),
+              ),
               Bubble(
                 image: "assets/themes_images/ecole.png",
                 isStart: widget.user.stars_per_subtheme[5]! &&

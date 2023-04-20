@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+//import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:mon_vocabulaire/Widgets/icon_widget.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
@@ -10,7 +10,7 @@ class NotificationPage extends StatelessWidget {
   LocalNotificationService localNotificationService =
       LocalNotificationService();
 
-  Widget buildNotification() => SwitchSettingsTile(
+  /*Widget buildNotification() => SwitchSettingsTile(
         settingKey: keyNotification,
         leading: IconWidget(icon: Icons.notifications, color: Colors.green),
         title: 'Notification',
@@ -20,12 +20,12 @@ class NotificationPage extends StatelessWidget {
                   "Tu nous as manqué", "Il y a encore des mots à decouverire ")
               : localNotificationService.stopNotifications();
         },
-      );
+      );*/
 
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          buildNotification(),
+          // buildNotification(),
         ],
       );
 }

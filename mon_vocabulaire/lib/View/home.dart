@@ -67,62 +67,63 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _selectedIndex == 0 || _selectedIndex == 2
-            ? AppBar(
-                backgroundColor: Colors.white,
-                automaticallyImplyLeading: false,
-                elevation: 1,
-                title: AppBarHome(user: widget.user),
-              )
-            : null,
-        body: page[_selectedIndex],
-        bottomNavigationBar: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Expanded(child: SizedBox()),
-              IconButton(
-                icon: Icon(
-                  Icons.home,
-                  color: _isHome ? Palette.pink : Colors.black45,
-                ),
-                onPressed: () {
-                  _onItemTapped(0);
-                },
+      appBar: _selectedIndex == 0 || _selectedIndex == 2
+          ? AppBar(
+              backgroundColor: Colors.white,
+              automaticallyImplyLeading: false,
+              elevation: 1,
+              title: AppBarHome(user: widget.user),
+            )
+          : null,
+      body: page[_selectedIndex],
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Expanded(child: SizedBox()),
+            IconButton(
+              icon: Icon(
+                Icons.home,
+                color: _isHome ? Palette.pink : Colors.black45,
               ),
-              const Expanded(flex: 3, child: SizedBox()),
-              IconButton(
-                icon: Icon(Icons.gamepad,
-                    color: _isGames ? Palette.pink : Colors.black45),
-                onPressed: () {
-                  _onItemTapped(2);
-                },
-              ),
-              const Expanded(child: SizedBox()),
-            ],
-          ),
+              onPressed: () {
+                _onItemTapped(0);
+              },
+            ),
+            const Expanded(flex: 3, child: SizedBox()),
+            IconButton(
+              icon: Icon(Icons.gamepad,
+                  color: _isGames ? Palette.pink : Colors.black45),
+              onPressed: () {
+                _onItemTapped(2);
+              },
+            ),
+            const Expanded(child: SizedBox()),
+          ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: _isProfil
-            ? null
-            : FloatingActionButton(
-                onPressed: () {
-                  _onItemTapped(1);
-                },
-                child: CircleAvatar(
-                  radius: 50.0,
-                  backgroundColor: Palette.blue,
-                  child: ClipOval(
-                    child: Image.network(
-                      widget.user
-                          .image, //TODO: change this to images from gallery
-                      fit: BoxFit.cover,
-                      width: 100.0,
-                      height: 100.0,
-                    ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _isProfil
+          ? null
+          : FloatingActionButton(
+              onPressed: () {
+                _onItemTapped(1);
+              },
+              child: CircleAvatar(
+                radius: 50.0,
+                backgroundColor: Palette.blue,
+                child: ClipOval(
+                  child: Image.network(
+                    widget
+                        .user.image, //TODO: change this to images from gallery
+                    fit: BoxFit.cover,
+                    width: 100.0,
+                    height: 100.0,
                   ),
                 ),
-              ));
+              ),
+            ),
+    );
   }
 }

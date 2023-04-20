@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:lite_rolling_switch/lite_rolling_switch.dart';
+
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
-import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+//import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:mon_vocabulaire/View/Settings/heather_page.dart';
 import 'package:mon_vocabulaire/View/Settings/notification.dart';
 import 'package:mon_vocabulaire/Widgets/icon_widget.dart';
@@ -68,16 +68,16 @@ class _SettingsPageState extends State<SettingsPage> {
     localNotificationService.initialiseNotifications();
   }
 
-  Widget buildLogout() => SimpleSettingsTile(
+  /* Widget buildLogout() => SimpleSettingsTile(
         title: 'Se déconnecter',
         subtitle: '',
         leading: IconWidget(icon: Icons.logout, color: Colors.blueAccent),
         onTap: () {
           Settings.clearCache();
         },
-      );
+      );*/
 
-  Widget buildDeleteAccount() => SimpleSettingsTile(
+  /* Widget buildDeleteAccount() => SimpleSettingsTile(
         title: 'Supprimer compte',
         subtitle: '',
         leading: IconWidget(icon: Icons.delete, color: Colors.pink),
@@ -96,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
         subtitle: '',
         leading: IconWidget(icon: Icons.thumb_up, color: Colors.purple),
         onTap: () {},
-      );
+      );*/
 
   @override
   Widget build(BuildContext context) {
@@ -126,30 +126,24 @@ class _SettingsPageState extends State<SettingsPage> {
           padding: EdgeInsets.all(24),
           children: [
             HeaderPage(),
-            SettingsGroup(
-              title: 'General',
-              children: <Widget>[
-                NotificationPage(),
-                buildLogout(),
-                buildDeleteAccount(),
-              ],
-            ),
-            const SizedBox(
-              height: 32,
-            ),
-            SettingsGroup(
-              title: 'FEEDBACK',
-              children: <Widget>[
-                const SizedBox(
-                  height: 8,
-                ),
-                buildReportBug(context),
-                buildSendFeedback(context),
-              ],
-            ),
+            // SettingsGroup(
+            // title: 'General',
+            // children: <Widget>[
+            NotificationPage(),
+            //   buildLogout(),
+            //  buildDeleteAccount(),
           ],
         ),
+        //const SizedBox(
+        //  height: 32,
       ),
+      //SettingsGroup(
+      //  title: 'FEEDBACK',
+      //children: <Widget>[
+      //const SizedBox(
+      //  height: 8,
     );
+    // buildReportBug(context),
+    // buildSendFeedback(context),
   }
 }

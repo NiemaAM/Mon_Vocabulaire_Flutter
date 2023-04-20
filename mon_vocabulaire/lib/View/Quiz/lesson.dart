@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Widgets/palette.dart';
+import '../../Widgets/palette.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../Widgets/button.dart';
