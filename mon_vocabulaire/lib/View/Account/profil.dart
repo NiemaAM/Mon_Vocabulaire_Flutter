@@ -4,7 +4,7 @@ import 'package:mon_vocabulaire/View/Account/edit_account.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
 
 import '../../Widgets/Palette.dart';
-import 'accounts.dart';
+import '../Settings/settings_page.dart';
 
 class Profil extends StatefulWidget {
   final User user;
@@ -19,37 +19,23 @@ class _ProfilState extends State<Profil> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Palette.white,
       appBar: AppBar(
-        backgroundColor: Palette.blue,
         title: const Text("Mon Profil"),
         elevation: 1,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const Accounts(),
+                builder: (context) => SettingsPage(
+                  user: widget.user,
+                ),
               ),
             );
           },
-          icon: const Icon(Icons.logout),
-          tooltip: "Changer de compte",
+          icon: const Icon(Icons.settings),
+          tooltip: "Paramètres",
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditAccount(user: widget.user),
-                ),
-              );
-            },
-            icon: const Icon(Icons.edit),
-            tooltip: "Modifier mon compte",
-          )
-        ],
       ),
       body: ListView(
         children: [

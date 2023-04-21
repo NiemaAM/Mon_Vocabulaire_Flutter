@@ -7,6 +7,10 @@ import 'package:mon_vocabulaire/Model/quiz_model.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/quiz_app_bar.dart';
+import '../../Model/quiz_prposition.dart';
+import '../../Services/audio_background.dart';
+import '../../Services/sfx.dart';
+import '../../Services/voice.dart';
 import '../../Widgets/button.dart';
 
 class QuizTextImages extends StatefulWidget {
@@ -26,6 +30,15 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   String correct = '';
   String theme = '';
   String subTheme = '';
+  QuizModel quizModel = QuizModel();
+  List<Proposition> questions = [];
+  int index = 0;
+  List<String> images = [];
+  List<String> mots = [];
+  List<String> reponse = [];
+  bool didResponse = false;
+  String response = '';
+
   getTheme() {
     switch (widget.subTheme) {
       case 1:
@@ -122,44 +135,82 @@ class _QuizTextImagesState extends State<QuizTextImages> {
           duration -= 1; // decrement the duration every second
         } else {
           timer.cancel(); // stop the timer when the duration reaches 0
-          testGetRandomWords(); // execute the function after the timer is done
+          nextQuestion(); // execute the function after the timer is done
           duration = 30;
           startTimer();
+        }
+        if (index == size || chances == 0) {
+          duration = 0;
         }
       });
     });
   }
 
-  QuizModel quizModel = QuizModel();
-  List<String> images = [];
-  List<String> mots = [];
-  List<String> reponse = [];
-  testGetRandomWords() async {
-    await quizModel.getRandomWords(theme, subTheme);
-    List<String> _images = quizModel
-        .getPropositionImages()
-        .map((element) => element.toString())
-        .toList();
-    List<String> _mots = quizModel
-        .getProposition()
-        .map((element) => element.toString())
-        .toList();
-    List<String> _reponse =
-        quizModel.getReponse().map((element) => element.toString()).toList();
+  getQuestions() async {
+    List<Proposition> quest =
+        await quizModel.getRandomPropositions(theme, subTheme);
     setState(() {
-      images = _images;
-      mots = _mots;
-      reponse = _reponse;
-      correct = _reponse[3];
+      questions = quest;
     });
+    setState(() {
+      size = quizModel.getSize();
+    });
+    nextQuestion();
+  }
+
+  int size = 5;
+  nextQuestion() async {
+    if (index == 0) {
+      setState(() {
+        images = questions[index]
+            .propositionsImages
+            .map((element) => element.toString())
+            .toList();
+        mots = questions[index]
+            .propositions
+            .map((element) => element.toString())
+            .toList();
+        reponse = questions[index]
+            .reponse
+            .map((element) => element.toString())
+            .toList();
+        correct = reponse[3];
+        index += 1;
+      });
+    } else if (index < size) {
+      setState(() {
+        index += 1;
+        images = questions[index]
+            .propositionsImages
+            .map((element) => element.toString())
+            .toList();
+        mots = questions[index]
+            .propositions
+            .map((element) => element.toString())
+            .toList();
+        reponse = questions[index]
+            .reponse
+            .map((element) => element.toString())
+            .toList();
+        correct = reponse[3];
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
+    AudioBK.pauseBK();
     getTheme();
-    testGetRandomWords();
+    getQuestions();
     startTimer();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Sfx.play("sfx/pop.mp3", 1);
+    AudioBK.playBK();
   }
 
   @override
@@ -168,7 +219,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Palette.white,
+          backgroundColor: Theme.of(context).colorScheme.background,
           elevation: 2,
           iconTheme: const IconThemeData(color: Colors.black),
           automaticallyImplyLeading: false,
@@ -177,201 +228,268 @@ class _QuizTextImagesState extends State<QuizTextImages> {
             chances: chances,
             duration: duration,
             user: widget.user,
+            question: index,
+            size: size,
           )),
-      body: Stack(
-        children: [
-          Stack(
-            children: [
-              Align(
-                alignment: AlignmentDirectional.bottomEnd,
-                child: Stack(
-                  alignment: AlignmentDirectional.bottomEnd,
-                  children: [
-                    Container(
-                      height: height / 1.45,
-                      width: width,
-                      decoration: const BoxDecoration(
-                        color: Palette.blue,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(100),
-                            topRight: Radius.circular(100)),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional.topCenter,
-                      child: SizedBox(
-                        height: height / 1.7,
-                        child: Center(
-                            child: Text(
-                          correct,
-                          style: const TextStyle(
-                              color: Palette.white, fontSize: 30),
-                        )),
-                      ),
-                    ),
+      body: index == size
+          ? AlertDialog(
+              // <-- SEE HERE
+              title: const Text('Bien joué !'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: const <Widget>[
+                    Text("Tu as terminé le quiz :)"),
                   ],
                 ),
               ),
-              Center(
-                child: ListView(
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Column(
+                    TextButton(
+                      child: const Text('Retour'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Accueil'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Réessayer'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QuizTextImages(
+                              subTheme: widget.subTheme,
+                              user: widget.user,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            )
+          : chances == 0
+              ? AlertDialog(
+                  // <-- SEE HERE
+                  title: const Text('Oh non ...'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: const <Widget>[
+                        Text("Tu n'as plus de coeurs :("),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Stack(children: [
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.close)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Button(
-                                color: Palette.blue,
-                                content: const Icon(
-                                  Icons.volume_up,
-                                  color: Palette.white,
-                                  size: 50,
+                        TextButton(
+                          child: const Text('Retour'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Accueil'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Réessayer'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => QuizTextImages(
+                                  subTheme: widget.subTheme,
+                                  user: widget.user,
                                 ),
-                                callback: () {
-                                  song();
-                                },
-                                width: 100,
-                                heigth: 100,
                               ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 70, top: 20),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Button(
-                                content: Image.asset(
-                                    "assets/themes_images/snail.png"),
-                                color: Palette.pink,
-                                callback: song,
-                                heigth: 35,
-                                width: 35,
-                              ),
-                            ),
-                          ),
-                        ]),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ],
-                ),
-              ),
-            ],
-          ),
-          Align(
-            alignment: AlignmentDirectional.bottomEnd,
-            child: SizedBox(
-              height: height / 1.9,
-              child: GridView.count(
-                crossAxisCount: 2,
-                children: List.generate(
-                  mots.length,
-                  (int index) {
-                    String key = mots[index];
-                    String value = images[index];
-                    return Center(
-                      child: Button(
-                        enabled: _isEnabled,
-                        content: Image.asset(
-                          value,
-                          scale: 5,
+                )
+              : Stack(
+                  children: [
+                    Stack(
+                      children: [
+                        Align(
+                          alignment: AlignmentDirectional.bottomEnd,
+                          child: Stack(
+                            alignment: AlignmentDirectional.bottomEnd,
+                            children: [
+                              Container(
+                                height: height / 1.45,
+                                width: width,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(100),
+                                      topRight: Radius.circular(100)),
+                                ),
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional.topCenter,
+                                child: SizedBox(
+                                  height: height / 1.7,
+                                  child: Center(
+                                      child: Text(
+                                    correct,
+                                    style: const TextStyle(
+                                        color: Palette.white, fontSize: 30),
+                                  )),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        color: Palette.white,
-                        callback: () {
-                          if (key == correct) {
-                            testGetRandomWords();
-                            setState(() {
-                              duration = 30;
-                            });
-                          } else {
-                            if (chances == 1) {
-                              setState(() {
-                                chances -= 1;
-                              });
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      // <-- SEE HERE
-                                      title: const Text('Oh non ...'),
-                                      content: SingleChildScrollView(
-                                        child: ListBody(
-                                          children: const <Widget>[
-                                            Text("Tu n'as plus de coeurs :("),
-                                          ],
+                        Center(
+                          child: ListView(
+                            children: [
+                              Column(
+                                children: [
+                                  Stack(children: [
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: IconButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          icon: const Icon(
+                                            Icons.close,
+                                            color: Palette.red,
+                                          )),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 20),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Button(
+                                          color: Palette.blue,
+                                          content: const Icon(
+                                            Icons.volume_up,
+                                            color: Palette.white,
+                                            size: 50,
+                                          ),
+                                          callback: () {
+                                            Voice.play(reponse[0], 1);
+                                          },
+                                          width: 100,
+                                          heigth: 100,
                                         ),
                                       ),
-                                      actions: <Widget>[
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            TextButton(
-                                              child: const Text('Retour'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Accueil'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Réessayer'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        QuizTextImages(
-                                                      subTheme: widget.subTheme,
-                                                      user: widget.user,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 70, top: 20),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Button(
+                                          content: Image.asset(
+                                              "assets/themes_images/snail.png"),
+                                          color: Palette.pink,
+                                          callback: () {
+                                            Voice.play(reponse[0], 0.75);
+                                          },
+                                          heigth: 35,
+                                          width: 35,
                                         ),
-                                      ],
-                                    );
-                                  });
-                            } else {
-                              setState(() {
-                                chances -= 1;
-                              });
-                            }
-                          }
-                        },
-                        heigth: width / 2.2,
-                        width: width / 2.2,
-                        radius: 30,
+                                      ),
+                                    ),
+                                  ]),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      child: SizedBox(
+                        height: height / 1.9,
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          children: List.generate(
+                            mots.length,
+                            (int index) {
+                              String key = mots[index];
+                              String value = images[index];
+                              return Center(
+                                child: Button(
+                                  enabled: _isEnabled,
+                                  content: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Image.asset(
+                                      value,
+                                    ),
+                                  ),
+                                  color: didResponse
+                                      ? key == response
+                                          ? response == correct
+                                              ? Palette.lighterGreen
+                                              : Palette.lightRed
+                                          : key == correct
+                                              ? Palette.lighterGreen
+                                              : Palette.white
+                                      : Palette.white,
+                                  callback: () {
+                                    setState(() {
+                                      didResponse = true;
+                                      response = key;
+                                    });
+                                    if (key == correct) {
+                                      Sfx.play("sfx/ding.mp3", 1);
+                                      Timer(const Duration(seconds: 1), () {
+                                        nextQuestion();
+                                        setState(() {
+                                          duration = 30;
+                                          didResponse = false;
+                                        });
+                                      });
+                                    } else {
+                                      Sfx.play("sfx/zew.mp3", 1);
+                                      Timer(const Duration(seconds: 1), () {
+                                        nextQuestion();
+                                        setState(() {
+                                          chances -= 1;
+                                          duration = 30;
+                                          didResponse = false;
+                                        });
+                                      });
+                                    }
+                                  },
+                                  heigth: width / 2.2,
+                                  width: width / 2.2,
+                                  radius: 30,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

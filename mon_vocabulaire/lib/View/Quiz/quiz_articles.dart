@@ -49,9 +49,7 @@ class _QuizArticlesState extends State<QuizArticles> {
           automaticallyImplyLeading: false,
           titleSpacing: 0,
           title: QuizAppBar(
-            chances: chances,
-            user: widget.user,
-          )),
+              chances: chances, user: widget.user, question: 0, size: 0)),
       body: Stack(
         children: [
           Stack(
@@ -98,7 +96,10 @@ class _QuizArticlesState extends State<QuizArticles> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                icon: const Icon(Icons.close)),
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Palette.red,
+                                )),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 20),
