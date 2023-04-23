@@ -1,5 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Providers/theme_provider.dart';
@@ -548,7 +549,22 @@ class _SettingsPageState extends State<SettingsPage> {
                       color: Colors.red,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    AwesomeDialog(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      context: context,
+                      headerAnimationLoop: false,
+                      dialogType: DialogType.warning,
+                      animType: AnimType.rightSlide,
+                      title: 'Cette action est irréversible',
+                      desc:
+                          'Êtes-vous certain de vouloir supprimer ce compte ?',
+                      btnCancelText: "Supprimer",
+                      btnCancelOnPress: () {},
+                      btnOkText: "Anuler",
+                      btnOkOnPress: () {},
+                    ).show();
+                  },
                 ),
               ],
             ),

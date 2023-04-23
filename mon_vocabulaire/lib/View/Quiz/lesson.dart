@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/lesson_model.dart';
 import 'package:mon_vocabulaire/View/Quiz/quiz_text_images.dart';
@@ -189,7 +190,20 @@ class _LessonPage extends State<LessonPage> {
                     alignment: Alignment.topRight,
                     child: IconButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          AwesomeDialog(
+                            context: context,
+                            headerAnimationLoop: false,
+                            dialogType: DialogType.question,
+                            animType: AnimType.rightSlide,
+                            title: 'Quitter la leçon',
+                            desc: 'Es-tu sûr(e) de vouloir quitter ?',
+                            btnCancelText: "Quitter",
+                            btnCancelOnPress: () {
+                              Navigator.pop(context);
+                            },
+                            btnOkText: "Rester",
+                            btnOkOnPress: () {},
+                          ).show();
                         },
                         icon: const Icon(
                           Icons.close,
@@ -271,63 +285,31 @@ class _LessonPage extends State<LessonPage> {
                                 index += 1;
                               });
                             } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      // <-- SEE HERE
-                                      title: const Text('Leçon terminée'),
-                                      content: SingleChildScrollView(
-                                        child: ListBody(
-                                          children: const <Widget>[
-                                            Text(
-                                                "Bravo ! Tu as terminé ta leçon."),
-                                          ],
-                                        ),
+                              Sfx.play("sfx/done.mp3", 1);
+                              AwesomeDialog(
+                                context: context,
+                                headerAnimationLoop: false,
+                                dialogType: DialogType.success,
+                                animType: AnimType.rightSlide,
+                                title: 'Leçon terminée',
+                                desc: 'Bravo ! Tu as terminé ta leçon.',
+                                btnCancelText: "Retour",
+                                btnCancelOnPress: () {
+                                  Navigator.pop(context);
+                                },
+                                btnOkText: "Suivant",
+                                btnOkOnPress: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => QuizTextImages(
+                                        subTheme: widget.subTheme,
+                                        user: widget.user,
                                       ),
-                                      actions: <Widget>[
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            TextButton(
-                                              child: const Text('Retour'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Accueil'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Suivant'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        QuizTextImages(
-                                                      subTheme: widget.subTheme,
-                                                      user: widget.user,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    );
-                                  });
+                                    ),
+                                  );
+                                },
+                              ).show();
                             }
                           },
                           heigth: 60,

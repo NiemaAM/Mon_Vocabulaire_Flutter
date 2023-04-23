@@ -42,6 +42,8 @@ dependencies:
   flutter_svg: ^2.0.5
   audioplayers: ^4.0.1
   provider: ^6.0.5
+  awesome_dialog: ^3.0.2
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:

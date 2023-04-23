@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
-import 'package:mon_vocabulaire/View/Account/edit_account.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
 
 import '../../Widgets/Palette.dart';
