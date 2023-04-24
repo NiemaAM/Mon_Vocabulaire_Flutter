@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/audio_BK.dart';
-import 'package:mon_vocabulaire/Model/audio_player.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/View/Games/jeux.dart';
 import 'package:mon_vocabulaire/View/Account/profil.dart';
@@ -27,7 +26,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   @override
   void initState() {
     Audio_BK.playBK();
+    // state object as an observer for app lifecycle events
     WidgetsBinding.instance.addObserver(this);
+
     super.initState();
     setState(() {
       page = [
@@ -44,6 +45,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     Audio_BK.disposeBK();
   }
 
+  // Override the didChangeAppLifecycleState method to listen for app lifecycle
+  // events and pause the audio player when the app enters the background
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
