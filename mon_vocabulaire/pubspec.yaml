@@ -37,11 +37,12 @@ dependencies:
   percent_indicator: ^4.2.3
   image_picker: ^0.8.7+2
   flutter_local_notifications: ^13.0.0
-  timezone: ^0.9.1
-  rxdart: ^0.27.7
-  flutter_datetime_picker: ^1.5.1
-  lite_rolling_switch: ^1.0.1
+  shared_preferences: ^2.1.0
+  flutter_svg: ^2.0.5
+  audioplayers: ^4.0.1
   provider: ^6.0.5
+  awesome_dialog: ^3.0.2
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:
@@ -69,9 +70,9 @@ flutter:
     - assets/
     - assets/themes_images/
     - assets/images/
-    # - assets/audios/
-    #- assets/sfx/
-    #- assets/mascotte/
+    - assets/audios/
+    - assets/sfx/
+    - assets/mascotte/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
