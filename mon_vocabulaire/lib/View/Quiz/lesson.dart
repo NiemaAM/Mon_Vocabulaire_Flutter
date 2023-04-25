@@ -1,11 +1,20 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Model/lesson_model.dart';
+import 'package:mon_vocabulaire/View/Quiz/quiz_text_images.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
+import '../../Model/quiz_model.dart';
+import '../../Model/user.dart';
+import '../../Services/audio_background.dart';
+import '../../Services/sfx.dart';
+import '../../Services/voice.dart';
 import '../../Widgets/button.dart';
 
 class LessonPage extends StatefulWidget {
-  const LessonPage({super.key});
+  final int subTheme;
+  final User user;
+  const LessonPage({super.key, required this.subTheme, required this.user});
 
   @override
   State<LessonPage> createState() => _LessonPage();
@@ -14,30 +23,136 @@ class LessonPage extends StatefulWidget {
 class _LessonPage extends State<LessonPage> {
   int coursbar = 3;
   int chances = 3;
+  String theme = '';
+  String subTheme = '';
+  QuizModel quizModel = QuizModel();
+  List<Lesson> lesson = [];
+  int index = 0;
+  int size = 5;
+  getTheme() {
+    switch (widget.subTheme) {
+      case 1:
+        setState(() {
+          theme = "École";
+          subTheme = "Eléments";
+        });
+        break;
+      case 2:
+        setState(() {
+          theme = 'École';
+          subTheme = 'Personnes';
+        });
+        break;
+      case 3:
+        setState(() {
+          theme = 'Maison et Famille';
+          subTheme = 'Maison';
+        });
+        break;
+      case 4:
+        setState(() {
+          theme = 'Maison et Famille';
+          subTheme = 'Famille';
+        });
+        break;
+      case 5:
+        setState(() {
+          theme = 'Cuisine et aliments';
+          subTheme = 'Cuisine';
+        });
+        break;
+      case 6:
+        setState(() {
+          theme = 'Cuisine et aliments';
+          subTheme = 'Aliments';
+        });
+        break;
+      case 7:
+        setState(() {
+          theme = 'Animaux';
+          subTheme = 'Mammifères';
+        });
+        break;
+      case 8:
+        setState(() {
+          theme = 'Animaux';
+          subTheme = 'Oiseaux et autres';
+        });
+        break;
+      case 9:
+        setState(() {
+          theme = 'Mon corps et mes habits';
+          subTheme = 'Mon corps';
+        });
+        break;
+      case 10:
+        setState(() {
+          theme = 'Mon corps et mes habits';
+          subTheme = 'Mes habits';
+        });
+        break;
+      case 11:
+        setState(() {
+          theme = 'Sports et loisirs';
+          subTheme = 'Sports';
+        });
+        break;
+      case 12:
+        setState(() {
+          theme = 'Sports et loisirs';
+          subTheme = 'Loisirs';
+        });
+        break;
+      default:
+    }
+  }
+
+  getLesson() async {
+    List<Lesson> les = await quizModel.getLesson(theme, subTheme);
+    setState(() {
+      lesson = les;
+      size = quizModel.getSize() - 1;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AudioBK.pauseBK();
+    getTheme();
+    getLesson();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Sfx.play("sfx/pop.mp3", 1);
+    AudioBK.playBK();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.background,
           elevation: 1,
           automaticallyImplyLeading: false,
           title: Center(
             child: LinearPercentIndicator(
               width: width - 35,
-              animation: true,
+              animation: false,
               lineHeight: 25.0,
-              animationDuration: 1000,
-              percent: 0.7,
+              animationDuration: 1,
+              percent: index / size,
               barRadius: const Radius.circular(100),
               progressColor: Palette.lightGreen,
-              backgroundColor: Palette.lightGrey,
-              center: const Text(
-                "150/240 mots",
-                style: TextStyle(
+              backgroundColor: Theme.of(context).shadowColor,
+              center: Text(
+                "$index/$size mots",
+                style: const TextStyle(
                   fontSize: 14.0,
-                  color: Colors.white,
                 ),
               ),
             ),
@@ -53,9 +168,9 @@ class _LessonPage extends State<LessonPage> {
                   Container(
                     height: height / 1.45,
                     width: width,
-                    decoration: const BoxDecoration(
-                      color: Palette.blue,
-                      borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(100),
                           topRight: Radius.circular(100)),
                     ),
@@ -75,9 +190,25 @@ class _LessonPage extends State<LessonPage> {
                     alignment: Alignment.topRight,
                     child: IconButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          AwesomeDialog(
+                            context: context,
+                            headerAnimationLoop: false,
+                            dialogType: DialogType.question,
+                            animType: AnimType.rightSlide,
+                            title: 'Quitter la leçon',
+                            desc: 'Es-tu sûr(e) de vouloir quitter ?',
+                            btnCancelText: "Quitter",
+                            btnCancelOnPress: () {
+                              Navigator.pop(context);
+                            },
+                            btnOkText: "Rester",
+                            btnOkOnPress: () {},
+                          ).show();
                         },
-                        icon: const Icon(Icons.close)),
+                        icon: const Icon(
+                          Icons.close,
+                          color: Palette.red,
+                        )),
                   ),
                   Stack(
                     children: [
@@ -104,7 +235,7 @@ class _LessonPage extends State<LessonPage> {
                             child: Padding(
                               padding: const EdgeInsets.all(20),
                               child: Image.asset(
-                                'assets/images/135.png',
+                                lesson[index].image,
                                 scale: 3,
                               ),
                             ),
@@ -115,13 +246,22 @@ class _LessonPage extends State<LessonPage> {
                         top: width / 3,
                         left: 20,
                         child: Button(
-                          content: const Icon(
+                          content: Icon(
                             Icons.chevron_left_rounded,
-                            color: Palette.white,
+                            color: index > 0 ? Palette.white : Palette.grey,
                             size: 40,
                           ),
-                          color: Palette.pink,
-                          callback: () {},
+                          color: index > 0
+                              ? Theme.of(context).secondaryHeaderColor
+                              : Palette.lightGrey,
+                          callback: () {
+                            if (index > 0) {
+                              Sfx.play("sfx/plip.mp3", 1);
+                              setState(() {
+                                index -= 1;
+                              });
+                            }
+                          },
                           heigth: 60,
                           width: 60,
                         ),
@@ -130,13 +270,48 @@ class _LessonPage extends State<LessonPage> {
                         top: width / 3,
                         right: 20,
                         child: Button(
-                          content: const Icon(
+                          content: Icon(
                             Icons.chevron_right_rounded,
-                            color: Palette.white,
+                            color: index != size ? Palette.white : Palette.grey,
                             size: 40,
                           ),
-                          color: Palette.pink,
-                          callback: () {},
+                          color: index != size
+                              ? Theme.of(context).secondaryHeaderColor
+                              : Palette.lightGrey,
+                          callback: () {
+                            if (index < size) {
+                              Sfx.play("sfx/plip.mp3", 1);
+                              setState(() {
+                                index += 1;
+                              });
+                            } else {
+                              Sfx.play("sfx/done.mp3", 1);
+                              AwesomeDialog(
+                                context: context,
+                                headerAnimationLoop: false,
+                                dialogType: DialogType.success,
+                                animType: AnimType.rightSlide,
+                                title: 'Leçon terminée',
+                                desc: 'Bravo ! Tu as terminé ta leçon.',
+                                btnCancelText: "Retour",
+                                btnCancelOnPress: () {
+                                  Navigator.pop(context);
+                                },
+                                btnOkText: "Suivant",
+                                btnOkOnPress: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => QuizTextImages(
+                                        subTheme: widget.subTheme,
+                                        user: widget.user,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ).show();
+                            }
+                          },
                           heigth: 60,
                           width: 60,
                         ),
@@ -167,30 +342,30 @@ class _LessonPage extends State<LessonPage> {
                                 alignment: const Alignment(0.01, 0.1),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
+                                  children: [
                                     Padding(
-                                      padding: EdgeInsets.only(top: 20),
+                                      padding: const EdgeInsets.only(top: 20),
                                       child: Text(
-                                        "(Nom,Masculin,Singulier)",
-                                        style: TextStyle(
+                                        lesson[index].article == "une"
+                                            ? "(Nom,Féminin,Singulier)"
+                                            : lesson[index].article == "de la"
+                                                ? "(Nom,Féminin,Singulier)"
+                                                : lesson[index].article == "des"
+                                                    ? "(Nom,Pluriels)"
+                                                    : "(Nom,Masculin,Singulier)",
+                                        style: const TextStyle(
                                             fontSize: 12,
                                             color: Colors.black45),
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(top: 10),
+                                      padding: const EdgeInsets.only(top: 10),
                                       child: Text(
-                                        "Un chien",
-                                        style: TextStyle(fontSize: 20),
+                                        "${lesson[index].article} ${lesson[index].mot}",
+                                        style: const TextStyle(
+                                            fontSize: 20, color: Palette.black),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        "/...../",
-                                        style: TextStyle(fontSize: 20),
-                                      ),
-                                    )
                                   ],
                                 )),
                           ),
@@ -203,13 +378,15 @@ class _LessonPage extends State<LessonPage> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Button(
-                        color: Palette.pink,
+                        color: Theme.of(context).secondaryHeaderColor,
                         content: const Icon(
                           Icons.volume_up,
                           color: Palette.white,
                           size: 50,
                         ),
-                        callback: () {},
+                        callback: () {
+                          Voice.play(lesson[index].audio, 1);
+                        },
                         width: 100,
                         heigth: 100,
                       ),
@@ -222,7 +399,9 @@ class _LessonPage extends State<LessonPage> {
                       child: Button(
                         content: Image.asset("assets/themes_images/snail.png"),
                         color: Palette.blue,
-                        callback: () {},
+                        callback: () {
+                          Voice.play(lesson[index].audio, 0.75);
+                        },
                         heigth: 35,
                         width: 35,
                       ),

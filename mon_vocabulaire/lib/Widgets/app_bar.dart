@@ -33,7 +33,7 @@ class _AppBarHomeState extends State<AppBarHome> {
               widget.user.words_per_level[widget.user.current_level]! / 240,
           barRadius: const Radius.circular(100),
           progressColor: Palette.lightGreen,
-          backgroundColor: Palette.lightGrey,
+          backgroundColor: Theme.of(context).shadowColor,
           center: Text(
             "${widget.user.words_per_level[widget.user.current_level]}/240 mots",
             style: const TextStyle(

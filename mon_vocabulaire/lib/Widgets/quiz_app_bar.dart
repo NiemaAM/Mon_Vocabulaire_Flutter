@@ -7,11 +7,15 @@ class QuizAppBar extends StatefulWidget {
   final int chances;
   final int duration;
   final User user;
+  final int question;
+  final int size;
   const QuizAppBar(
       {super.key,
       required this.chances,
       this.duration = 0,
-      required this.user});
+      required this.user,
+      required this.question,
+      required this.size});
 
   @override
   State<QuizAppBar> createState() => _QuizAppBarState();
@@ -22,13 +26,14 @@ class _QuizAppBarState extends State<QuizAppBar> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.topCenter,
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Text(
-              "3/15",
-              style: TextStyle(color: Colors.black, fontSize: 16),
+              "${widget.question}/${widget.size}",
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
             ),
           ),
         ),
@@ -43,8 +48,12 @@ class _QuizAppBarState extends State<QuizAppBar> {
                 animationDuration: 0,
                 percent: widget.duration / 30,
                 barRadius: const Radius.circular(100),
-                progressColor: Palette.lightGreen,
-                backgroundColor: Palette.lightGrey,
+                progressColor: widget.duration >= 20
+                    ? Palette.lightGreen
+                    : widget.duration <= 10
+                        ? Palette.red
+                        : Palette.orange,
+                backgroundColor: Theme.of(context).shadowColor,
               ),
             ),
             Padding(

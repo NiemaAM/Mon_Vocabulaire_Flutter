@@ -37,6 +37,13 @@ dependencies:
   cupertino_icons: ^1.0.2
   percent_indicator: ^4.2.3
   image_picker: ^0.8.7+2
+  flutter_local_notifications: ^13.0.0
+  shared_preferences: ^2.1.0
+  flutter_svg: ^2.0.5
+  audioplayers: ^4.0.1
+  provider: ^6.0.5
+  awesome_dialog: ^3.0.2
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:
