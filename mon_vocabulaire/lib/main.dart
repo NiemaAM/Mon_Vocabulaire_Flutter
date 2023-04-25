@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Settings/settingsPage2.dart';
+import 'package:mon_vocabulaire/View/home.dart';
+
 import 'package:provider/provider.dart';
 import 'View/splash_screen.dart';
 import 'package:mon_vocabulaire/Provider/theme.provider.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
             themeMode: themeProvider.themeMode,
             theme: MyThemes.lightTheme,
             darkTheme: MyThemes.darkTheme,
-            home: const SettingsPage2(),
+            home: const SplashScreen(),
           );
         },
       );

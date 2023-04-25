@@ -5,7 +5,6 @@ import 'package:mon_vocabulaire/View/Account/profil.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
 import '../Widgets/app_bar.dart';
-import 'Themes/themes.dart';
 
 class Home extends StatefulWidget {
   final User user;
@@ -26,11 +25,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     setState(() {
-      page = [
-        Themes(user: widget.user),
-        Profil(user: widget.user),
-        Games(user: widget.user)
-      ];
+      page = [Profil(user: widget.user), Games(user: widget.user)];
     });
   }
 
