@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
 
-import '../../Widgets/Palette.dart';
+import '../../Widgets/palette.dart';
 import '../Settings/settings_page.dart';
 
 class Profil extends StatefulWidget {

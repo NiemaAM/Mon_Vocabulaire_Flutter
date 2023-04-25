@@ -5,7 +5,7 @@ import 'package:mon_vocabulaire/View/Account/profil.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import '../Services/audio_background.dart';
 import '../Widgets/app_bar.dart';
-import 'Themes/themes.dart';
+import 'package:mon_vocabulaire/View/Themes/themes.dart';
 
 class Home extends StatefulWidget {
   final User user;
