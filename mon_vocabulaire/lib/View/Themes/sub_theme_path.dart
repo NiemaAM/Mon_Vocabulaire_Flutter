@@ -99,6 +99,7 @@ class _LessonPathState extends State<LessonPath> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: color,
@@ -151,10 +152,10 @@ class _LessonPathState extends State<LessonPath> {
                         },
                         content: Image.asset(
                           "assets/themes_images/lesson.png",
-                          scale: 5,
+                          scale: width > 500 ? 4 : 5,
                         ),
-                        heigth: 150,
-                        width: 150,
+                        heigth: width > 500 ? 200 : 150,
+                        width: width > 500 ? 200 : 150,
                         radius: 200,
                         color: color),
                   ),
@@ -179,15 +180,15 @@ class _LessonPathState extends State<LessonPath> {
                           opacity: 0.8,
                           child: Image.asset(
                             "assets/themes_images/song.png",
-                            scale: 5,
+                            scale: width > 500 ? 4 : 5,
                           ),
                         ),
-                        heigth: 150,
-                        width: 150,
+                        heigth: width > 500 ? 200 : 150,
+                        width: width > 500 ? 200 : 150,
                         radius: 200,
                         color: Palette.white)),
                 Positioned(
-                  top: height / 3,
+                  top: height / 3.2,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: Align(
@@ -209,11 +210,11 @@ class _LessonPathState extends State<LessonPath> {
                           opacity: 0.8,
                           child: Image.asset(
                             "assets/themes_images/images.png",
-                            scale: 5,
+                            scale: width > 500 ? 4 : 5,
                           ),
                         ),
-                        heigth: 150,
-                        width: 150,
+                        heigth: width > 500 ? 200 : 150,
+                        width: width > 500 ? 200 : 150,
                         radius: 200,
                         color: Palette.white,
                       ),
@@ -240,11 +241,11 @@ class _LessonPathState extends State<LessonPath> {
                       opacity: 0.8,
                       child: Image.asset(
                         "assets/themes_images/drag_and_drop.png",
-                        scale: 6,
+                        scale: width > 500 ? 5 : 6,
                       ),
                     ),
-                    heigth: 150,
-                    width: 150,
+                    heigth: width > 500 ? 200 : 150,
+                    width: width > 500 ? 200 : 150,
                     radius: 200,
                     color: Palette.white,
                   ),
@@ -269,11 +270,11 @@ class _LessonPathState extends State<LessonPath> {
                       opacity: 0.8,
                       child: Image.asset(
                         "assets/themes_images/lock.png",
-                        scale: 7,
+                        scale: width > 500 ? 6 : 7,
                       ),
                     ),
-                    heigth: 150,
-                    width: 150,
+                    heigth: width > 500 ? 200 : 150,
+                    width: width > 500 ? 200 : 150,
                     radius: 200,
                     color: Palette.white,
                     enabled: false,
