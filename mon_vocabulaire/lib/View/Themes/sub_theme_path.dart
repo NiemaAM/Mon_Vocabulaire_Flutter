@@ -134,7 +134,7 @@ class _LessonPathState extends State<LessonPath> {
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20),
+                  padding: EdgeInsets.only(left: width > 500 ? 40 : 20),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Button(
@@ -162,7 +162,7 @@ class _LessonPathState extends State<LessonPath> {
                 ),
                 Positioned(
                     top: height / 6,
-                    right: 0,
+                    right: width > 500 ? 20 : 0,
                     child: Button(
                         callback: () {
                           Sfx.play("sfx/plip.mp3", 1);
@@ -190,7 +190,7 @@ class _LessonPathState extends State<LessonPath> {
                 Positioned(
                   top: height / 3.2,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 20),
+                    padding: EdgeInsets.only(left: width > 500 ? 40 : 20),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Button(
@@ -223,7 +223,7 @@ class _LessonPathState extends State<LessonPath> {
                 ),
                 Positioned(
                   top: height / 2,
-                  right: 0,
+                  right: width > 500 ? 20 : 0,
                   child: Button(
                     callback: () {
                       Sfx.play("sfx/plip.mp3", 1);
@@ -251,7 +251,7 @@ class _LessonPathState extends State<LessonPath> {
                   ),
                 ),
                 Positioned(
-                  left: 20,
+                  left: width > 500 ? 40 : 20,
                   top: height / 1.6,
                   child: Button(
                     callback: () {
