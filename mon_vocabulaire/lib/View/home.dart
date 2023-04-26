@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/audio_BK.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/View/Games/jeux.dart';
 import 'package:mon_vocabulaire/View/Account/profil.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
-
+import '../Services/audio_background.dart';
 import '../Widgets/app_bar.dart';
 import 'Themes/themes.dart';
 
@@ -25,11 +24,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    Audio_BK.playBK();
-    // state object as an observer for app lifecycle events
-    WidgetsBinding.instance.addObserver(this);
-
     super.initState();
+    AudioBK.playBK();
+    WidgetsBinding.instance.addObserver(this);
     setState(() {
       page = [
         Themes(user: widget.user),
@@ -42,17 +39,15 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
-    Audio_BK.disposeBK();
+    AudioBK.pauseBK();
   }
 
-  // Override the didChangeAppLifecycleState method to listen for app lifecycle
-  // events and pause the audio player when the app enters the background
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      Audio_BK.pauseBK();
+      AudioBK.pauseBK();
     } else {
-      Audio_BK.playBK();
+      AudioBK.playBK();
     }
   }
 
@@ -91,7 +86,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     return Scaffold(
         appBar: _selectedIndex == 0 || _selectedIndex == 2
             ? AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.background,
                 automaticallyImplyLeading: false,
                 elevation: 1,
                 title: AppBarHome(user: widget.user),
@@ -99,6 +94,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             : null,
         body: page[_selectedIndex],
         bottomNavigationBar: BottomAppBar(
+          color: Theme.of(context).colorScheme.background,
           shape: const CircularNotchedRectangle(),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -107,7 +103,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
               IconButton(
                 icon: Icon(
                   Icons.home,
-                  color: _isHome ? Palette.pink : Colors.black45,
+                  color: _isHome
+                      ? Theme.of(context).secondaryHeaderColor
+                      : Theme.of(context).hoverColor,
                 ),
                 onPressed: () {
                   _onItemTapped(0);
@@ -115,8 +113,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
               ),
               const Expanded(flex: 3, child: SizedBox()),
               IconButton(
-                icon: Icon(Icons.gamepad,
-                    color: _isGames ? Palette.pink : Colors.black45),
+                icon: Icon(
+                  Icons.gamepad,
+                  color: _isGames
+                      ? Theme.of(context).secondaryHeaderColor
+                      : Theme.of(context).hoverColor,
+                ),
                 onPressed: () {
                   _onItemTapped(2);
                 },
