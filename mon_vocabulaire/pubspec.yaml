@@ -72,6 +72,7 @@ flutter:
     - assets/
     - assets/themes_images/
     - assets/images/
+    - assets/avatars/
     - assets/audios/
     - assets/sfx/
     - assets/mascotte/

@@ -83,7 +83,7 @@ class _LevelBlocState extends State<LevelBloc> {
                           center: Text(
                             widget.locked
                                 ? "0/240 mots"
-                                : "${widget.user.words_per_level[widget.user.current_level]!}/240 mots",
+                                : "${widget.user.words_per_level[widget.user.current_level]!} sur 240 mots",
                             style: TextStyle(
                               fontSize: 14.0,
                               color: widget.locked

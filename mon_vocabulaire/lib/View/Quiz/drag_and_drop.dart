@@ -488,6 +488,7 @@ class _DragAndDropState extends State<DragAndDrop> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    AudioBK.pauseBK();
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -601,9 +602,14 @@ class _DragAndDropState extends State<DragAndDrop> {
               left: 0,
               right: 0,
               child: Center(
-                  child: Image.asset(
-                reponse[1],
-                scale: 3,
+                  child: Padding(
+                padding: EdgeInsets.only(
+                  left: width / 3.5,
+                  right: width / 3.5,
+                ),
+                child: Image.asset(
+                  reponse[1],
+                ),
               ))),
 
           // Le Mot

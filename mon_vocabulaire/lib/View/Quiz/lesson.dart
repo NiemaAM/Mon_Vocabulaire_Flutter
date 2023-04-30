@@ -134,6 +134,7 @@ class _LessonPage extends State<LessonPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    AudioBK.pauseBK();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -150,7 +151,7 @@ class _LessonPage extends State<LessonPage> {
               progressColor: Palette.lightGreen,
               backgroundColor: Theme.of(context).shadowColor,
               center: Text(
-                "$index/$size mots",
+                "$index sur $size mots",
                 style: const TextStyle(
                   fontSize: 14.0,
                 ),
@@ -218,8 +219,8 @@ class _LessonPage extends State<LessonPage> {
                         child: Align(
                           alignment: Alignment.topCenter,
                           child: Container(
-                            height: width - 100,
-                            width: width - 100,
+                            height: height / 2.7,
+                            width: width / 1.3,
                             decoration: const BoxDecoration(
                               color: Palette.white,
                               borderRadius:
@@ -233,18 +234,17 @@ class _LessonPage extends State<LessonPage> {
                               ],
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(20),
+                              padding: const EdgeInsets.all(40),
                               child: Image.asset(
                                 lesson[index].image,
-                                scale: 3,
                               ),
                             ),
                           ),
                         ),
                       ),
                       Positioned(
-                        top: width / 3,
-                        left: 20,
+                        top: height / 5,
+                        left: width > 500 ? width / 13 : 15,
                         child: Button(
                           content: Icon(
                             Icons.chevron_left_rounded,
@@ -267,8 +267,8 @@ class _LessonPage extends State<LessonPage> {
                         ),
                       ),
                       Positioned(
-                        top: width / 3,
-                        right: 20,
+                        top: height / 5,
+                        right: width > 500 ? width / 13 : 15,
                         child: Button(
                           content: Icon(
                             Icons.chevron_right_rounded,
@@ -324,8 +324,8 @@ class _LessonPage extends State<LessonPage> {
                       child: Stack(
                         children: [
                           Container(
-                            height: width - 150,
-                            width: width - 80,
+                            height: height / 3.8,
+                            width: width / 1.3,
                             decoration: const BoxDecoration(
                               color: Palette.white,
                               borderRadius:
@@ -374,7 +374,7 @@ class _LessonPage extends State<LessonPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: height / 10),
+                    padding: EdgeInsets.only(top: height / 8),
                     child: Align(
                       alignment: Alignment.center,
                       child: Button(
@@ -393,7 +393,7 @@ class _LessonPage extends State<LessonPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 70, top: height / 5),
+                    padding: EdgeInsets.only(left: 70, top: height / 4.5),
                     child: Align(
                       alignment: Alignment.center,
                       child: Button(

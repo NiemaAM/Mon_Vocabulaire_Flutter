@@ -489,6 +489,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    AudioBK.pauseBK();
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -614,10 +615,15 @@ class _QuizTextImagesState extends State<QuizTextImages> {
           ),
           Align(
             alignment: AlignmentDirectional.bottomEnd,
-            child: SizedBox(
-              height: height / 1.9,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  top: width > 500 ? height / 3.7 : height / 2.7),
               child: GridView.count(
                 crossAxisCount: 2,
+                padding: EdgeInsets.only(
+                    left: width > 500 ? 60 : 0,
+                    right: width > 500 ? 60 : 0,
+                    top: width > 500 ? 60 : 0),
                 children: List.generate(
                   mots.length,
                   (int index) {
@@ -671,8 +677,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                             }
                           }
                         },
-                        heigth: width / 2.2,
-                        width: width / 2.2,
+                        heigth: width > 500 ? width / 2.8 : width / 2.2,
+                        width: width > 500 ? width / 2.8 : width / 2.2,
                         radius: 30,
                       ),
                     );

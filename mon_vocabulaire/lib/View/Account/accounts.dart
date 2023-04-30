@@ -19,7 +19,7 @@ class _AccountsState extends State<Accounts> {
   User user_salam = User(
       id: 1,
       name: "salma",
-      image: "https://cdn-icons-png.flaticon.com/512/3371/3371919.png",
+      image: "assets/avatars/avatar_girl.png",
       current_level: 1,
       words_per_level: {1: 120},
       coins: 20,
@@ -116,7 +116,7 @@ class _AccountsState extends State<Accounts> {
   User user_mehdi = User(
       id: 2,
       name: "mehdi",
-      image: "https://cdn-icons-png.flaticon.com/512/3371/3371822.png",
+      image: "assets/avatars/avatar_boy.png",
       current_level: 2,
       words_per_level: {1: 40, 2: 200},
       coins: 120,
