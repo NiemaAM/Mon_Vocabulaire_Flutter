@@ -10,7 +10,7 @@ class BubbleMessage extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     return SizedBox(
       width: width,
-      height: 150,
+      height: width > 500 ? 150 : width / 2,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Row(

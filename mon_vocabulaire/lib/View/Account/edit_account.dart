@@ -58,7 +58,7 @@ class _EditAccountState extends State<EditAccount> {
                       : CircleAvatar(
                           radius: 100,
                           backgroundColor: Palette.blue,
-                          backgroundImage: NetworkImage(widget.user.image),
+                          backgroundImage: AssetImage(widget.user.image),
                         ),
                   Positioned(
                     bottom: 15,

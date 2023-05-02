@@ -99,6 +99,7 @@ class _LessonPathState extends State<LessonPath> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: color,
@@ -133,7 +134,7 @@ class _LessonPathState extends State<LessonPath> {
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20),
+                  padding: EdgeInsets.only(left: width > 500 ? 40 : 10),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Button(
@@ -151,17 +152,17 @@ class _LessonPathState extends State<LessonPath> {
                         },
                         content: Image.asset(
                           "assets/themes_images/lesson.png",
-                          scale: 5,
+                          scale: width > 500 ? 4 : 5,
                         ),
-                        heigth: 150,
-                        width: 150,
+                        heigth: width > 500 ? 200 : 150,
+                        width: width > 500 ? 200 : 150,
                         radius: 200,
                         color: color),
                   ),
                 ),
                 Positioned(
                     top: height / 6,
-                    right: 0,
+                    right: width > 500 ? 40 : 10,
                     child: Button(
                         callback: () {
                           Sfx.play("sfx/plip.mp3", 1);
@@ -179,47 +180,50 @@ class _LessonPathState extends State<LessonPath> {
                           opacity: 0.8,
                           child: Image.asset(
                             "assets/themes_images/song.png",
-                            scale: 5,
+                            scale: width > 500 ? 4 : 5,
                           ),
                         ),
-                        heigth: 150,
-                        width: 150,
+                        heigth: width > 500 ? 200 : 150,
+                        width: width > 500 ? 200 : 150,
                         radius: 200,
                         color: Palette.white)),
-                Padding(
-                  padding: const EdgeInsets.only(top: 250, left: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Button(
-                      callback: () {
-                        Sfx.play("sfx/plip.mp3", 1);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => QuizImageTexts(
-                              subTheme: widget.subTheme,
-                              user: widget.user,
+                Positioned(
+                  top: height / 3.2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: width > 500 ? 40 : 10),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Button(
+                        callback: () {
+                          Sfx.play("sfx/plip.mp3", 1);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuizImageTexts(
+                                subTheme: widget.subTheme,
+                                user: widget.user,
+                              ),
                             ),
+                          );
+                        },
+                        content: Opacity(
+                          opacity: 0.8,
+                          child: Image.asset(
+                            "assets/themes_images/images.png",
+                            scale: width > 500 ? 4 : 5,
                           ),
-                        );
-                      },
-                      content: Opacity(
-                        opacity: 0.8,
-                        child: Image.asset(
-                          "assets/themes_images/images.png",
-                          scale: 5,
                         ),
+                        heigth: width > 500 ? 200 : 150,
+                        width: width > 500 ? 200 : 150,
+                        radius: 200,
+                        color: Palette.white,
                       ),
-                      heigth: 150,
-                      width: 150,
-                      radius: 200,
-                      color: Palette.white,
                     ),
                   ),
                 ),
                 Positioned(
-                  top: 360,
-                  right: 0,
+                  top: height / 2.15,
+                  right: width > 500 ? 40 : 10,
                   child: Button(
                     callback: () {
                       Sfx.play("sfx/plip.mp3", 1);
@@ -237,18 +241,18 @@ class _LessonPathState extends State<LessonPath> {
                       opacity: 0.8,
                       child: Image.asset(
                         "assets/themes_images/drag_and_drop.png",
-                        scale: 6,
+                        scale: width > 500 ? 5 : 6,
                       ),
                     ),
-                    heigth: 150,
-                    width: 150,
+                    heigth: width > 500 ? 200 : 150,
+                    width: width > 500 ? 200 : 150,
                     radius: 200,
                     color: Palette.white,
                   ),
                 ),
                 Positioned(
-                  bottom: 20,
-                  left: 20,
+                  left: width > 500 ? 40 : 10,
+                  top: height / 1.6,
                   child: Button(
                     callback: () {
                       Sfx.play("sfx/plip.mp3", 1);
@@ -266,11 +270,11 @@ class _LessonPathState extends State<LessonPath> {
                       opacity: 0.8,
                       child: Image.asset(
                         "assets/themes_images/lock.png",
-                        scale: 7,
+                        scale: width > 500 ? 6 : 7,
                       ),
                     ),
-                    heigth: 150,
-                    width: 150,
+                    heigth: width > 500 ? 200 : 150,
+                    width: width > 500 ? 200 : 150,
                     radius: 200,
                     color: Palette.white,
                     enabled: false,

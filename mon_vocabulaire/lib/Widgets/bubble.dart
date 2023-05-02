@@ -86,9 +86,11 @@ class _BubbleState extends State<Bubble> {
                           Radius.circular(50),
                         ),
                       ),
-                      child: Image.asset(
-                        widget.image,
-                        scale: width < 500 ? 6 : 3,
+                      child: Padding(
+                        padding: EdgeInsets.all(width > 500 ? 15 : 5),
+                        child: Image.asset(
+                          widget.image,
+                        ),
                       ),
                     ),
                   ),

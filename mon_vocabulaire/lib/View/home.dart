@@ -138,7 +138,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   radius: 50.0,
                   backgroundColor: Palette.blue,
                   child: ClipOval(
-                    child: Image.network(
+                    child: Image.asset(
                       widget.user
                           .image, //TODO: change this to images from gallery
                       fit: BoxFit.cover,

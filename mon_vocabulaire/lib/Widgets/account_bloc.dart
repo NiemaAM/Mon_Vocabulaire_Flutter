@@ -42,14 +42,16 @@ class _AccountBlocState extends State<AccountBloc> {
                     children: [
                       Text(
                         widget.user.coins.toString(),
-                        style: const TextStyle(color: Palette.yellow),
+                        style: TextStyle(
+                            color: Palette.yellow,
+                            fontSize: width > 500 ? 18 : 14),
                       ),
-                      const SizedBox(
-                        width: 8,
+                      SizedBox(
+                        width: width > 500 ? 4 : 8,
                       ),
                       Image.asset(
                         'assets/themes_images/coin.png',
-                        scale: 25,
+                        scale: width > 500 ? 15 : 25,
                       ),
                     ],
                   )),
@@ -58,7 +60,7 @@ class _AccountBlocState extends State<AccountBloc> {
                   Padding(
                     padding: EdgeInsets.only(bottom: width / 25),
                     child: LinearPercentIndicator(
-                      width: width - 110,
+                      width: width > 500 ? width - 130 : width - 110,
                       animation: true,
                       lineHeight: width / 17,
                       animationDuration: 1000,
@@ -69,7 +71,7 @@ class _AccountBlocState extends State<AccountBloc> {
                       progressColor: Palette.lightGreen,
                       backgroundColor: Palette.lightGrey,
                       center: Text(
-                        "${widget.user.words_per_level[widget.user.current_level]}/240 mots",
+                        "${widget.user.words_per_level[widget.user.current_level]} sur 240 mots",
                         style: const TextStyle(
                           fontSize: 14.0,
                           color: Colors.white,
@@ -80,37 +82,39 @@ class _AccountBlocState extends State<AccountBloc> {
                   Row(
                     children: [
                       CircleAvatar(
-                        radius: width / 11,
+                        radius: width > 500 ? width / 9 : width / 11,
                         backgroundColor: Palette.blue,
                         child: ClipOval(
-                          child: Image.network(
+                          child: Image.asset(
                             widget.user.image,
                             fit: BoxFit.cover,
-                            width: width / 4,
-                            height: width / 4,
                           ),
                         ),
                       ),
+                      const Expanded(child: SizedBox()),
                       Padding(
-                        padding: const EdgeInsets.only(left: 50),
+                        padding: const EdgeInsets.only(right: 50),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               widget.user.name,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Palette.white,
                                   fontSize: width / 20,
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              "Niveau ${(widget.user.current_level).toString()} - CE${widget.user.current_level.toString()}",
+                              "Niveau ${(widget.user.current_level).toString()} - ${widget.user.current_level.toString()}AEP",
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Palette.white, fontSize: width / 25),
                             ),
                           ],
                         ),
                       ),
+                      const Expanded(child: SizedBox()),
                     ],
                   ),
                 ],

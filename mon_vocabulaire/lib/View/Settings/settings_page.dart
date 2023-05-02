@@ -232,7 +232,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   radius: width / 5,
                   backgroundColor: Palette.blue,
                   child: ClipOval(
-                    child: Image.network(
+                    child: Image.asset(
                       widget.user.image,
                     ),
                   ),
