@@ -15,6 +15,9 @@ import '../../Services/sfx.dart';
 import '../../Services/voice.dart';
 import '../../Widgets/round_icon_widget.dart';
 import '../Account/edit_account.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
+import 'dart:math';
 
 class SettingsPage extends StatefulWidget {
   final User user;
@@ -25,6 +28,12 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final myController = TextEditingController();
+  String captchaValue = '';
+  String captchaImagePath = '';
+  bool captchaVerified = false;
+  Map<String, dynamic> captchaData = {};
+
   bool notifOn = false;
   bool darkOn = false;
   bool soundOn = true;
@@ -95,6 +104,95 @@ class _SettingsPageState extends State<SettingsPage> {
     Voice.volume(voiceVolume);
   }
 
+  Future<void> loadCaptchaData() async {
+    // Load the captcha data from a local JSON file
+    String captchaDataJson =
+        await rootBundle.loadString('assets/captcha_data.json');
+    captchaData = json.decode(captchaDataJson);
+    // Generate a new captcha image
+    generateCaptchaImage();
+  }
+
+  void generateCaptchaImage() {
+    // Generate a random captcha image code
+    List<String> captchaCodes = captchaData.keys.toList();
+    // final Random random = Random();
+    String captchaCode =
+        captchaCodes[new Random().nextInt(captchaCodes.length)];
+
+    captchaValue = captchaData[captchaCode];
+    print("$captchaValue");
+
+    // Load the corresponding captcha image from assets
+    captchaImagePath = 'assets/captcha/$captchaCode.png';
+  }
+
+  void verifyCaptcha(String input) {
+    // Verify the user's input against the captcha value
+    captchaVerified = input == captchaValue;
+
+    if (captchaVerified) {
+      AwesomeDialog(
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        context: context,
+        headerAnimationLoop: false,
+        dialogType: DialogType.success,
+        animType: AnimType.rightSlide,
+        body: Center(
+            child: Column(
+          children: [
+            Text(
+              'Verrouillage Parental',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Compte supprimé'),
+            ),
+          ],
+        )),
+      ).show();
+    } else {
+      AwesomeDialog(
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        context: context,
+        headerAnimationLoop: false,
+        dialogType: DialogType.error,
+        animType: AnimType.rightSlide,
+        body: Center(
+            child: Column(
+          children: [
+            Text(
+              'Verrouillage Parental',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Code erroné. Entrez le code affiché ci-dessous :'),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(captchaImagePath),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(hintText: 'Entrez le code ici'),
+                controller: myController,
+              ),
+            ),
+          ],
+        )),
+        btnCancelText: "Vérifier",
+        btnCancelOnPress: () {
+          verifyCaptcha(myController.text);
+          myController.clear();
+        },
+      ).show();
+    }
+    ;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -103,12 +201,14 @@ class _SettingsPageState extends State<SettingsPage> {
     getSfxVolume();
     getVoiceVolume();
     getTheme();
+    loadCaptchaData();
   }
 
   @override
   void dispose() {
     super.dispose();
     Sfx.play("sfx/pop.mp3", 1);
+    myController.dispose();
   }
 
   @override
@@ -551,19 +651,61 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   onTap: () {
                     AwesomeDialog(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      context: context,
-                      headerAnimationLoop: false,
-                      dialogType: DialogType.warning,
-                      animType: AnimType.rightSlide,
-                      title: 'Cette action est irréversible',
-                      desc:
-                          'Êtes-vous certain de vouloir supprimer ce compte ?',
-                      btnCancelText: "Supprimer",
-                      btnCancelOnPress: () {},
-                      btnOkText: "Anuler",
-                      btnOkOnPress: () {},
-                    ).show();
+                            padding: const EdgeInsets.only(left: 15, right: 15),
+                            context: context,
+                            headerAnimationLoop: false,
+                            dialogType: DialogType.warning,
+                            animType: AnimType.rightSlide,
+                            title: 'Cette action est irréversible',
+                            desc:
+                                'Êtes-vous certain de vouloir supprimer ce compte ?',
+                            btnCancelText: "Supprimer",
+                            btnCancelOnPress: () {
+                              AwesomeDialog(
+                                padding:
+                                    const EdgeInsets.only(left: 15, right: 15),
+                                context: context,
+                                headerAnimationLoop: false,
+                                dialogType: DialogType.noHeader,
+                                animType: AnimType.rightSlide,
+                                body: Center(
+                                    child: Column(
+                                  children: [
+                                    Text(
+                                      'Verrouillage Parental',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                          'Entrez le code affiché ci-dessous :'),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Image.asset(captchaImagePath),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextField(
+                                        decoration: InputDecoration(
+                                            hintText: 'Entrez le code ici'),
+                                        controller: myController,
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                                btnCancelText: "Vérifier",
+                                btnCancelOnPress: () {
+                                  verifyCaptcha(myController.text);
+                                  myController.clear();
+                                },
+                              ).show();
+                            },
+                            btnOkText: "Annuler",
+                            btnOkOnPress: () {})
+                        .show();
                   },
                 ),
               ],
