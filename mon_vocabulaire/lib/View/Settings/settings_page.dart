@@ -1,8 +1,12 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mon_vocabulaire/Providers/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
 import 'package:mon_vocabulaire/View/Account/accounts.dart';
@@ -25,6 +29,12 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final myController = TextEditingController();
+  String captchaValue = '';
+  String captchaImagePath = '';
+  bool captchaVerified = false;
+  Map<String, dynamic> captchaData = {};
+
   bool notifOn = false;
   bool darkOn = false;
   bool soundOn = true;
@@ -95,6 +105,99 @@ class _SettingsPageState extends State<SettingsPage> {
     Voice.volume(voiceVolume);
   }
 
+  Future<void> loadCaptchaData() async {
+    // Load the captcha data from a local JSON file
+    String captchaDataJson =
+        await rootBundle.loadString('assets/captcha_data.json');
+    captchaData = json.decode(captchaDataJson);
+    // Generate a new captcha image
+    generateCaptchaImage();
+  }
+
+  void generateCaptchaImage() {
+    // Generate a random captcha image code
+    List<String> captchaCodes = captchaData.keys.toList();
+    // final Random random = Random();
+    String captchaCode = captchaCodes[Random().nextInt(captchaCodes.length)];
+
+    captchaValue = captchaData[captchaCode];
+    // Load the corresponding captcha image from assets
+    captchaImagePath = 'assets/captcha/$captchaCode.png';
+  }
+
+  void verifyCaptcha(String input) {
+    // Verify the user's input against the captcha value
+    captchaVerified = input == captchaValue;
+    generateCaptchaImage();
+
+    if (captchaVerified) {
+      AwesomeDialog(
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        context: context,
+        headerAnimationLoop: false,
+        dialogType: DialogType.success,
+        animType: AnimType.rightSlide,
+        body: Center(
+            child: Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 30),
+          child: Column(
+            children: const [
+              Text(
+                'Verrouillage Parental',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Compte supprimé'),
+              ),
+            ],
+          ),
+        )),
+      ).show();
+    } else {
+      AwesomeDialog(
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        context: context,
+        headerAnimationLoop: false,
+        dialogType: DialogType.error,
+        animType: AnimType.rightSlide,
+        body: Center(
+            child: Column(
+          children: [
+            const Text(
+              'Verrouillage Parental',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Code erroné.\nEntrez le code affiché ci-dessous :',
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(captchaImagePath),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration:
+                    const InputDecoration(hintText: 'Entrez le code ici'),
+                controller: myController,
+              ),
+            ),
+          ],
+        )),
+        btnCancelText: "Vérifier",
+        btnCancelOnPress: () {
+          verifyCaptcha(myController.text);
+          myController.clear();
+        },
+      ).show();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -103,12 +206,14 @@ class _SettingsPageState extends State<SettingsPage> {
     getSfxVolume();
     getVoiceVolume();
     getTheme();
+    loadCaptchaData();
   }
 
   @override
   void dispose() {
     super.dispose();
     Sfx.play("sfx/pop.mp3", 1);
+    myController.dispose();
   }
 
   @override
@@ -551,19 +656,61 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   onTap: () {
                     AwesomeDialog(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      context: context,
-                      headerAnimationLoop: false,
-                      dialogType: DialogType.warning,
-                      animType: AnimType.rightSlide,
-                      title: 'Cette action est irréversible',
-                      desc:
-                          'Êtes-vous certain de vouloir supprimer ce compte ?',
-                      btnCancelText: "Supprimer",
-                      btnCancelOnPress: () {},
-                      btnOkText: "Anuler",
-                      btnOkOnPress: () {},
-                    ).show();
+                            padding: const EdgeInsets.only(left: 15, right: 15),
+                            context: context,
+                            headerAnimationLoop: false,
+                            dialogType: DialogType.warning,
+                            animType: AnimType.rightSlide,
+                            title: 'Cette action est irréversible',
+                            desc:
+                                'Êtes-vous certain de vouloir supprimer ce compte ?',
+                            btnCancelText: "Supprimer",
+                            btnCancelOnPress: () {
+                              AwesomeDialog(
+                                padding:
+                                    const EdgeInsets.only(left: 15, right: 15),
+                                context: context,
+                                headerAnimationLoop: false,
+                                dialogType: DialogType.noHeader,
+                                animType: AnimType.rightSlide,
+                                body: Center(
+                                    child: Column(
+                                  children: [
+                                    const Text(
+                                      'Verrouillage Parental',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                          'Entrez le code affiché ci-dessous :'),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Image.asset(captchaImagePath),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextField(
+                                        decoration: const InputDecoration(
+                                            hintText: 'Entrez le code ici'),
+                                        controller: myController,
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                                btnCancelText: "Vérifier",
+                                btnCancelOnPress: () {
+                                  verifyCaptcha(myController.text);
+                                  myController.clear();
+                                },
+                              ).show();
+                            },
+                            btnOkText: "Annuler",
+                            btnOkOnPress: () {})
+                        .show();
                   },
                 ),
               ],
