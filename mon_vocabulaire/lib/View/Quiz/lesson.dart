@@ -141,7 +141,7 @@ class _LessonPage extends State<LessonPage> {
           automaticallyImplyLeading: false,
           title: Center(
             child: LinearPercentIndicator(
-              width: width - 35,
+              width: width - 57,
               animation: false,
               lineHeight: 25.0,
               animationDuration: 1,
@@ -149,8 +149,14 @@ class _LessonPage extends State<LessonPage> {
               barRadius: const Radius.circular(100),
               progressColor: Palette.lightGreen,
               backgroundColor: Theme.of(context).shadowColor,
-              center: Text(
-                "$index/$size mots",
+              trailing: Text(
+                "$size",
+                style: const TextStyle(
+                  fontSize: 14.0,
+                ),
+              ),
+              leading: Text(
+                "$index",
                 style: const TextStyle(
                   fontSize: 14.0,
                 ),
