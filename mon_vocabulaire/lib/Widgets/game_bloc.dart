@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Games/ninja_bubble.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 
 import 'Palette.dart';
@@ -9,12 +8,14 @@ class GameBloc extends StatefulWidget {
   final String price;
   final String image;
   final Color color;
+  final Widget game; // game page
   const GameBloc(
       {super.key,
       required this.text,
       required this.price,
       required this.image,
-      required this.color});
+      required this.color,
+      required this.game});
 
   @override
   State<GameBloc> createState() => _GameBlocState();
@@ -30,7 +31,7 @@ class _GameBlocState extends State<GameBloc> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const NinjaBubble(),
+              builder: (context) => widget.game,
             ),
           );
         },

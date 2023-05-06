@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/View/Games/flip_card.dart';
+import 'package:mon_vocabulaire/View/Games/ninja_bubble.dart';
 import '../../Model/user.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/game_bloc.dart';
@@ -23,30 +25,34 @@ class _GamesState extends State<Games> {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         crossAxisCount: 2,
-        children: const [
-          GameBloc(
+        children: [
+          const GameBloc(
             color: Palette.lightBlue,
             image: "assets/themes_images/bubble.png",
             price: '20',
             text: "Jeu 1",
+            game: NinjaBubble(),
           ),
-          GameBloc(
+          const GameBloc(
             color: Palette.orange,
             image: "assets/themes_images/drag_and_drop.png",
             price: '120',
             text: "Jeu 2",
+            game: NinjaBubble(),
           ),
           GameBloc(
             color: Palette.lightGreen,
             image: "assets/themes_images/images.png",
             price: '50',
             text: "Jeu 3",
+            game: FlipCardGame(user: widget.user),
           ),
-          GameBloc(
+          const GameBloc(
             color: Palette.pink,
             image: "assets/themes_images/cloud.png",
             price: '80',
             text: "Jeu 4",
+            game: NinjaBubble(),
           ),
         ],
       ),
