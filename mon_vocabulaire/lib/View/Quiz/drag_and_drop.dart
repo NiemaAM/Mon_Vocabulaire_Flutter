@@ -133,7 +133,7 @@ class _DragAndDropState extends State<DragAndDrop> {
       questions = quest;
     });
     setState(() {
-      size = quizModel.getSize() - 1;
+      size = quizModel.getSize();
     });
     nextQuestion();
   }

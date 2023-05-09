@@ -1,8 +1,12 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mon_vocabulaire/Providers/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
@@ -117,12 +121,9 @@ class _SettingsPageState extends State<SettingsPage> {
     // Generate a random captcha image code
     List<String> captchaCodes = captchaData.keys.toList();
     // final Random random = Random();
-    String captchaCode =
-        captchaCodes[new Random().nextInt(captchaCodes.length)];
+    String captchaCode = captchaCodes[Random().nextInt(captchaCodes.length)];
 
     captchaValue = captchaData[captchaCode];
-    print("$captchaValue");
-
     // Load the corresponding captcha image from assets
     captchaImagePath = 'assets/captcha/$captchaCode.png';
   }
@@ -130,6 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
   void verifyCaptcha(String input) {
     // Verify the user's input against the captcha value
     captchaVerified = input == captchaValue;
+    generateCaptchaImage();
 
     if (captchaVerified) {
       AwesomeDialog(
@@ -139,16 +141,20 @@ class _SettingsPageState extends State<SettingsPage> {
         dialogType: DialogType.success,
         animType: AnimType.rightSlide,
         body: Center(
-            child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                'Compte supprimé',
+            child: Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 30),
+          child: Column(
+            children: const [
+              Text(
+                'Verrouillage Parental',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
               ),
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Compte supprimé'),
+              ),
+            ],
+          ),
         )),
       ).show();
     } else {
@@ -161,15 +167,15 @@ class _SettingsPageState extends State<SettingsPage> {
         body: Center(
             child: Column(
           children: [
-            Text(
+            const Text(
               'Verrouillage Parental',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text(
-                'Code erroné. Entrez le code affiché ci-dessous :',
-                style: TextStyle(color: Colors.red),
+                'Code erroné.\nEntrez le code affiché ci-dessous :',
+                textAlign: TextAlign.center,
               ),
             ),
             Padding(
@@ -179,7 +185,8 @@ class _SettingsPageState extends State<SettingsPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                decoration: InputDecoration(hintText: 'Entrez le code ici'),
+                decoration:
+                    const InputDecoration(hintText: 'Entrez le code ici'),
                 controller: myController,
               ),
             ),
@@ -192,7 +199,6 @@ class _SettingsPageState extends State<SettingsPage> {
         },
       ).show();
     }
-    ;
   }
 
   @override
@@ -673,14 +679,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                 body: Center(
                                     child: Column(
                                   children: [
-                                    Text(
+                                    const Text(
                                       'Verrouillage Parental',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
                                       child: Text(
                                           'Entrez le code affiché ci-dessous :'),
                                     ),
@@ -691,7 +697,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: TextField(
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                             hintText: 'Entrez le code ici'),
                                         controller: myController,
                                       ),

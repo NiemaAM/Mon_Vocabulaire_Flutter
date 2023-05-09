@@ -111,7 +111,7 @@ class _LessonPage extends State<LessonPage> {
     List<Lesson> les = await quizModel.getLesson(theme, subTheme);
     setState(() {
       lesson = les;
-      size = quizModel.getSize() - 1;
+      size = quizModel.getLessonSize() - 1;
     });
   }
 
@@ -151,7 +151,7 @@ class _LessonPage extends State<LessonPage> {
               progressColor: Palette.lightGreen,
               backgroundColor: Theme.of(context).shadowColor,
               center: Text(
-                "$index sur $size mots",
+                "${index + 1} sur ${size + 1} mots",
                 style: const TextStyle(
                   fontSize: 14.0,
                 ),
