@@ -1,6 +1,7 @@
 // ignore_for_file: equal_keys_in_map
 
 import 'dart:async';
+import 'package:animator/animator.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/home.dart';
 import '../Model/user.dart';
@@ -162,14 +163,21 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               children: [
                 Container(
-                  width: 100,
-                  height: 100,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        // ignore: unnecessary_string_interpolations
-                        image: AssetImage("assets/logo.png"),
-                        fit: BoxFit.cover),
-                  ),
+                  width: 200,
+                  height: 200,
+                  child: Animator<double>(
+                      tween: Tween<double>(begin: 50, end: 300),
+                      duration: Duration(seconds: 3),
+                      cycles: 0,
+                      builder: (context, AnimatorState, child) => Center(
+                            child: Container(
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                height: AnimatorState.value,
+                                width: AnimatorState.value,
+                                child: Image(
+                                  image: AssetImage("assets/logo.png"),
+                                )),
+                          )),
                 ),
                 const Padding(
                   padding: EdgeInsets.all(10),

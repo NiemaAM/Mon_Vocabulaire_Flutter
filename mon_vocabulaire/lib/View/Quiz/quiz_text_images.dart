@@ -83,13 +83,13 @@ class _QuizTextImagesState extends State<QuizTextImages> {
       case 7:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Mammifères';
+          subTheme = 'Ferme';
         });
         break;
       case 8:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Oiseaux et autres';
+          subTheme = 'Forêt';
         });
         break;
       case 9:

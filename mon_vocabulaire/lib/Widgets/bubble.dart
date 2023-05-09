@@ -4,6 +4,7 @@ import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/star.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
+import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 
 class Bubble extends StatefulWidget {
   final String image;
@@ -46,12 +47,13 @@ class _BubbleState extends State<Bubble> {
         Button(
           callback: () {
             Sfx.play("sfx/plip.mp3", 1);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => widget.callback,
-              ),
-            );
+            Navigator.of(context).push(SizedSlide(Page: widget.callback));
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => widget.callback,
+            //   ),
+            // );
           },
           content: SizedBox(
             height: 140,

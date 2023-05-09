@@ -141,13 +141,12 @@ class _SettingsPageState extends State<SettingsPage> {
         body: Center(
             child: Column(
           children: [
-            Text(
-              'Verrouillage Parental',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Compte supprimé'),
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                'Compte supprimé',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+              ),
             ),
           ],
         )),
@@ -168,7 +167,10 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text('Code erroné. Entrez le code affiché ci-dessous :'),
+              child: Text(
+                'Code erroné. Entrez le code affiché ci-dessous :',
+                style: TextStyle(color: Colors.red),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Themes/sub_themes.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
+import 'package:animator/animator.dart';
 
 import '../../Model/user.dart';
 
@@ -24,6 +25,7 @@ class _ThemesState extends State<Themes> {
         child: Center(
           child: Column(
             children: [
+              ////
               Bubble(
                 image: "assets/themes_images/ecole.png",
                 nbStars: widget.user.stars_per_subtheme[5]! +
@@ -39,6 +41,7 @@ class _ThemesState extends State<Themes> {
                 color: Palette.ecole,
                 type: "theme",
               ),
+              ////
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -80,6 +83,7 @@ class _ThemesState extends State<Themes> {
                   const Expanded(child: SizedBox()),
                 ],
               ),
+
               CircleAvatar(
                 radius: width >= 500 ? 90 : 0,
                 backgroundColor: Colors.transparent,
@@ -87,6 +91,7 @@ class _ThemesState extends State<Themes> {
                   "assets/logo.png",
                 ),
               ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

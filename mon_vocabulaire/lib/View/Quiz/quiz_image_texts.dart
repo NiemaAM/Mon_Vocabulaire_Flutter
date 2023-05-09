@@ -82,13 +82,13 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
       case 7:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Mammifères';
+          subTheme = 'Ferme';
         });
         break;
       case 8:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Oiseaux et autres';
+          subTheme = 'Forêt';
         });
         break;
       case 9:
@@ -220,7 +220,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
             padding: const EdgeInsets.all(10),
             child: Text(
               chances == 3
-                  ? "Exellent travaille!"
+                  ? "Excellent travail!"
                   : chances == 2
                       ? "Bien joué!"
                       : "Bel effort!",
@@ -236,7 +236,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
               chances == 3
                   ? "Tu es un vrai champion!"
                   : chances == 2
-                      ? "Joli travaille, Continue comme ça!"
+                      ? "Joli travail, Continue comme ça!"
                       : "Pas mal, mais tu peux faire mieux!",
               style: const TextStyle(
                 fontSize: 16,

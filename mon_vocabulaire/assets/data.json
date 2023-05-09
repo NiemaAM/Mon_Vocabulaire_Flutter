@@ -597,8 +597,42 @@
             }
         }        
     },
+    
     "Animaux": {
-        "Oiseaux et autres": {
+
+        "Forêt": {
+          
+          "136": {
+            "article" : "une",
+            "mot" : "corne",
+            "code": 136
+        },
+        "137": {
+            "article" : "une",
+            "mot" : "écurie",
+            "code": 137
+        },
+        "138": {
+            "article" : "un",
+            "mot" : "éléphant",
+            "code": 138
+        },
+        "139": {
+            "article" : "une",
+            "mot" : "gazelle",
+            "code": 139
+        },
+        "140": {
+            "article" : "une",
+            "mot" : "girafe",
+            "code": 140
+        },
+        "141": {
+            "article" : "de la",
+            "mot" : "laine",
+            "code": 141
+        },
+       
             "117": {
                 "article": "des",
                 "mot": "ailes",
@@ -609,55 +643,10 @@
                 "mot": "bec",
                 "code": 118
             },
-            "119": {
-                "article": "un",
-                "mot": "canard",
-                "code": 119
-            },
-            "120": {
-                "article": "une",
-                "mot": "cigogne",
-                "code": 120
-            },
-            "121": {
-                "article": "un",
-                "mot": "coq",
-                "code": 121
-            },
-            "122": {
-                "article": "un",
-                "mot": "dindon",
-                "code": 122
-            },
-            "123": {
-                "article": "une",
-                "mot": "hirondelle",
-                "code": 123
-            },
-            "124": {
-                "article": "une",
-                "mot": "oie",
-                "code": 124
-            },
-            "125": {
-                "article": "un",
-                "mot": "oiseau",
-                "code": 125
-            },
             "126": {
                 "article": "un",
                 "mot": "poulailler",
                 "code": 126
-            },
-            "127": {
-                "article": "une",
-                "mot": "poule",
-                "code": 127
-            },
-            "128": {
-                "article": "un",
-                "mot": "poussin",
-                "code": 128
             },
             "150": {
               "article": "une",
@@ -684,18 +673,87 @@
               "mot": "moustique",
               "code": 154
             },
-            "155": {
-              "article": "un",
-              "mot": "poisson",
-              "code": 155
-            },
-            "156": {
-              "article": "une",
-              "mot": "tortue",
-              "code": 156
-            }
+            
+            "143": {
+              "article" : "un",
+              "mot" : "lion",
+              "code": 143
+          },
+          
+          "145": {
+            "article" : "une",
+            "mot" : "niche",
+            "code": 145
         },
-        "Mammifères" : {
+        "146": {
+            "article" : "une",
+            "mot" : "patte",
+            "code": 146
+        },
+        
+        "149": {
+          "article" : "un",
+          "mot" : "zèbre",
+          "code": 149
+      }
+        },
+        "Ferme" : {
+          
+          "155": {
+            "article": "un",
+            "mot": "poisson",
+            "code": 155
+          },
+          "156": {
+            "article": "une",
+            "mot": "tortue",
+            "code": 156
+          },
+          "127": {
+            "article": "une",
+            "mot": "poule",
+            "code": 127
+        },
+        "128": {
+            "article": "un",
+            "mot": "poussin",
+            "code": 128
+        },
+          "122": {
+            "article": "un",
+            "mot": "dindon",
+            "code": 122
+        },
+        "123": {
+            "article": "une",
+            "mot": "hirondelle",
+            "code": 123
+        },
+        "124": {
+            "article": "une",
+            "mot": "oie",
+            "code": 124
+        },
+        "125": {
+            "article": "un",
+            "mot": "oiseau",
+            "code": 125
+        },
+          "119": {
+            "article": "un",
+            "mot": "canard",
+            "code": 119
+        },
+        "120": {
+            "article": "une",
+            "mot": "cigogne",
+            "code": 120
+        },
+        "121": {
+            "article": "un",
+            "mot": "coq",
+            "code": 121
+        },
             "129": {
                 "article" : "un",
                 "mot" : "âne",
@@ -731,60 +789,15 @@
                 "mot" : "chien",
                 "code": 135
             },
-            "136": {
-                "article" : "une",
-                "mot" : "corne",
-                "code": 136
-            },
-            "137": {
-                "article" : "une",
-                "mot" : "écurie",
-                "code": 137
-            },
-            "138": {
-                "article" : "un",
-                "mot" : "éléphant",
-                "code": 138
-            },
-            "139": {
-                "article" : "une",
-                "mot" : "gazelle",
-                "code": 139
-            },
-            "140": {
-                "article" : "une",
-                "mot" : "girafe",
-                "code": 140
-            },
-            "141": {
-                "article" : "de la",
-                "mot" : "laine",
-                "code": 141
-            },
             "142": {
                 "article" : "un",
                 "mot" : "lapin",
                 "code": 142
             },
-            "143": {
-                "article" : "un",
-                "mot" : "lion",
-                "code": 143
-            },
             "144": {
                 "article" : "un",
                 "mot" : "mouton",
                 "code": 144
-            },
-            "145": {
-                "article" : "une",
-                "mot" : "niche",
-                "code": 145
-            },
-            "146": {
-                "article" : "une",
-                "mot" : "patte",
-                "code": 146
             },
             "147": {
                 "article" : "une",
@@ -795,14 +808,11 @@
                 "article" : "une",
                 "mot" : "vache",
                 "code": 148
-            },
-            "149": {
-                "article" : "un",
-                "mot" : "zèbre",
-                "code": 149
             }
         }
     },
+
+
     "Mon corps et mes habits": {
         "Mon corps" : {
             "157": {

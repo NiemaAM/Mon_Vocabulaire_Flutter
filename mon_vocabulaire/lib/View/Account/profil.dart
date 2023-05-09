@@ -4,6 +4,7 @@ import 'package:mon_vocabulaire/Widgets/levels.dart';
 
 import '../../Widgets/palette.dart';
 import '../Settings/settings_page.dart';
+import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 
 class Profil extends StatefulWidget {
   final User user;
@@ -23,14 +24,19 @@ class _ProfilState extends State<Profil> {
         elevation: 1,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SettingsPage(
-                  user: widget.user,
-                ),
+            Navigator.of(context).push(SlideRight(
+              Page: SettingsPage(
+                user: widget.user,
               ),
-            );
+            ));
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => SettingsPage(
+            //       user: widget.user,
+            //     ),
+            //   ),
+            // );
           },
           icon: const Icon(Icons.settings),
           tooltip: "Paramètres",

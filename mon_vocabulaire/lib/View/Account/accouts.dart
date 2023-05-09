@@ -1,10 +1,12 @@
 // ignore_for_file: file_names, equal_keys_in_map
 
 import 'package:flutter/material.dart';
+
 import 'package:mon_vocabulaire/View/Account/create_account.dart';
 import 'package:mon_vocabulaire/Widgets/account_bloc.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
+import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 
 import '../../Model/user.dart';
 
@@ -233,12 +235,7 @@ class _AccountsState extends State<Accounts> {
       ),
       floatingActionButton: Button(
         callback: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CreateAccount(),
-            ),
-          );
+          Navigator.of(context).push(SlideButtom(Page: CreateAccount()));
         },
         content: Row(
           children: const [

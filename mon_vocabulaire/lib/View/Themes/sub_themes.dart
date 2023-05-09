@@ -6,22 +6,26 @@ import '../../Model/user.dart';
 import '../../Services/sfx.dart';
 import '../../Widgets/message_mascotte.dart';
 import 'sub_theme_path.dart';
+import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 
 class SubThemes extends StatefulWidget {
   final String title;
   final int theme;
   final User user;
-  const SubThemes(
-      {super.key,
-      required this.title,
-      required this.theme,
-      required this.user});
+
+  const SubThemes({
+    super.key,
+    required this.title,
+    required this.theme,
+    required this.user,
+  });
 
   @override
   State<SubThemes> createState() => _SubThemesState();
 }
 
-class _SubThemesState extends State<SubThemes> {
+class _SubThemesState extends State<SubThemes>
+    with SingleTickerProviderStateMixin {
   List<String> images = ["", ""];
   String background = "";
   Color color = Palette.blue;
@@ -62,10 +66,10 @@ class _SubThemesState extends State<SubThemes> {
       });
     } else if (widget.theme == 4) {
       setState(() {
-        images[0] = "assets/themes_images/mammiferes.png";
-        images[1] = "assets/themes_images/oiseaux.png";
-        titles[0] = "Mammifères";
-        titles[1] = "Oiseaux et autres";
+        images[0] = "assets/images/122.png";
+        images[1] = "assets/themes_images/mammiferes.png";
+        titles[0] = "Ferme";
+        titles[1] = "Forêt";
         background = "forest";
         color = Palette.animaux;
         color2 = Palette.animaux2;
@@ -120,10 +124,16 @@ class _SubThemesState extends State<SubThemes> {
                 const Expanded(
                   child: SizedBox(),
                 ),
+
+                ///////////////////////////////////test///////////////////////////////
+                //AnimatedBuilder(),
+                //////////////////////////////////endTest/////////////////////////////
+
                 const BubbleMessage(
                   message:
                       "Salut, je suis ton compagnon Bubble ! Et je vais t'aider à apprendre le français.",
                 ),
+
                 Bubble(
                   hasShadow: true,
                   image: images[0],
