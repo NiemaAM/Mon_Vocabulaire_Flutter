@@ -133,7 +133,7 @@ class _DragAndDropState extends State<DragAndDrop> {
       questions = quest;
     });
     setState(() {
-      size = quizModel.getSize() - 1;
+      size = quizModel.getSize();
     });
     nextQuestion();
   }
@@ -150,6 +150,7 @@ class _DragAndDropState extends State<DragAndDrop> {
         question = questions[index].lettresQuestion;
         propositions = questions[index].lettresProposition;
         index += 1;
+        Voice.play(reponse[0], 1);
       });
     } else if (index < size) {
       clear();
@@ -162,6 +163,7 @@ class _DragAndDropState extends State<DragAndDrop> {
         correct = questions[index].lettresReponse;
         question = questions[index].lettresQuestion;
         propositions = questions[index].lettresProposition;
+        Voice.play(reponse[0], 1);
       });
     }
   }
@@ -348,8 +350,8 @@ class _DragAndDropState extends State<DragAndDrop> {
                 ],
               ),
               const Expanded(child: SizedBox()),
-              const Column(
-                children: [
+              Column(
+                children: const [
                   Icon(
                     Icons.arrow_upward_rounded,
                     size: 40,
@@ -481,13 +483,14 @@ class _DragAndDropState extends State<DragAndDrop> {
   void dispose() {
     super.dispose();
     Sfx.play("sfx/pop.mp3", 1);
-    AudioBK.playBK();
+    //AudioBK.playBK();
   }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    AudioBK.pauseBK();
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -539,6 +542,7 @@ class _DragAndDropState extends State<DragAndDrop> {
                                 desc: 'Es-tu sûr(e) de vouloir quitter ?',
                                 btnCancelText: "Quitter",
                                 btnCancelOnPress: () {
+                                  AudioBK.playBK();
                                   Navigator.pop(context);
                                 },
                                 btnOkText: "Rester",
@@ -601,9 +605,14 @@ class _DragAndDropState extends State<DragAndDrop> {
               left: 0,
               right: 0,
               child: Center(
-                  child: Image.asset(
-                reponse[1],
-                scale: 3,
+                  child: Padding(
+                padding: EdgeInsets.only(
+                  left: width / 3.5,
+                  right: width / 3.5,
+                ),
+                child: Image.asset(
+                  reponse[1],
+                ),
               ))),
 
           // Le Mot

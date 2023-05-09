@@ -35,7 +35,7 @@ class _AppBarHomeState extends State<AppBarHome> {
           progressColor: Palette.lightGreen,
           backgroundColor: Theme.of(context).shadowColor,
           center: Text(
-            "${widget.user.words_per_level[widget.user.current_level]}/240 mots",
+            "${widget.user.words_per_level[widget.user.current_level]} sur 240 mots",
             style: const TextStyle(
               fontSize: 14,
               color: Colors.white,

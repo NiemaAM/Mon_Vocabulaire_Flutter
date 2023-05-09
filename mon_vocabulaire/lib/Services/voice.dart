@@ -5,9 +5,9 @@ class Voice {
   static AudioPlayer voiceAudioPlayer = AudioPlayer();
 
   static Future<void> play(String name, double speed) async {
-    voiceAudioPlayer.setPlaybackRate(speed);
     await voiceAudioPlayer.setSource(AssetSource(name));
     voiceAudioPlayer.play(AssetSource(name));
+    voiceAudioPlayer.setPlaybackRate(speed);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final double? voiceVolume = prefs.getDouble('voiceVolume');
     voiceAudioPlayer.setVolume(voiceVolume ?? 1);

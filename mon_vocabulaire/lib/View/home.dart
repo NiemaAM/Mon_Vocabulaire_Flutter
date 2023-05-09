@@ -4,6 +4,7 @@ import 'package:mon_vocabulaire/View/Games/jeux.dart';
 import 'package:mon_vocabulaire/View/Account/profil.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import '../Services/audio_background.dart';
+import '../Services/sfx.dart';
 import '../Widgets/app_bar.dart';
 import 'Themes/themes.dart';
 
@@ -46,6 +47,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
       AudioBK.pauseBK();
+      Sfx.pause();
     } else {
       AudioBK.playBK();
     }
@@ -138,7 +140,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   radius: 50.0,
                   backgroundColor: Palette.blue,
                   child: ClipOval(
-                    child: Image.network(
+                    child: Image.asset(
                       widget.user
                           .image, //TODO: change this to images from gallery
                       fit: BoxFit.cover,

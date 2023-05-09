@@ -19,23 +19,30 @@ class _ProfilState extends State<Profil> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Mon Profil"),
-        elevation: 1,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SettingsPage(
-                  user: widget.user,
-                ),
+          title: const Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text("Mon Profil"),
+          ),
+          elevation: 1,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingsPage(
+                        user: widget.user,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.settings),
+                tooltip: "Paramètres",
               ),
-            );
-          },
-          icon: const Icon(Icons.settings),
-          tooltip: "Paramètres",
-        ),
-      ),
+            ),
+          ]),
       body: ListView(
         children: [
           Padding(
@@ -44,7 +51,7 @@ class _ProfilState extends State<Profil> {
               radius: width / 5,
               backgroundColor: Palette.blue,
               child: ClipOval(
-                child: Image.network(
+                child: Image.asset(
                   widget.user.image, //TODO: change this to images from gallery
                   fit: BoxFit.cover,
                   width: width / 2.5,

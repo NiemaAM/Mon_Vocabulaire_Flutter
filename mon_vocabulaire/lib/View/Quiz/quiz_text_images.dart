@@ -171,6 +171,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
             .toList();
         correct = reponse[3];
         index += 1;
+        Voice.play(reponse[0], 1);
       });
     } else if (index < size) {
       setState(() {
@@ -188,6 +189,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
             .map((element) => element.toString())
             .toList();
         correct = reponse[3];
+        Voice.play(reponse[0], 1);
       });
     }
   }
@@ -482,13 +484,14 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   void dispose() {
     super.dispose();
     Sfx.play("sfx/pop.mp3", 1);
-    AudioBK.playBK();
+    //AudioBK.playBK();
   }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    AudioBK.pauseBK();
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -556,6 +559,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                     desc: 'Es-tu sûr(e) de vouloir quitter ?',
                                     btnCancelText: "Quitter",
                                     btnCancelOnPress: () {
+                                      AudioBK.playBK();
                                       Navigator.pop(context);
                                     },
                                     btnOkText: "Rester",
@@ -596,7 +600,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                     "assets/themes_images/snail.png"),
                                 color: Palette.pink,
                                 callback: () {
-                                  Voice.play(reponse[0], 0.75);
+                                  Voice.play(reponse[0], 0.65);
                                 },
                                 heigth: 35,
                                 width: 35,
@@ -614,10 +618,15 @@ class _QuizTextImagesState extends State<QuizTextImages> {
           ),
           Align(
             alignment: AlignmentDirectional.bottomEnd,
-            child: SizedBox(
-              height: height / 1.9,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  top: width > 500 ? height / 3.7 : height / 2.7),
               child: GridView.count(
                 crossAxisCount: 2,
+                padding: EdgeInsets.only(
+                    left: width > 500 ? 60 : 0,
+                    right: width > 500 ? 60 : 0,
+                    top: width > 500 ? 60 : 0),
                 children: List.generate(
                   mots.length,
                   (int index) {
@@ -671,8 +680,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                             }
                           }
                         },
-                        heigth: width / 2.2,
-                        width: width / 2.2,
+                        heigth: width > 500 ? width / 2.8 : width / 2.2,
+                        width: width > 500 ? width / 2.8 : width / 2.2,
                         radius: 30,
                       ),
                     );
