@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/star.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -12,6 +13,7 @@ class Bubble extends StatefulWidget {
   final Color color;
   final Widget callback;
   final String type;
+  final bool hasShadow;
   const Bubble(
       {super.key,
       required this.image,
@@ -20,8 +22,8 @@ class Bubble extends StatefulWidget {
       required this.text,
       required this.callback,
       required this.color,
-      required this.type
-      });
+      required this.type,
+      this.hasShadow = false});
 
   @override
   State<Bubble> createState() => _BubbleState();
@@ -43,6 +45,7 @@ class _BubbleState extends State<Bubble> {
       children: [
         Button(
           callback: () {
+            Sfx.play("sfx/plip.mp3", 1);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -90,7 +93,10 @@ class _BubbleState extends State<Bubble> {
                     ),
                   ),
                 ),
-                Star(nbStar: widget.nbStars,typebubble: widget.type,)
+                Star(
+                  nbStar: widget.nbStars,
+                  typebubble: widget.type,
+                )
               ],
             ),
           ),
@@ -101,15 +107,31 @@ class _BubbleState extends State<Bubble> {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 10),
-          child: SizedBox(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(19)),
+              boxShadow: [
+                BoxShadow(
+                  color: widget.hasShadow
+                      ? const Color.fromARGB(231, 255, 255, 255)
+                      : Colors.transparent,
+                  blurRadius: 40.0,
+                  spreadRadius: 20.0,
+                )
+              ],
+            ),
             width: 100,
             child: Align(
               alignment: Alignment.center,
               child: Text(
                 widget.text,
                 textAlign: TextAlign.center,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: widget.hasShadow
+                        ? Colors.black
+                        : Theme.of(context).colorScheme.onSurface),
               ),
             ),
           ),

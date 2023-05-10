@@ -36,7 +36,6 @@ class _CreateAccountState extends State<CreateAccount> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Créer un compte"),
-        backgroundColor: Palette.blue,
         elevation: 1,
       ),
       body: ListView(children: [

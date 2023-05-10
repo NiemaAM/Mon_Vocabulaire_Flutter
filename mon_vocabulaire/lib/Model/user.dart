@@ -8,8 +8,8 @@ class User {
   Map<int, int> words_per_level = {};
   Map<int, int> words_per_subtheme = {};
   Map<int, int> stars_per_subtheme = {};
-  int coins = 0;
   Map<int, Map<int, bool>> status_per_Subtheme = {};
+  int coins = 0;
 
   User(
       {required this.id,
@@ -19,7 +19,6 @@ class User {
       required this.words_per_level,
       required this.words_per_subtheme,
       required this.stars_per_subtheme,
-      required this.coins,
-      required this.status_per_Subtheme
-      });
+      required this.status_per_Subtheme,
+      required this.coins});
 }

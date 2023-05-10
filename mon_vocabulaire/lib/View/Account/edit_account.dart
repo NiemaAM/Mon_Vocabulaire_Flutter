@@ -39,7 +39,6 @@ class _EditAccountState extends State<EditAccount> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Modifier mon compte"),
-        backgroundColor: Palette.blue,
         elevation: 1,
       ),
       body: ListView(children: [

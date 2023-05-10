@@ -3,7 +3,7 @@ import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/View/Games/jeux.dart';
 import 'package:mon_vocabulaire/View/Account/profil.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
-
+import '../Services/audio_background.dart';
 import '../Widgets/app_bar.dart';
 import 'Themes/themes.dart';
 
@@ -15,7 +15,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with WidgetsBindingObserver {
   List<Widget> page = [];
   int _selectedIndex = 0;
   bool _isHome = true;
@@ -25,6 +25,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    AudioBK.playBK();
+    WidgetsBinding.instance.addObserver(this);
     setState(() {
       page = [
         Themes(user: widget.user),
@@ -32,6 +34,21 @@ class _HomeState extends State<Home> {
         Games(user: widget.user)
       ];
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    AudioBK.pauseBK();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      AudioBK.pauseBK();
+    } else {
+      AudioBK.playBK();
+    }
   }
 
   void _onItemTapped(int index) {
@@ -69,7 +86,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
         appBar: _selectedIndex == 0 || _selectedIndex == 2
             ? AppBar(
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.background,
                 automaticallyImplyLeading: false,
                 elevation: 1,
                 title: AppBarHome(user: widget.user),
@@ -77,6 +94,7 @@ class _HomeState extends State<Home> {
             : null,
         body: page[_selectedIndex],
         bottomNavigationBar: BottomAppBar(
+          color: Theme.of(context).colorScheme.background,
           shape: const CircularNotchedRectangle(),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -85,7 +103,9 @@ class _HomeState extends State<Home> {
               IconButton(
                 icon: Icon(
                   Icons.home,
-                  color: _isHome ? Palette.pink : Colors.black45,
+                  color: _isHome
+                      ? Theme.of(context).secondaryHeaderColor
+                      : Theme.of(context).hoverColor,
                 ),
                 onPressed: () {
                   _onItemTapped(0);
@@ -93,8 +113,12 @@ class _HomeState extends State<Home> {
               ),
               const Expanded(flex: 3, child: SizedBox()),
               IconButton(
-                icon: Icon(Icons.gamepad,
-                    color: _isGames ? Palette.pink : Colors.black45),
+                icon: Icon(
+                  Icons.gamepad,
+                  color: _isGames
+                      ? Theme.of(context).secondaryHeaderColor
+                      : Theme.of(context).hoverColor,
+                ),
                 onPressed: () {
                   _onItemTapped(2);
                 },

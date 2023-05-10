@@ -26,7 +26,8 @@ class _ThemesState extends State<Themes> {
             children: [
               Bubble(
                 image: "assets/themes_images/ecole.png",
-                nbStars: widget.user.stars_per_subtheme[5]! + widget.user.stars_per_subtheme[6]!,
+                nbStars: widget.user.stars_per_subtheme[5]! +
+                    widget.user.stars_per_subtheme[6]!,
                 stage: widget.user.words_per_subtheme[5]! +
                     widget.user.words_per_subtheme[6]!,
                 text: 'L’école',
@@ -35,7 +36,7 @@ class _ThemesState extends State<Themes> {
                   theme: 1,
                   user: widget.user,
                 ),
-                color: Palette.orange,
+                color: Palette.ecole,
                 type: "theme",
               ),
               Row(
@@ -44,7 +45,8 @@ class _ThemesState extends State<Themes> {
                   const Expanded(child: SizedBox()),
                   Bubble(
                     image: "assets/themes_images/maison.png",
-                    nbStars: widget.user.stars_per_subtheme[9]! + widget.user.stars_per_subtheme[10]!,
+                    nbStars: widget.user.stars_per_subtheme[9]! +
+                        widget.user.stars_per_subtheme[10]!,
                     stage: widget.user.words_per_subtheme[9]! +
                         widget.user.words_per_subtheme[10]!,
                     text: 'Maison et famille',
@@ -53,7 +55,7 @@ class _ThemesState extends State<Themes> {
                       theme: 2,
                       user: widget.user,
                     ),
-                    color: Palette.lightGreen,
+                    color: Palette.maison,
                     type: "theme",
                   ),
                   const Expanded(
@@ -62,7 +64,8 @@ class _ThemesState extends State<Themes> {
                   ),
                   Bubble(
                     image: "assets/themes_images/cuisine_et_aliments.png",
-                    nbStars: widget.user.stars_per_subtheme[11]! + widget.user.stars_per_subtheme[12]!,
+                    nbStars: widget.user.stars_per_subtheme[11]! +
+                        widget.user.stars_per_subtheme[12]!,
                     stage: widget.user.words_per_subtheme[11]! +
                         widget.user.words_per_subtheme[12]!,
                     text: 'Cuisine et aliments',
@@ -71,7 +74,7 @@ class _ThemesState extends State<Themes> {
                       theme: 3,
                       user: widget.user,
                     ),
-                    color: Palette.yellow,
+                    color: Palette.cuisine,
                     type: "theme",
                   ),
                   const Expanded(child: SizedBox()),
@@ -90,7 +93,8 @@ class _ThemesState extends State<Themes> {
                   const Expanded(child: SizedBox()),
                   Bubble(
                     image: "assets/themes_images/animaux.png",
-                    nbStars: widget.user.stars_per_subtheme[1]! + widget.user.stars_per_subtheme[2]!,
+                    nbStars: widget.user.stars_per_subtheme[1]! +
+                        widget.user.stars_per_subtheme[2]!,
                     stage: widget.user.words_per_subtheme[1]! +
                         widget.user.words_per_subtheme[2]!,
                     text: 'Animaux',
@@ -99,7 +103,7 @@ class _ThemesState extends State<Themes> {
                       theme: 4,
                       user: widget.user,
                     ),
-                    color: Palette.pink,
+                    color: Palette.animaux,
                     type: "theme",
                   ),
                   const Expanded(
@@ -108,7 +112,8 @@ class _ThemesState extends State<Themes> {
                   ),
                   Bubble(
                     image: "assets/themes_images/mes_habits.png",
-                    nbStars: widget.user.stars_per_subtheme[3]! + widget.user.stars_per_subtheme[4]!,
+                    nbStars: widget.user.stars_per_subtheme[3]! +
+                        widget.user.stars_per_subtheme[4]!,
                     stage: widget.user.words_per_subtheme[3]! +
                         widget.user.words_per_subtheme[4]!,
                     text: 'Mon corps et mes habits',
@@ -117,7 +122,7 @@ class _ThemesState extends State<Themes> {
                       theme: 5,
                       user: widget.user,
                     ),
-                    color: Palette.purple,
+                    color: Palette.corps,
                     type: "theme",
                   ),
                   const Expanded(child: SizedBox()),
@@ -125,7 +130,8 @@ class _ThemesState extends State<Themes> {
               ),
               Bubble(
                 image: "assets/themes_images/sports.png",
-                nbStars: widget.user.stars_per_subtheme[7]! + widget.user.stars_per_subtheme[8]!,
+                nbStars: widget.user.stars_per_subtheme[7]! +
+                    widget.user.stars_per_subtheme[8]!,
                 stage: widget.user.words_per_subtheme[7]! +
                     widget.user.words_per_subtheme[8]!,
                 text: 'Sports et loisirs',
@@ -134,7 +140,7 @@ class _ThemesState extends State<Themes> {
                   theme: 6,
                   user: widget.user,
                 ),
-                color: Palette.indigo,
+                color: Palette.sports,
                 type: "theme",
               ),
               const SizedBox(

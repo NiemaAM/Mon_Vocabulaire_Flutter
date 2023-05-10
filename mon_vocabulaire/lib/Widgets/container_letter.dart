@@ -3,11 +3,13 @@ class ContainerLetter extends StatefulWidget {
  String lettre;
  bool isReponse;
  bool isCorrect;
+ Color color;
    ContainerLetter({
     super.key,
     required this.lettre,
     required this.isReponse,
     this.isCorrect=false,
+    required this.color
   });
 
   @override

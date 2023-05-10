@@ -9,12 +9,15 @@ class GameBloc extends StatefulWidget {
   final String price;
   final String image;
   final Color color;
+  final Widget gameName;
+
   const GameBloc(
       {super.key,
       required this.text,
       required this.price,
       required this.image,
-      required this.color});
+      required this.color,
+      required this.gameName});
 
   @override
   State<GameBloc> createState() => _GameBlocState();
@@ -30,7 +33,7 @@ class _GameBlocState extends State<GameBloc> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const NinjaBubble(),
+              builder: (context) => widget.gameName,
             ),
           );
         },
