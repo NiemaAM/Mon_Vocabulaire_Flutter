@@ -62,7 +62,7 @@ class _FlipCardGameState extends State<FlipCardGame>
         setState(() {
           countdown--;
           if (countdown == 4) {
-            Sfx.play("sfx/race_start.mp3", 1);
+            Sfx.play("audios/sfx/race_start.mp3", 1);
           }
           if (countdown < 0) {
             duration--;

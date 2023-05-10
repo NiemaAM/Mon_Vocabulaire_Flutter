@@ -112,9 +112,9 @@ class _LessonPage extends State<LessonPage> {
     setState(() {
       lesson = les;
       if (quizModel.getSize() >= 10) {
-        size = 10;
+        size = 9;
       } else {
-        size = quizModel.getSize();
+        size = quizModel.getSize() - 1;
       }
     });
   }
@@ -156,7 +156,7 @@ class _LessonPage extends State<LessonPage> {
               progressColor: Palette.lightGreen,
               backgroundColor: Theme.of(context).shadowColor,
               center: Text(
-                "$index sur $size mots",
+                "${index + 1} sur ${size + 1} mots",
                 style: const TextStyle(
                   fontSize: 14.0,
                 ),

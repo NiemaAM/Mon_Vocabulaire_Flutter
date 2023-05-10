@@ -338,7 +338,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
               Column(
                 children: [
                   Image.asset(
-                    "assets/themes_images/coin.png",
+                    "assets/images/themes/coin.png",
                     scale: 13,
                   ),
                   const Text(
@@ -606,7 +606,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                               alignment: Alignment.center,
                               child: Button(
                                 content: Image.asset(
-                                    "assets/themes_images/snail.png"),
+                                    "assets/images/themes/snail.png"),
                                 color: Palette.pink,
                                 callback: () {
                                   Voice.play(reponse[0], 0.60);

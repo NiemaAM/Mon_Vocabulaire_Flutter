@@ -337,7 +337,7 @@ class _DragAndDropState extends State<DragAndDrop> {
               Column(
                 children: [
                   Image.asset(
-                    "assets/themes_images/coin.png",
+                    "assets/images/themes/coin.png",
                     scale: 13,
                   ),
                   const Text(
@@ -591,7 +591,7 @@ class _DragAndDropState extends State<DragAndDrop> {
                           alignment: Alignment.center,
                           child: Button(
                             content:
-                                Image.asset("assets/themes_images/snail.png"),
+                                Image.asset("assets/images/themes/snail.png"),
                             color: Palette.blue,
                             callback: () {
                               Voice.play(reponse[0], 0.65);

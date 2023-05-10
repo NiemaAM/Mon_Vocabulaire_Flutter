@@ -333,7 +333,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
               Column(
                 children: [
                   Image.asset(
-                    "assets/themes_images/coin.png",
+                    "assets/images/themes/coin.png",
                     scale: 13,
                   ),
                   const Text(
