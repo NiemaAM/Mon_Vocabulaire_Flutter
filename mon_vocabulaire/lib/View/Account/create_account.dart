@@ -55,8 +55,8 @@ class _CreateAccountState extends State<CreateAccount> {
                       : const CircleAvatar(
                           radius: 100,
                           backgroundColor: Palette.blue,
-                          backgroundImage: NetworkImage(
-                              'https://cdn-icons-png.flaticon.com/512/3371/3371919.png'),
+                          backgroundImage:
+                              AssetImage('assets/avatars/avatar_boy.png'),
                         ),
                   Positioned(
                     bottom: 15,

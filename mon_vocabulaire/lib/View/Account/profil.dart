@@ -44,7 +44,7 @@ class _ProfilState extends State<Profil> {
               radius: width / 5,
               backgroundColor: Palette.blue,
               child: ClipOval(
-                child: Image.network(
+                child: Image.asset(
                   widget.user.image, //TODO: change this to images from gallery
                   fit: BoxFit.cover,
                   width: width / 2.5,

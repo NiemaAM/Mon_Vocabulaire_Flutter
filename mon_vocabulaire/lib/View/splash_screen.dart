@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   User user = User(
       id: 1,
       name: "salma",
-      image: "https://cdn-icons-png.flaticon.com/512/3371/3371919.png",
+      image: "assets/avatars/avatar_girl.png",
       current_level: 1,
       words_per_level: {1: 120},
       coins: 20,
