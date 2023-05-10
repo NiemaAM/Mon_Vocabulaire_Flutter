@@ -114,7 +114,7 @@ class _QuizAppBarState extends State<QuizAppBar> {
                         width: 8,
                       ),
                       Image.asset(
-                        'assets/themes_images/coin.png',
+                        'assets/images/themes/coin.png',
                         scale: 20,
                       ),
                     ],
