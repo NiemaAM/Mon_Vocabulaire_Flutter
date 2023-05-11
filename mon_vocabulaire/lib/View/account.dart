@@ -1,7 +1,6 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/large_container.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
