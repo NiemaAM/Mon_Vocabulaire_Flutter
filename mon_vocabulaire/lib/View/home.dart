@@ -85,70 +85,102 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _selectedIndex == 0 || _selectedIndex == 2
-            ? AppBar(
-                backgroundColor: Theme.of(context).colorScheme.background,
-                automaticallyImplyLeading: false,
-                elevation: 1,
-                title: AppBarHome(user: widget.user),
-              )
-            : null,
-        body: page[_selectedIndex],
-        bottomNavigationBar: BottomAppBar(
-          color: Theme.of(context).colorScheme.background,
-          shape: const CircularNotchedRectangle(),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Expanded(child: SizedBox()),
-              IconButton(
-                icon: Icon(
-                  Icons.home,
-                  color: _isHome
-                      ? Theme.of(context).secondaryHeaderColor
-                      : Theme.of(context).hoverColor,
-                ),
-                onPressed: () {
-                  _onItemTapped(0);
-                },
+    return WillPopScope(
+      onWillPop: () async {
+        final shouldPop = await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text(
+                'Es-tu sûr(e) de vouloir quitter ?',
+                textAlign: TextAlign.center,
               ),
-              const Expanded(flex: 3, child: SizedBox()),
-              IconButton(
-                icon: Icon(
-                  Icons.gamepad,
-                  color: _isGames
-                      ? Theme.of(context).secondaryHeaderColor
-                      : Theme.of(context).hoverColor,
+              actionsAlignment: MainAxisAlignment.spaceBetween,
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('Oui'),
                 ),
-                onPressed: () {
-                  _onItemTapped(2);
-                },
-              ),
-              const Expanded(child: SizedBox()),
-            ],
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: const Text('Non'),
+                ),
+              ],
+            );
+          },
+        );
+        return shouldPop!;
+      },
+      child: Scaffold(
+          appBar: _selectedIndex == 0 || _selectedIndex == 2
+              ? AppBar(
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  automaticallyImplyLeading: false,
+                  elevation: 1,
+                  title: AppBarHome(user: widget.user),
+                )
+              : null,
+          body: page[_selectedIndex],
+          bottomNavigationBar: BottomAppBar(
+            color: Theme.of(context).colorScheme.background,
+            shape: const CircularNotchedRectangle(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Expanded(child: SizedBox()),
+                IconButton(
+                  icon: Icon(
+                    Icons.home,
+                    color: _isHome
+                        ? Theme.of(context).secondaryHeaderColor
+                        : Theme.of(context).hoverColor,
+                  ),
+                  onPressed: () {
+                    _onItemTapped(0);
+                  },
+                ),
+                const Expanded(flex: 3, child: SizedBox()),
+                IconButton(
+                  icon: Icon(
+                    Icons.gamepad,
+                    color: _isGames
+                        ? Theme.of(context).secondaryHeaderColor
+                        : Theme.of(context).hoverColor,
+                  ),
+                  onPressed: () {
+                    _onItemTapped(2);
+                  },
+                ),
+                const Expanded(child: SizedBox()),
+              ],
+            ),
           ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: _isProfil
-            ? null
-            : FloatingActionButton(
-                onPressed: () {
-                  _onItemTapped(1);
-                },
-                child: CircleAvatar(
-                  radius: 50.0,
-                  backgroundColor: Palette.blue,
-                  child: ClipOval(
-                    child: Image.asset(
-                      widget.user
-                          .image, //TODO: change this to images from gallery
-                      fit: BoxFit.cover,
-                      width: 100.0,
-                      height: 100.0,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: _isProfil
+              ? null
+              : FloatingActionButton(
+                  onPressed: () {
+                    _onItemTapped(1);
+                  },
+                  child: CircleAvatar(
+                    radius: 50.0,
+                    backgroundColor: Palette.blue,
+                    child: ClipOval(
+                      child: Image.asset(
+                        widget.user
+                            .image, //TODO: change this to images from gallery
+                        fit: BoxFit.cover,
+                        width: 100.0,
+                        height: 100.0,
+                      ),
                     ),
                   ),
-                ),
-              ));
+                )),
+    );
   }
 }

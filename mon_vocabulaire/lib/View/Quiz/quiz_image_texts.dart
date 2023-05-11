@@ -481,7 +481,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
   void dispose() {
     super.dispose();
     Sfx.play("sfx/pop.mp3", 1);
-    //AudioBK.playBK();
+    AudioBK.playBK();
   }
 
   @override
@@ -544,7 +544,6 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                     desc: 'Es-tu sûr(e) de vouloir quitter ?',
                                     btnCancelText: "Quitter",
                                     btnCancelOnPress: () {
-                                      AudioBK.playBK();
                                       Navigator.pop(context);
                                     },
                                     btnOkText: "Rester",
