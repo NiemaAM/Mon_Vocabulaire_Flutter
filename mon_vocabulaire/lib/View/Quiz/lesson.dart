@@ -70,13 +70,13 @@ class _LessonPage extends State<LessonPage> {
       case 7:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Mammifères';
+          subTheme = 'Ferme';
         });
         break;
       case 8:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Oiseaux et autres';
+          subTheme = 'Forêt';
         });
         break;
       case 9:
@@ -111,7 +111,11 @@ class _LessonPage extends State<LessonPage> {
     List<Lesson> les = await quizModel.getLesson(theme, subTheme);
     setState(() {
       lesson = les;
-      size = quizModel.getSize() - 1;
+      if (quizModel.getSize() >= 10) {
+        size = 9;
+      } else {
+        size = quizModel.getSize() - 1;
+      }
     });
   }
 
@@ -126,7 +130,7 @@ class _LessonPage extends State<LessonPage> {
   @override
   void dispose() {
     super.dispose();
-    Sfx.play("sfx/pop.mp3", 1);
+    Sfx.play("audios/sfx/pop.mp3", 1);
     AudioBK.playBK();
   }
 
@@ -134,6 +138,8 @@ class _LessonPage extends State<LessonPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    AudioBK.pauseBK();
+    Voice.play(lesson[index].audio, 1);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -150,7 +156,7 @@ class _LessonPage extends State<LessonPage> {
               progressColor: Palette.lightGreen,
               backgroundColor: Theme.of(context).shadowColor,
               center: Text(
-                "$index/$size mots",
+                "${index + 1} sur ${size + 1} mots",
                 style: const TextStyle(
                   fontSize: 14.0,
                 ),
@@ -218,8 +224,8 @@ class _LessonPage extends State<LessonPage> {
                         child: Align(
                           alignment: Alignment.topCenter,
                           child: Container(
-                            height: height / 2.5,
-                            width: width / 1.5,
+                            height: height / 2.7,
+                            width: width / 1.3,
                             decoration: const BoxDecoration(
                               color: Palette.white,
                               borderRadius:
@@ -233,7 +239,7 @@ class _LessonPage extends State<LessonPage> {
                               ],
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(20),
+                              padding: const EdgeInsets.all(40),
                               child: Image.asset(
                                 lesson[index].image,
                               ),
@@ -243,7 +249,7 @@ class _LessonPage extends State<LessonPage> {
                       ),
                       Positioned(
                         top: height / 5,
-                        right: width - (width / 5),
+                        left: width > 500 ? width / 13 : 15,
                         child: Button(
                           content: Icon(
                             Icons.chevron_left_rounded,
@@ -255,11 +261,12 @@ class _LessonPage extends State<LessonPage> {
                               : Palette.lightGrey,
                           callback: () {
                             if (index > 0) {
-                              Sfx.play("sfx/plip.mp3", 1);
+                              Sfx.play("audios/sfx/plip.mp3", 1);
                               setState(() {
                                 index -= 1;
                               });
                             }
+                            Voice.play(lesson[index].audio, 1);
                           },
                           heigth: 60,
                           width: 60,
@@ -267,7 +274,7 @@ class _LessonPage extends State<LessonPage> {
                       ),
                       Positioned(
                         top: height / 5,
-                        left: width - (width / 5),
+                        right: width > 500 ? width / 13 : 15,
                         child: Button(
                           content: Icon(
                             Icons.chevron_right_rounded,
@@ -279,12 +286,12 @@ class _LessonPage extends State<LessonPage> {
                               : Palette.lightGrey,
                           callback: () {
                             if (index < size) {
-                              Sfx.play("sfx/plip.mp3", 1);
+                              Sfx.play("audios/sfx/plip.mp3", 1);
                               setState(() {
                                 index += 1;
                               });
                             } else {
-                              Sfx.play("sfx/done.mp3", 1);
+                              Sfx.play("audios/sfx/done.mp3", 1);
                               AwesomeDialog(
                                 context: context,
                                 headerAnimationLoop: false,
@@ -323,8 +330,8 @@ class _LessonPage extends State<LessonPage> {
                       child: Stack(
                         children: [
                           Container(
-                            height: height / 3,
-                            width: width / 1.5,
+                            height: height / 3.8,
+                            width: width / 1.3,
                             decoration: const BoxDecoration(
                               color: Palette.white,
                               borderRadius:
@@ -373,7 +380,7 @@ class _LessonPage extends State<LessonPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: height / 10),
+                    padding: EdgeInsets.only(top: height / 8),
                     child: Align(
                       alignment: Alignment.center,
                       child: Button(
@@ -392,14 +399,14 @@ class _LessonPage extends State<LessonPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 70, top: height / 5),
+                    padding: EdgeInsets.only(left: 70, top: height / 4.5),
                     child: Align(
                       alignment: Alignment.center,
                       child: Button(
-                        content: Image.asset("assets/themes_images/snail.png"),
+                        content: Image.asset("assets/images/themes/snail.png"),
                         color: Palette.blue,
                         callback: () {
-                          Voice.play(lesson[index].audio, 0.75);
+                          Voice.play(lesson[index].audio, 0.60);
                         },
                         heigth: 35,
                         width: 35,

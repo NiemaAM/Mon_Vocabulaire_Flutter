@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/home.dart';
+import 'package:mon_vocabulaire/View/Home/home.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../Model/user.dart';
@@ -50,7 +50,7 @@ class _AccountBlocState extends State<AccountBloc> {
                         width: width > 500 ? 4 : 8,
                       ),
                       Image.asset(
-                        'assets/themes_images/coin.png',
+                        'assets/images/themes/coin.png',
                         scale: width > 500 ? 15 : 25,
                       ),
                     ],

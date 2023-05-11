@@ -8,7 +8,6 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import '../../Model/user.dart';
 import '../../Services/sfx.dart';
 import '../../Services/voice.dart';
 import '../../Widgets/Palette.dart';
@@ -16,8 +15,7 @@ import '../../Widgets/game_card.dart';
 import '../../Widgets/message_mascotte.dart';
 
 class FlipCardGame extends StatefulWidget {
-  final User user;
-  const FlipCardGame({super.key, required this.user});
+  const FlipCardGame({super.key});
 
   @override
   State<FlipCardGame> createState() => _FlipCardGameState();
@@ -64,7 +62,7 @@ class _FlipCardGameState extends State<FlipCardGame>
         setState(() {
           countdown--;
           if (countdown == 4) {
-            Sfx.play("sfx/race_start.mp3", 1);
+            Sfx.play("audios/sfx/race_start.mp3", 1);
           }
           if (countdown < 0) {
             duration--;
@@ -129,7 +127,7 @@ class _FlipCardGameState extends State<FlipCardGame>
           padding: const EdgeInsets.only(bottom: 10),
           child: Text(
             duration > 0
-                ? "Bravo , tu as une bonne mémoire !"
+                ? "Bravo, tu as une bonne mémoire !"
                 : "Tu es presque , essaye encore une fois",
             style: const TextStyle(
               fontSize: 16,
@@ -138,7 +136,9 @@ class _FlipCardGameState extends State<FlipCardGame>
           ),
         ),
         Image.asset(
-          duration > 0 ? "assets/mascotte/win.gif" : "assets/mascotte/lose.gif",
+          duration > 0
+              ? "assets/images/mascotte/win.gif"
+              : "assets/images/mascotte/lose.gif",
           scale: 4,
         ),
       ]),
@@ -153,7 +153,7 @@ class _FlipCardGameState extends State<FlipCardGame>
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => FlipCardGame(user: widget.user),
+            builder: (context) => const FlipCardGame(),
           ),
         );
       },
@@ -240,14 +240,17 @@ class _FlipCardGameState extends State<FlipCardGame>
                     )),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: width > 500 ? 20 : 10),
-              child: BubbleMessage(
-                  message: countdown > 0
-                      ? countdown == 1
-                          ? "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown seconde."
-                          : "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown secondes."
-                      : "C'est parti !"),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.only(top: width > 500 ? 20 : 10),
+                child: BubbleMessage(
+                    message: countdown > 0
+                        ? countdown == 1
+                            ? "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown seconde."
+                            : "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown secondes."
+                        : "C'est parti !"),
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -304,10 +307,9 @@ class _FlipCardGameState extends State<FlipCardGame>
                                 firstCard = null;
                                 secondCard = null;
                                 numFlippedCards = 0;
-                                Voice.play("audios/$cardImage.mp3", 1);
+                                Voice.play("audios/voices/$cardImage.mp3", 1);
                               });
                             } else {
-                              print(flippedCardList[index]);
                               // Flip the selected cards back over after a delay
                               Future.delayed(const Duration(milliseconds: 1000),
                                   () async {

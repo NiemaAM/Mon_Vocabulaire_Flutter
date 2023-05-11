@@ -82,13 +82,13 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
       case 7:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Mammifères';
+          subTheme = 'Ferme';
         });
         break;
       case 8:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Oiseaux et autres';
+          subTheme = 'Forêt';
         });
         break;
       case 9:
@@ -124,22 +124,23 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
   void startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        if (duration > 0) {
+        if (duration > 0 && !quizEnded) {
           duration -= 1; // decrement the duration every second
           time += 1;
-        } else if (chances > 0) {
+        } else if (chances > 0 && !quizEnded) {
           timer.cancel(); // stop the timer when the duration reaches 0
           nextQuestion(); // execute the function after the timer is done
           duration = 30;
           startTimer();
         }
-        if (index == size || chances == 0) {
+        if (index == size || chances == 0 || quizEnded) {
           duration = 0;
         }
       });
     });
   }
 
+  bool first = true;
   getQuestions() async {
     List<Proposition> quest =
         await quizModel.getRandomPropositions(theme, subTheme);
@@ -147,14 +148,18 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
       questions = quest;
     });
     setState(() {
-      size = quizModel.getSize();
+      if (quizModel.getSize() >= 10) {
+        size = 10;
+      } else {
+        size = quizModel.getSize();
+      }
     });
     nextQuestion();
   }
 
   int size = 5;
   nextQuestion() async {
-    if (index == 0) {
+    if (first) {
       setState(() {
         images = questions[index]
             .propositionsImages
@@ -169,7 +174,10 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
             .map((element) => element.toString())
             .toList();
         correct = reponse[3];
-        index += 1;
+        first = false;
+        if (didResponse) {
+          nextQuestion();
+        }
       });
     } else if (index < size) {
       setState(() {
@@ -196,7 +204,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
       setState(() {
         quizEnded = true;
       });
-      Sfx.play("sfx/win.mp3", 1);
+      Sfx.play("audios/sfx/win.mp3", 1);
       _controllerConfetti.play();
       AwesomeDialog(
         context: context,
@@ -245,10 +253,10 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
           ),
           Image.asset(
             chances == 3
-                ? "assets/mascotte/win.gif"
+                ? "assets/images/mascotte/win.gif"
                 : chances == 2
-                    ? "assets/mascotte/win2.gif"
-                    : "assets/mascotte/win3.gif",
+                    ? "assets/images/mascotte/win2.gif"
+                    : "assets/images/mascotte/win3.gif",
             scale: 5,
           ),
           const SizedBox(
@@ -325,7 +333,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
               Column(
                 children: [
                   Image.asset(
-                    "assets/themes_images/coin.png",
+                    "assets/images/themes/coin.png",
                     scale: 13,
                   ),
                   const Text(
@@ -350,8 +358,8 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                 ],
               ),
               const Expanded(child: SizedBox()),
-              const Column(
-                children: [
+              Column(
+                children: const [
                   Icon(
                     Icons.arrow_upward_rounded,
                     size: 40,
@@ -401,7 +409,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
       setState(() {
         quizEnded = true;
       });
-      Sfx.play("sfx/lose.mp3", 1);
+      Sfx.play("audios/sfx/lose.mp3", 1);
       AwesomeDialog(
         context: context,
         headerAnimationLoop: false,
@@ -440,7 +448,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
             ),
           ),
           Image.asset(
-            "assets/mascotte/lose.gif",
+            "assets/images/mascotte/lose.gif",
             scale: 5,
           ),
         ]),
@@ -480,7 +488,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
   @override
   void dispose() {
     super.dispose();
-    Sfx.play("sfx/pop.mp3", 1);
+    Sfx.play("audios/sfx/pop.mp3", 1);
     AudioBK.playBK();
   }
 
@@ -500,7 +508,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
             chances: chances,
             duration: duration,
             user: widget.user,
-            question: index,
+            question: index >= size ? size : index + 1,
             size: size,
           )),
       body: Stack(
@@ -631,7 +639,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                       response = key;
                                     });
                                     if (key == correct) {
-                                      Sfx.play("sfx/ding.mp3", 1);
+                                      Sfx.play("audios/sfx/ding.mp3", 1);
                                       Timer(const Duration(seconds: 1), () {
                                         nextQuestion();
                                         setState(() {
@@ -641,7 +649,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                         endQuiz();
                                       });
                                     } else {
-                                      Sfx.play("sfx/zew.mp3", 1);
+                                      Sfx.play("audios/sfx/zew.mp3", 1);
                                       Timer(const Duration(seconds: 1), () {
                                         nextQuestion();
                                         setState(() {

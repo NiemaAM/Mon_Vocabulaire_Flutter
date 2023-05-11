@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Games/flip_card.dart';
-import 'package:mon_vocabulaire/View/Games/ninja_bubble.dart';
+import 'package:mon_vocabulaire/View/Games/math_game.dart';
 import '../../Model/user.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/game_bloc.dart';
@@ -25,34 +25,62 @@ class _GamesState extends State<Games> {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         crossAxisCount: 2,
-        children: [
-          const GameBloc(
-            color: Palette.lightBlue,
-            image: "assets/themes_images/bubble.png",
-            price: '20',
-            text: "Jeu 1",
-            callback: NinjaBubble(),
-          ),
-          const GameBloc(
-            color: Palette.orange,
-            image: "assets/themes_images/drag_and_drop.png",
-            price: '120',
-            text: "Jeu 2",
-            callback: NinjaBubble(),
-          ),
+        children: const [
           GameBloc(
             color: Palette.lightGreen,
-            image: "assets/themes_images/images.png",
+            image: "assets/images/games/JuMots.png",
             price: '50',
-            text: "Jeu 3",
-            callback: FlipCardGame(user: widget.user),
+            text: "JuMots",
+            page: FlipCardGame(),
           ),
-          const GameBloc(
-            color: Palette.pink,
-            image: "assets/themes_images/cloud.png",
+          GameBloc(
+            color: Palette.orange,
+            image: "assets/images/games/tic-tac-toe.png",
+            price: '20',
+            text: "Tic Tac Toe",
+            page: FlipCardGame(),
+          ),
+          GameBloc(
+            color: Palette.blue,
+            image: "assets/images/games/bubbles.png",
+            price: '50',
+            text: "NinjaBubbles",
+            page: FlipCardGame(),
+          ),
+          GameBloc(
+            color: Color.fromARGB(255, 206, 89, 227),
+            image: "assets/images/games/math_game.png",
             price: '80',
-            text: "Jeu 4",
-            callback: NinjaBubble(),
+            text: "FruityMaths",
+            page: MathGame(),
+          ),
+          GameBloc(
+            color: Palette.pink,
+            image: "assets/images/games/puzzle.png",
+            price: '80',
+            text: "Puzzle",
+            page: FlipCardGame(),
+          ),
+          GameBloc(
+            color: Color.fromARGB(255, 30, 173, 173),
+            image: "assets/images/games/apple.png",
+            price: '80',
+            text: "Recoltte",
+            page: FlipCardGame(),
+          ),
+          GameBloc(
+            color: Palette.red,
+            image: "assets/images/games/search.png",
+            price: '100',
+            text: "Trouvailles",
+            page: FlipCardGame(),
+          ),
+          GameBloc(
+            color: Color.fromARGB(255, 171, 131, 85),
+            image: "assets/images/games/chess.png",
+            price: '100',
+            text: "Dames",
+            page: FlipCardGame(),
           ),
         ],
       ),

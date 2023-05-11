@@ -61,8 +61,8 @@ class _EditAccountState extends State<EditAccount> {
                           backgroundImage: AssetImage(widget.user.image),
                         ),
                   Positioned(
-                    bottom: 15,
-                    left: 70,
+                    bottom: 35,
+                    right: 10,
                     child: Button(
                         callback: () {},
                         heigth: 60,

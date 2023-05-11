@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
-
-import '../Services/sfx.dart';
 import 'Palette.dart';
 
 class GameBloc extends StatefulWidget {
@@ -9,14 +7,14 @@ class GameBloc extends StatefulWidget {
   final String price;
   final String image;
   final Color color;
-  final Widget callback;
+  final Widget page;
   const GameBloc(
       {super.key,
       required this.text,
       required this.price,
       required this.image,
       required this.color,
-      required this.callback});
+      required this.page});
 
   @override
   State<GameBloc> createState() => _GameBlocState();
@@ -29,11 +27,10 @@ class _GameBlocState extends State<GameBloc> {
     return Center(
       child: Button(
         callback: () {
-          Sfx.play("sfx/plip.mp3", 1);
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => widget.callback,
+              builder: (context) => widget.page,
             ),
           );
         },
@@ -63,7 +60,7 @@ class _GameBlocState extends State<GameBloc> {
                   ),
                 ),
                 Image.asset(
-                  "assets/themes_images/coin.png",
+                  "assets/images/themes/coin.png",
                   scale: width >= 700
                       ? 16
                       : width >= 500

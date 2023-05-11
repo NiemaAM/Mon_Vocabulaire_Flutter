@@ -7,7 +7,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mon_vocabulaire/Providers/theme_provider.dart';
+import 'package:mon_vocabulaire/Themes/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
 import 'package:mon_vocabulaire/View/Account/accounts.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
@@ -108,7 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> loadCaptchaData() async {
     // Load the captcha data from a local JSON file
     String captchaDataJson =
-        await rootBundle.loadString('assets/captcha_data.json');
+        await rootBundle.loadString('assets/data/captcha_data.json');
     captchaData = json.decode(captchaDataJson);
     // Generate a new captcha image
     generateCaptchaImage();
@@ -122,7 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     captchaValue = captchaData[captchaCode];
     // Load the corresponding captcha image from assets
-    captchaImagePath = 'assets/captcha/$captchaCode.png';
+    captchaImagePath = 'assets/images/captcha/$captchaCode.png';
   }
 
   void verifyCaptcha(String input) {
@@ -173,6 +173,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Text(
                 'Code erroné.\nEntrez le code affiché ci-dessous :',
                 textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.red),
               ),
             ),
             Padding(
@@ -212,7 +213,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void dispose() {
     super.dispose();
-    Sfx.play("sfx/pop.mp3", 1);
+    Sfx.play("audios/sfx/pop.mp3", 1);
     myController.dispose();
   }
 
@@ -306,8 +307,8 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(bottom: 10, top: 10),
             child: Column(
               children: [
-                const Row(
-                  children: [
+                Row(
+                  children: const [
                     RoundIconWidget(
                         icon: Icons.music_note, color: Palette.pink),
                     SizedBox(
@@ -344,8 +345,8 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(bottom: 10, top: 10),
             child: Column(
               children: [
-                const Row(
-                  children: [
+                Row(
+                  children: const [
                     RoundIconWidget(
                         icon: Icons.volume_up, color: Palette.orange),
                     SizedBox(
@@ -382,8 +383,8 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(bottom: 10, top: 10),
             child: Column(
               children: [
-                const Row(
-                  children: [
+                Row(
+                  children: const [
                     RoundIconWidget(
                         icon: Icons.record_voice_over, color: Palette.indigo),
                     SizedBox(

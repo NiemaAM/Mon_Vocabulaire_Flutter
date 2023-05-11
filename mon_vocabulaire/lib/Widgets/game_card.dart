@@ -54,7 +54,7 @@ class _CardWidgetState extends State<CardWidget> {
             ],
             borderRadius: BorderRadius.circular(5)),
         margin: const EdgeInsets.all(4.0),
-        child: Image.asset("assets/images/${widget.backImage}.png"),
+        child: Image.asset("assets/images/pics/${widget.backImage}.png"),
       ),
       front: Container(
         padding: const EdgeInsets.all(20),
@@ -82,7 +82,7 @@ class _CardWidgetState extends State<CardWidget> {
             ],
             borderRadius: BorderRadius.circular(5)),
         margin: const EdgeInsets.all(4.0),
-        child: Image.asset("assets/themes_images/${widget.frontImage}.png"),
+        child: Image.asset("assets/images/games/${widget.frontImage}.png"),
       ),
       onFlip: widget.onFlip,
       onFlipDone: widget.onFlipDone,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
-
+import 'package:mon_vocabulaire/Services/animation_route.dart';
 import '../../Widgets/Palette.dart';
 import '../Settings/settings_page.dart';
 
@@ -18,31 +18,21 @@ class _ProfilState extends State<Profil> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-          title: const Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text("Mon Profil"),
-          ),
-          elevation: 1,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SettingsPage(
-                        user: widget.user,
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.settings),
-                tooltip: "Paramètres",
+      appBar: AppBar(title: const Text("Mon Profil"), elevation: 1, actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              SlideRight(
+                page: SettingsPage(
+                  user: widget.user,
+                ),
               ),
-            ),
-          ]),
+            );
+          },
+          icon: const Icon(Icons.settings),
+          tooltip: "Paramètres",
+        ),
+      ]),
       body: ListView(
         children: [
           Padding(

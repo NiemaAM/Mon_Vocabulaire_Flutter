@@ -80,13 +80,13 @@ class _DragAndDropState extends State<DragAndDrop> {
       case 7:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Mammifères';
+          subTheme = 'Ferme';
         });
         break;
       case 8:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Oiseaux et autres';
+          subTheme = 'Forêt';
         });
         break;
       case 9:
@@ -114,6 +114,10 @@ class _DragAndDropState extends State<DragAndDrop> {
         });
         break;
       default:
+        setState(() {
+          theme = 'Sports et loisirs';
+          subTheme = 'Loisirs';
+        });
     }
   }
 
@@ -126,6 +130,7 @@ class _DragAndDropState extends State<DragAndDrop> {
     });
   }
 
+  bool first = true;
   getQuestions() async {
     List<PropositionLettres> quest =
         await quizModel.getRandomPropositionsLettres(theme, subTheme);
@@ -133,13 +138,17 @@ class _DragAndDropState extends State<DragAndDrop> {
       questions = quest;
     });
     setState(() {
-      size = quizModel.getSize();
+      if (quizModel.getSize() >= 10) {
+        size = 9;
+      } else {
+        size = quizModel.getSize() - 1;
+      }
     });
     nextQuestion();
   }
 
   nextQuestion() {
-    if (index == 0) {
+    if (first) {
       clear();
       setState(() {
         reponse = questions[index]
@@ -149,9 +158,12 @@ class _DragAndDropState extends State<DragAndDrop> {
         correct = questions[index].lettresReponse;
         question = questions[index].lettresQuestion;
         propositions = questions[index].lettresProposition;
-        index += 1;
-        Voice.play(reponse[0], 1);
+        first = false;
+        if (isCorrect) {
+          nextQuestion();
+        }
       });
+      Voice.play(reponse[0], 1);
     } else if (index < size) {
       clear();
       setState(() {
@@ -163,8 +175,8 @@ class _DragAndDropState extends State<DragAndDrop> {
         correct = questions[index].lettresReponse;
         question = questions[index].lettresQuestion;
         propositions = questions[index].lettresProposition;
-        Voice.play(reponse[0], 1);
       });
+      Voice.play(reponse[0], 1);
     }
   }
 
@@ -182,7 +194,7 @@ class _DragAndDropState extends State<DragAndDrop> {
           duration = 30;
           startTimer();
         }
-        if (index == size || chances == 0) {
+        if (chances == 0 || quizEnded) {
           duration = 0;
         }
       });
@@ -195,7 +207,7 @@ class _DragAndDropState extends State<DragAndDrop> {
         quizEnded = true;
       });
       Timer(const Duration(seconds: 1), () {
-        Sfx.play("sfx/win.mp3", 1);
+        Sfx.play("audios/sfx/win.mp3", 1);
       });
       _controllerConfetti.play();
       AwesomeDialog(
@@ -245,10 +257,10 @@ class _DragAndDropState extends State<DragAndDrop> {
           ),
           Image.asset(
             chances == 3
-                ? "assets/mascotte/win.gif"
+                ? "assets/images/mascotte/win.gif"
                 : chances == 2
-                    ? "assets/mascotte/win2.gif"
-                    : "assets/mascotte/win3.gif",
+                    ? "assets/images/mascotte/win2.gif"
+                    : "assets/images/mascotte/win3.gif",
             scale: 5,
           ),
           const SizedBox(
@@ -325,7 +337,7 @@ class _DragAndDropState extends State<DragAndDrop> {
               Column(
                 children: [
                   Image.asset(
-                    "assets/themes_images/coin.png",
+                    "assets/images/themes/coin.png",
                     scale: 13,
                   ),
                   const Text(
@@ -402,7 +414,7 @@ class _DragAndDropState extends State<DragAndDrop> {
         quizEnded = true;
       });
       Timer(const Duration(seconds: 1), () {
-        Sfx.play("sfx/lose.mp3", 1);
+        Sfx.play("audios/sfx/lose.mp3", 1);
       });
       AwesomeDialog(
         context: context,
@@ -442,7 +454,7 @@ class _DragAndDropState extends State<DragAndDrop> {
             ),
           ),
           Image.asset(
-            "assets/mascotte/lose.gif",
+            "assets/images/mascotte/lose.gif",
             scale: 5,
           ),
         ]),
@@ -482,7 +494,7 @@ class _DragAndDropState extends State<DragAndDrop> {
   @override
   void dispose() {
     super.dispose();
-    Sfx.play("sfx/pop.mp3", 1);
+    Sfx.play("audios/sfx/pop.mp3", 1);
     AudioBK.playBK();
   }
 
@@ -502,8 +514,8 @@ class _DragAndDropState extends State<DragAndDrop> {
             chances: chances,
             duration: duration,
             user: widget.user,
-            question: index,
-            size: size,
+            question: index >= size ? size + 1 : index + 1,
+            size: size + 1,
           )),
       body: Stack(
         children: [
@@ -579,10 +591,10 @@ class _DragAndDropState extends State<DragAndDrop> {
                           alignment: Alignment.center,
                           child: Button(
                             content:
-                                Image.asset("assets/themes_images/snail.png"),
+                                Image.asset("assets/images/themes/snail.png"),
                             color: Palette.blue,
                             callback: () {
-                              Voice.play(reponse[0], 0.75);
+                              Voice.play(reponse[0], 0.65);
                             },
                             heigth: 35,
                             width: 35,
@@ -650,14 +662,14 @@ class _DragAndDropState extends State<DragAndDrop> {
                         if (!quizEnded) {
                           if (receivedItem.toString() == correct[index]) {
                             if (!quizEnded) {
-                              Sfx.play("sfx/plip.mp3", 1);
+                              Sfx.play("audios/sfx/plip.mp3", 1);
                             }
                             setState(() {
                               question[index] = correct[index];
                             });
                           } else {
                             if (!quizEnded) {
-                              Sfx.play("sfx/zew.mp3", 1);
+                              Sfx.play("audios/sfx/zew.mp3", 1);
                             }
                             setState(() {
                               chances -= 1;
@@ -672,7 +684,7 @@ class _DragAndDropState extends State<DragAndDrop> {
                             });
                             if (!quizEnded) {
                               Timer(const Duration(milliseconds: 1000), () {
-                                Sfx.play("sfx/ding.mp3", 1);
+                                Sfx.play("audios/sfx/ding.mp3", 1);
                               });
                             }
                             Timer(const Duration(seconds: 1), () {
