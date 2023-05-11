@@ -218,7 +218,7 @@ class _DragAndDropState extends State<DragAndDrop> {
             padding: const EdgeInsets.all(10),
             child: Text(
               chances == 3
-                  ? "Exellent travaille!"
+                  ? "Excellent travail!"
                   : chances == 2
                       ? "Bien joué!"
                       : "Bel effort!",
