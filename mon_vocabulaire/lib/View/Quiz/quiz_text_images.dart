@@ -237,7 +237,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
               chances == 3
                   ? "Tu es un vrai champion!"
                   : chances == 2
-                      ? "Joli travaille, Continue comme ça!"
+                      ? "Joli travail, Continue comme ça!"
                       : "Pas mal, mais tu peux faire mieux!",
               style: const TextStyle(
                 fontSize: 16,
