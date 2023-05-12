@@ -41,7 +41,7 @@ class _CreateAccountState extends State<CreateAccount> {
       body: ListView(children: [
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 50),
+            padding: const EdgeInsets.only(top: 80),
             child: SizedBox(
               height: 250,
               child: Stack(

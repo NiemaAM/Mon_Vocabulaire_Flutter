@@ -42,6 +42,7 @@ dependencies:
   flutter_svg: ^2.0.5
   audioplayers: ^4.0.1
   provider: ^6.0.5
+  #awesome_dialog: ^3.0.2
   confetti: ^0.7.0
 
 dev_dependencies:
@@ -73,7 +74,7 @@ flutter:
     - assets/images/
     - assets/audios/
     - assets/sfx/
-   # - assets/mascotte/
+    - assets/mascotte/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

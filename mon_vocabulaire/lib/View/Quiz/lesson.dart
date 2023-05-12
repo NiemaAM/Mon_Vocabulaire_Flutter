@@ -140,7 +140,7 @@ class _LessonPage extends State<LessonPage> {
           automaticallyImplyLeading: false,
           title: Center(
             child: LinearPercentIndicator(
-              width: width - 35,
+              width: width - 57,
               animation: false,
               lineHeight: 25.0,
               animationDuration: 1,
@@ -148,8 +148,14 @@ class _LessonPage extends State<LessonPage> {
               barRadius: const Radius.circular(100),
               progressColor: Palette.lightGreen,
               backgroundColor: Theme.of(context).shadowColor,
-              center: Text(
-                "$index/$size mots",
+              trailing: Text(
+                "$size",
+                style: const TextStyle(
+                  fontSize: 14.0,
+                ),
+              ),
+              leading: Text(
+                "$index",
                 style: const TextStyle(
                   fontSize: 14.0,
                 ),
@@ -188,9 +194,7 @@ class _LessonPage extends State<LessonPage> {
                   Align(
                     alignment: Alignment.topRight,
                     child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+                        onPressed: () {},
                         icon: const Icon(
                           Icons.close,
                           color: Palette.red,
@@ -271,63 +275,7 @@ class _LessonPage extends State<LessonPage> {
                                 index += 1;
                               });
                             } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      // <-- SEE HERE
-                                      title: const Text('Leçon terminée'),
-                                      content: SingleChildScrollView(
-                                        child: ListBody(
-                                          children: const <Widget>[
-                                            Text(
-                                                "Bravo ! Tu as terminé ta leçon."),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: <Widget>[
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            TextButton(
-                                              child: const Text('Retour'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Accueil'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Suivant'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        QuizTextImages(
-                                                      subTheme: widget.subTheme,
-                                                      user: widget.user,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    );
-                                  });
+                              Sfx.play("sfx/done.mp3", 1);
                             }
                           },
                           heigth: 60,

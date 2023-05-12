@@ -1,7 +1,11 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mon_vocabulaire/Providers/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
 import 'package:mon_vocabulaire/View/Account/accounts.dart';
@@ -24,6 +28,12 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final myController = TextEditingController();
+  String captchaValue = '';
+  String captchaImagePath = '';
+  bool captchaVerified = false;
+  Map<String, dynamic> captchaData = {};
+
   bool notifOn = false;
   bool darkOn = false;
   bool soundOn = true;
@@ -94,6 +104,35 @@ class _SettingsPageState extends State<SettingsPage> {
     Voice.volume(voiceVolume);
   }
 
+  Future<void> loadCaptchaData() async {
+    // Load the captcha data from a local JSON file
+    String captchaDataJson =
+        await rootBundle.loadString('assets/captcha_data.json');
+    captchaData = json.decode(captchaDataJson);
+    // Generate a new captcha image
+    generateCaptchaImage();
+  }
+
+  void generateCaptchaImage() {
+    // Generate a random captcha image code
+    List<String> captchaCodes = captchaData.keys.toList();
+    // final Random random = Random();
+    String captchaCode = captchaCodes[Random().nextInt(captchaCodes.length)];
+
+    captchaValue = captchaData[captchaCode];
+    // Load the corresponding captcha image from assets
+    captchaImagePath = 'assets/captcha/$captchaCode.png';
+  }
+
+  void verifyCaptcha(String input) {
+    // Verify the user's input against the captcha value
+    captchaVerified = input == captchaValue;
+    generateCaptchaImage();
+
+    if (captchaVerified) {
+    } else {}
+  }
+
   @override
   void initState() {
     super.initState();
@@ -102,12 +141,14 @@ class _SettingsPageState extends State<SettingsPage> {
     getSfxVolume();
     getVoiceVolume();
     getTheme();
+    loadCaptchaData();
   }
 
   @override
   void dispose() {
     super.dispose();
     Sfx.play("sfx/pop.mp3", 1);
+    myController.dispose();
   }
 
   @override
@@ -131,7 +172,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   radius: width / 5,
                   backgroundColor: Palette.blue,
                   child: ClipOval(
-                    child: Image.network(
+                    child: Image.asset(
                       widget.user.image,
                     ),
                   ),

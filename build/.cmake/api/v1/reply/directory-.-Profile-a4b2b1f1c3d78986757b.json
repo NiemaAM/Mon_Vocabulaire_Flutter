@@ -1,0 +1,136 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 74,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 77,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 80,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 84,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 92,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 95,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 99,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Runtime",
+			"destination" : "C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/runner/Profile",
+			"paths" : 
+			[
+				"runner/Profile/mon_vocabulaire.exe"
+			],
+			"targetId" : "mon_vocabulaire::@056c4f61b0156d1d9b06",
+			"targetIndex" : 8,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Runtime",
+			"destination" : "C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/runner/Profile/data",
+			"paths" : 
+			[
+				"flutter/ephemeral/icudtl.dat"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Runtime",
+			"destination" : "C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/runner/Profile",
+			"paths" : 
+			[
+				"flutter/ephemeral/flutter_windows.dll"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Runtime",
+			"destination" : "C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/runner/Profile",
+			"paths" : 
+			[
+				"C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/plugins/audioplayers_windows/Profile/audioplayers_windows_plugin.dll"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Runtime",
+			"type" : "code"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Runtime",
+			"destination" : "C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/runner/Profile/data",
+			"paths" : 
+			[
+				"C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/mon_vocabulaire/build//flutter_assets"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Runtime",
+			"destination" : "C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/runner/Profile/data",
+			"paths" : 
+			[
+				"C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/mon_vocabulaire/build/windows/app.so"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	}
+}

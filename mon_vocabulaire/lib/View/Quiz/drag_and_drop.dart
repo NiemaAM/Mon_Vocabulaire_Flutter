@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/quiz_prposition_lettres.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
@@ -34,6 +35,8 @@ class _DragAndDropState extends State<DragAndDrop> {
   bool isCorrect = false;
   int index = 0;
   int size = 5;
+  bool quizEnded = false;
+  late ConfettiController _controllerConfetti;
 
   getTheme() {
     switch (widget.subTheme) {
@@ -134,9 +137,9 @@ class _DragAndDropState extends State<DragAndDrop> {
     nextQuestion();
   }
 
-  nextQuestion() async {
-    clear();
+  nextQuestion() {
     if (index == 0) {
+      clear();
       setState(() {
         reponse = questions[index]
             .reponse
@@ -148,6 +151,7 @@ class _DragAndDropState extends State<DragAndDrop> {
         index += 1;
       });
     } else if (index < size) {
+      clear();
       setState(() {
         index += 1;
         reponse = questions[index]
@@ -162,14 +166,16 @@ class _DragAndDropState extends State<DragAndDrop> {
   }
 
   int duration = 30;
+  int time = 30;
   void startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (duration > 0) {
-          duration -= 1;
-        } else {
-          timer.cancel();
-          nextQuestion();
+          duration -= 1; // decrement the duration every second
+          time += 1;
+        } else if (chances > 0) {
+          timer.cancel(); // stop the timer when the duration reaches 0
+          nextQuestion(); // execute the function after the timer is done
           duration = 30;
           startTimer();
         }
@@ -180,6 +186,25 @@ class _DragAndDropState extends State<DragAndDrop> {
     });
   }
 
+  void endQuiz() {
+    if (index == size && chances != 0) {
+      setState(() {
+        quizEnded = true;
+      });
+      Timer(const Duration(seconds: 1), () {
+        Sfx.play("sfx/win.mp3", 1);
+      });
+      _controllerConfetti.play();
+    } else if (chances == 0) {
+      setState(() {
+        quizEnded = true;
+      });
+      Timer(const Duration(seconds: 1), () {
+        Sfx.play("sfx/lose.mp3", 1);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -187,6 +212,8 @@ class _DragAndDropState extends State<DragAndDrop> {
     getTheme();
     getQuestions();
     startTimer();
+    _controllerConfetti =
+        ConfettiController(duration: const Duration(seconds: 1));
   }
 
   @override
@@ -200,6 +227,7 @@ class _DragAndDropState extends State<DragAndDrop> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    AudioBK.pauseBK();
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -214,315 +242,241 @@ class _DragAndDropState extends State<DragAndDrop> {
             question: index,
             size: size,
           )),
-      body: index == size
-          ? AlertDialog(
-              // <-- SEE HERE
-              title: const Text('Bien joué !'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: const <Widget>[
-                    Text("Tu as terminé le quiz :)"),
-                  ],
+      body: Stack(
+        children: [
+          //le fond
+          Align(
+              alignment: AlignmentDirectional.bottomEnd,
+              child:
+                  Stack(alignment: AlignmentDirectional.bottomEnd, children: [
+                Container(
+                  height: height / 2.2,
+                  width: width,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(100),
+                        topRight: Radius.circular(100)),
+                  ),
                 ),
-              ),
-              actions: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              ])),
+          Center(
+            child: ListView(
+              children: [
+                Column(
                   children: [
-                    TextButton(
-                      child: const Text('Retour'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    TextButton(
-                      child: const Text('Accueil'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    TextButton(
-                      child: const Text('Réessayer'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DragAndDrop(
-                              subTheme: widget.subTheme,
-                              user: widget.user,
+                    Stack(children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.close,
+                              color: Palette.red,
+                            )),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: height / 2.7),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Button(
+                            color: Palette.pink,
+                            content: const Icon(
+                              Icons.volume_up,
+                              color: Palette.white,
+                              size: 50,
                             ),
+                            callback: () {
+                              Voice.play(reponse[0], 1);
+                            },
+                            width: 100,
+                            heigth: 100,
+                            enabled: !quizEnded,
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 70, top: height / 2.7),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Button(
+                            content:
+                                Image.asset("assets/themes_images/snail.png"),
+                            color: Palette.blue,
+                            callback: () {
+                              Voice.play(reponse[0], 0.75);
+                            },
+                            heigth: 35,
+                            width: 35,
+                            enabled: !quizEnded,
+                          ),
+                        ),
+                      ),
+                    ]),
                   ],
                 ),
               ],
-            )
-          : chances == 0
-              ? AlertDialog(
-                  // <-- SEE HERE
-                  title: const Text('Oh non ...'),
-                  content: SingleChildScrollView(
-                    child: ListBody(
-                      children: const <Widget>[
-                        Text("Tu n'as plus de coeurs :("),
-                      ],
-                    ),
-                  ),
-                  actions: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          child: const Text('Retour'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Accueil'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Réessayer'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DragAndDrop(
-                                  subTheme: widget.subTheme,
-                                  user: widget.user,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              : Stack(
-                  children: [
-                    //le fond
-                    Align(
-                        alignment: AlignmentDirectional.bottomEnd,
-                        child: Stack(
-                            alignment: AlignmentDirectional.bottomEnd,
-                            children: [
-                              Container(
-                                height: height / 2.2,
-                                width: width,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(100),
-                                      topRight: Radius.circular(100)),
-                                ),
-                              ),
-                            ])),
-                    Center(
-                      child: ListView(
-                        children: [
-                          Column(
-                            children: [
-                              Stack(children: [
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      icon: const Icon(
-                                        Icons.close,
-                                        color: Palette.red,
-                                      )),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: height / 2.7),
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Button(
-                                      color: Palette.pink,
-                                      content: const Icon(
-                                        Icons.volume_up,
-                                        color: Palette.white,
-                                        size: 50,
-                                      ),
-                                      callback: () {
-                                        Voice.play(reponse[0], 1);
-                                      },
-                                      width: 100,
-                                      heigth: 100,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 70, top: height / 2.7),
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Button(
-                                      content: Image.asset(
-                                          "assets/themes_images/snail.png"),
-                                      color: Palette.blue,
-                                      callback: () {
-                                        Voice.play(reponse[0], 0.75);
-                                      },
-                                      heigth: 35,
-                                      width: 35,
-                                    ),
-                                  ),
-                                ),
-                              ]),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+            ),
+          ),
 
-                    //l'image
-                    Positioned(
-                        top: -height * 0.5,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                            child: Image.asset(
-                          reponse[1],
-                          scale: 3,
-                        ))),
-
-                    // Le Mot
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            top: height / 3.5, left: 10, right: 10),
-                        child: Center(
-                          child: GridView.builder(
-                            padding: EdgeInsetsDirectional.symmetric(
-                                horizontal: question.length <= 3
-                                    ? 110
-                                    : question.length <= 4
-                                        ? 90
-                                        : question.length <= 5
-                                            ? 70
-                                            : question.length <= 6
-                                                ? 50
-                                                : question.length <= 7
-                                                    ? 30
-                                                    : question.length <= 8
-                                                        ? 10
-                                                        : 0),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: question.length <= 10
-                                        ? question.length
-                                        : 10,
-                                    childAspectRatio: 1,
-                                    crossAxisSpacing: 5,
-                                    mainAxisSpacing: 5),
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: question.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return DragTarget(
-                                onAccept: (receivedItem) {
-                                  if (receivedItem.toString() ==
-                                      correct[index]) {
-                                    Sfx.play("sfx/plip.mp3", 1);
-                                    setState(() {
-                                      question[index] = correct[index];
-                                    });
-                                  } else {
-                                    Sfx.play("sfx/zew.mp3", 1);
-                                    setState(() {
-                                      chances -= 1;
-                                    });
-                                  }
-                                  if (!question.contains("??")) {
-                                    setState(() {
-                                      isCorrect = true;
-                                      duration = 30;
-                                    });
-                                    Timer(const Duration(seconds: 1), () {
-                                      Sfx.play("sfx/ding.mp3", 1);
-                                    });
-                                    Timer(const Duration(seconds: 1), () {
-                                      setState(() {
-                                        isCorrect = false;
-                                      });
-                                      nextQuestion();
-                                    });
-                                  }
-                                },
-                                onWillAccept: (receivedItem) {
-                                  return true;
-                                },
-                                onLeave: (receivedItem) {},
-                                builder:
-                                    (context, acceptedItems, rejectedItems) =>
-                                        ContainerLetter(
-                                  lettre: question[index] == "??"
-                                      ? ""
-                                      : question[index],
-                                  isReponse: false,
-                                  color: question[index] == "??"
-                                      ? Palette.indigo
-                                      : isCorrect
-                                          ? Palette.lightGreen
-                                          : Palette.white,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    //les propositions
-                    Container(
-                      margin: EdgeInsets.only(top: height / 1.5),
-                      height: width / 8,
-                      width: width,
-                      child: Center(
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: propositions.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Draggable(
-                              data: propositions[index],
-                              childWhenDragging: Container(),
-                              feedback: ContainerLetter(
-                                  lettre: propositions[index],
-                                  isReponse: true,
-                                  color: Palette.pink),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: ContainerLetter(
-                                      lettre: propositions[index],
-                                      isReponse: true,
-                                      color: Palette.pink),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+          //l'image
+          Positioned(
+              top: -height * 0.5,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Center(
+                  child: Padding(
+                padding: EdgeInsets.only(
+                  left: width / 3.5,
+                  right: width / 3.5,
                 ),
+                child: Image.asset(
+                  reponse[1],
+                ),
+              ))),
+
+          // Le Mot
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              margin: EdgeInsets.only(top: height / 3.5, left: 10, right: 10),
+              child: Center(
+                child: GridView.builder(
+                  padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: question.length <= 3
+                          ? 110
+                          : question.length <= 4
+                              ? 90
+                              : question.length <= 5
+                                  ? 70
+                                  : question.length <= 6
+                                      ? 50
+                                      : question.length <= 7
+                                          ? 30
+                                          : question.length <= 8
+                                              ? 10
+                                              : 0),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount:
+                          question.length <= 10 ? question.length : 10,
+                      childAspectRatio: 1,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: question.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return DragTarget(
+                      onAccept: (receivedItem) {
+                        if (!quizEnded) {
+                          if (receivedItem.toString() == correct[index]) {
+                            if (!quizEnded) {
+                              Sfx.play("sfx/plip.mp3", 1);
+                            }
+                            setState(() {
+                              question[index] = correct[index];
+                            });
+                          } else {
+                            if (!quizEnded) {
+                              Sfx.play("sfx/zew.mp3", 1);
+                            }
+                            setState(() {
+                              chances -= 1;
+                            });
+                            endQuiz();
+                          }
+                          if (!question.contains("??")) {
+                            endQuiz();
+                            setState(() {
+                              isCorrect = true;
+                              duration = 30;
+                            });
+                            if (!quizEnded) {
+                              Timer(const Duration(milliseconds: 1000), () {
+                                Sfx.play("sfx/ding.mp3", 1);
+                              });
+                            }
+                            Timer(const Duration(seconds: 1), () {
+                              setState(() {
+                                isCorrect = false;
+                              });
+                              nextQuestion();
+                            });
+                          }
+                        }
+                      },
+                      onWillAccept: (receivedItem) {
+                        return true;
+                      },
+                      onLeave: (receivedItem) {},
+                      builder: (context, acceptedItems, rejectedItems) =>
+                          ContainerLetter(
+                        lettre: question[index] == "??" ? "" : question[index],
+                        isReponse: false,
+                        color: question[index] == "??"
+                            ? Palette.indigo
+                            : isCorrect
+                                ? Palette.lightGreen
+                                : Palette.white,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+
+          //les propositions
+          Container(
+            margin: EdgeInsets.only(top: height / 1.5),
+            height: width / 8,
+            width: width,
+            child: Center(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: propositions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Draggable(
+                    data: propositions[index],
+                    childWhenDragging: Container(),
+                    feedback: ContainerLetter(
+                        lettre: propositions[index],
+                        isReponse: true,
+                        color: Palette.pink),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: ContainerLetter(
+                            lettre: propositions[index],
+                            isReponse: true,
+                            color: Palette.pink),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          ConfettiWidget(
+            gravity: 0,
+            confettiController: _controllerConfetti,
+            blastDirectionality: BlastDirectionality
+                .explosive, // don't specify a direction, blast randomly
+            numberOfParticles: 20,
+            shouldLoop:
+                true, // start again as soon as the animation is finished
+            colors: const [
+              Palette.lightGreen,
+              Palette.blue,
+              Palette.pink,
+              Palette.orange,
+              Palette.purple
+            ], // manually specify the colors to be used
+          ),
+        ],
+      ),
     );
   }
 }

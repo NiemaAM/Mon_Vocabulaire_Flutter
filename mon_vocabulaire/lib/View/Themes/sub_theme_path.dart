@@ -7,7 +7,6 @@ import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import '../../Services/sfx.dart';
 import '../Quiz/drag_and_drop.dart';
-import '../Quiz/quiz_articles.dart';
 import '../Quiz/quiz_image_texts.dart';
 
 class LessonPath extends StatefulWidget {
@@ -256,8 +255,9 @@ class _LessonPathState extends State<LessonPath> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => QuizArticles(
+                          builder: (context) => DragAndDrop(
                             user: widget.user,
+                            subTheme: widget.subTheme,
                           ),
                         ),
                       );

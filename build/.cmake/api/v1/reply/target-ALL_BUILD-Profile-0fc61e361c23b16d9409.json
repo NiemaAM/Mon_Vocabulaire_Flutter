@@ -1,0 +1,36 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"flutter/ephemeral/.plugin_symlinks/audioplayers_windows/windows/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "audioplayers_windows_plugin::@6f00b843ae6f76675cd2"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "ALL_BUILD::@6f00b843ae6f76675cd2",
+	"isGeneratorProvided" : true,
+	"name" : "ALL_BUILD",
+	"paths" : 
+	{
+		"build" : "plugins/audioplayers_windows",
+		"source" : "flutter/ephemeral/.plugin_symlinks/audioplayers_windows/windows"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

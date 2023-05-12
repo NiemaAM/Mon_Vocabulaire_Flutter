@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe;-P;C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/_deps/nuget-subbuild/nuget-populate-prefix/src/nuget-populate-stamp/download-nuget-populate.cmake;COMMAND;C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe;-P;C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/_deps/nuget-subbuild/nuget-populate-prefix/src/nuget-populate-stamp/verify-nuget-populate.cmake
+source_dir=C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/_deps/nuget-src
+work_dir=C:/Users/pc/Desktop/Mon_Vocabulaire_Flutter/build/_deps
+url(s)=https://dist.nuget.org/win-x86-commandline/v6.5.0/nuget.exe
+hash=SHA256=d5fce5185de92b7356ea9264b997a620e35c6f6c3c061e471e0dc3a84b3d74fd
+no_extract=YES
+

@@ -2,11 +2,10 @@
 
 import 'dart:async';
 
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/quiz_prposition.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
-import 'package:mon_vocabulaire/Widgets/end_popup.dart';
-import 'package:mon_vocabulaire/Widgets/sucess_popup.dart';
 import '../../Model/quiz_model.dart';
 import '../../Services/audio_background.dart';
 import '../../Services/sfx.dart';
@@ -24,7 +23,6 @@ class QuizImageTexts extends StatefulWidget {
 }
 
 class _QuizImageTextsState extends State<QuizImageTexts> {
-  final bool _isEnabled = true;
   Color color = Palette.lightGrey;
   Color color2 = Palette.lightGrey;
   int chances = 3;
@@ -39,6 +37,8 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
   List<String> reponse = [];
   bool didResponse = false;
   String response = '';
+  bool quizEnded = false;
+  late ConfettiController _controllerConfetti;
 
   getTheme() {
     switch (widget.subTheme) {
@@ -118,23 +118,15 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
     }
   }
 
-  void song() async {}
-
-//TODO: change this
-  void call() {
-    setState(() {
-      color = Palette.darkGreen;
-      color2 = Palette.lightRed;
-    });
-  }
-
   int duration = 30;
+  int time = 0;
   void startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (duration > 0) {
           duration -= 1; // decrement the duration every second
-        } else {
+          time += 1;
+        } else if (chances > 0) {
           timer.cancel(); // stop the timer when the duration reaches 0
           nextQuestion(); // execute the function after the timer is done
           duration = 30;
@@ -198,6 +190,21 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
     }
   }
 
+  void endQuiz() {
+    if (index == size && chances != 0) {
+      setState(() {
+        quizEnded = true;
+      });
+      Sfx.play("sfx/win.mp3", 1);
+      _controllerConfetti.play();
+    } else if (chances == 0) {
+      setState(() {
+        quizEnded = true;
+      });
+      Sfx.play("sfx/lose.mp3", 1);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -205,6 +212,8 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
     getTheme();
     getQuestions();
     startTimer();
+    _controllerConfetti =
+        ConfettiController(duration: const Duration(seconds: 1));
   }
 
   @override
@@ -232,205 +241,166 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
             question: index,
             size: size,
           )),
-      body: index == size
-          ? SucessPopup()
-          : chances == 0
-              ? AlertDialog(
-                  // <-- SEE HERE
-                  title: const Text('Oh non ...'),
-                  content: SingleChildScrollView(
-                    child: ListBody(
-                      children: const <Widget>[
-                        Text("Tu n'as plus de coeurs :("),
-                      ],
-                    ),
-                  ),
-                  actions: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          child: const Text('Retour'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Accueil'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Réessayer'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => QuizImageTexts(
-                                  subTheme: widget.subTheme,
-                                  user: widget.user,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              : Stack(
+      body: Stack(
+        children: [
+          Stack(
+            children: [
+              Align(
+                alignment: AlignmentDirectional.bottomEnd,
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomEnd,
                   children: [
-                    Stack(
-                      children: [
-                        Align(
-                          alignment: AlignmentDirectional.bottomEnd,
-                          child: Stack(
-                            alignment: AlignmentDirectional.bottomEnd,
-                            children: [
-                              Container(
-                                height: height / 2,
-                                width: width,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: const BorderRadius.only(
-                                      topRight: Radius.circular(100),
-                                      topLeft: Radius.circular(100)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Center(
-                          child: ListView(
-                            children: [
-                              Column(
-                                children: [
-                                  Stack(children: [
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: IconButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          icon: const Icon(
-                                            Icons.close,
-                                            color: Palette.red,
-                                          )),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.only(top: height / 10),
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                          ),
-                                          child: Image.asset(
-                                            reponse[1],
-                                            scale: 3,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ]),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional.bottomEnd,
-                      child: SizedBox(
-                        height: height / 2.4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 20, left: 15, right: 15),
-                          child: GridView.count(
-                            crossAxisCount: 2,
-                            childAspectRatio: width / 300,
-                            mainAxisSpacing: width / 300,
-                            crossAxisSpacing: width / 300,
-                            controller:
-                                ScrollController(keepScrollOffset: false),
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            children: List.generate(
-                              mots.length,
-                              (int index) {
-                                String key = mots[index];
-                                return Stack(
-                                    alignment: AlignmentDirectional.topEnd,
-                                    children: [
-                                      Center(
-                                        child: Button(
-                                          enabled: _isEnabled,
-                                          content: Center(
-                                            child: Text(key,
-                                                style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                          ),
-                                          color: didResponse
-                                              ? key == response
-                                                  ? response == correct
-                                                      ? Palette.lighterGreen
-                                                      : Palette.lightRed
-                                                  : key == correct
-                                                      ? Palette.lighterGreen
-                                                      : Palette.white
-                                              : Palette.white,
-                                          callback: () {
-                                            setState(() {
-                                              didResponse = true;
-                                              response = key;
-                                            });
-                                            if (key == correct) {
-                                              Sfx.play("sfx/ding.mp3", 1);
-                                              Timer(const Duration(seconds: 1),
-                                                  () {
-                                                nextQuestion();
-                                                setState(() {
-                                                  duration = 30;
-                                                  didResponse = false;
-                                                });
-                                              });
-                                            } else {
-                                              Sfx.play("sfx/zew.mp3", 1);
-                                              Timer(const Duration(seconds: 1),
-                                                  () {
-                                                nextQuestion();
-                                                setState(() {
-                                                  chances -= 1;
-                                                  duration = 30;
-                                                  didResponse = false;
-                                                });
-                                              });
-                                            }
-                                          },
-                                          heigth: 100,
-                                          width: width / 2.4,
-                                          radius: 30,
-                                        ),
-                                      ),
-                                    ]);
-                              },
-                            ),
-                          ),
-                        ),
+                    Container(
+                      height: height / 2,
+                      width: width,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(100),
+                            topLeft: Radius.circular(100)),
                       ),
                     ),
                   ],
                 ),
+              ),
+              Center(
+                child: ListView(
+                  children: [
+                    Column(
+                      children: [
+                        Stack(children: [
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Palette.red,
+                                )),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: height / 10),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Image.asset(
+                                  reponse[1],
+                                  scale: 3,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Align(
+            alignment: AlignmentDirectional.bottomEnd,
+            child: SizedBox(
+              height: height / 2.4,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20, left: 15, right: 15),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  childAspectRatio: width / 300,
+                  mainAxisSpacing: width / 300,
+                  crossAxisSpacing: width / 300,
+                  controller: ScrollController(keepScrollOffset: false),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  children: List.generate(
+                    mots.length,
+                    (int index) {
+                      String key = mots[index];
+                      return Stack(
+                          alignment: AlignmentDirectional.topEnd,
+                          children: [
+                            Center(
+                              child: Button(
+                                enabled: !quizEnded,
+                                content: Center(
+                                  child: Text(key,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                color: didResponse
+                                    ? key == response
+                                        ? response == correct
+                                            ? Palette.lighterGreen
+                                            : Palette.lightRed
+                                        : key == correct
+                                            ? Palette.lighterGreen
+                                            : Palette.white
+                                    : Palette.white,
+                                callback: () {
+                                  if (!quizEnded) {
+                                    setState(() {
+                                      didResponse = true;
+                                      response = key;
+                                    });
+                                    if (key == correct) {
+                                      Sfx.play("sfx/ding.mp3", 1);
+                                      Timer(const Duration(seconds: 1), () {
+                                        nextQuestion();
+                                        setState(() {
+                                          duration = 30;
+                                          didResponse = false;
+                                        });
+                                        endQuiz();
+                                      });
+                                    } else {
+                                      Sfx.play("sfx/zew.mp3", 1);
+                                      Timer(const Duration(seconds: 1), () {
+                                        nextQuestion();
+                                        setState(() {
+                                          chances -= 1;
+                                          duration = 30;
+                                          didResponse = false;
+                                        });
+                                        endQuiz();
+                                      });
+                                    }
+                                  }
+                                },
+                                heigth: 100,
+                                width: width / 2.4,
+                                radius: 30,
+                              ),
+                            ),
+                          ]);
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ConfettiWidget(
+            gravity: 0,
+            confettiController: _controllerConfetti,
+            blastDirectionality: BlastDirectionality
+                .explosive, // don't specify a direction, blast randomly
+            numberOfParticles: 20,
+            shouldLoop:
+                true, // start again as soon as the animation is finished
+            colors: const [
+              Palette.lightGreen,
+              Palette.blue,
+              Palette.pink,
+              Palette.orange,
+              Palette.purple
+            ], // manually specify the colors to be used
+          ),
+        ],
+      ),
     );
   }
 }
