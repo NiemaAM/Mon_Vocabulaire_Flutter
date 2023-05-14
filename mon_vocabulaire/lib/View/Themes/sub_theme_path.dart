@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
@@ -35,8 +37,8 @@ class _LessonPathState extends State<LessonPath> {
     super.initState();
     if (widget.subTheme == 1 || widget.subTheme == 2) {
       setState(() {
-        images[1] = "assets/themes_images/personnes.png";
-        images[0] = "assets/themes_images/elements.png";
+        images[1] = "assets/images/themes/personnes.png";
+        images[0] = "assets/images/themes/elements.png";
         titles[1] = "Personnes";
         titles[0] = "Éléments";
         background = "school";
@@ -44,8 +46,8 @@ class _LessonPathState extends State<LessonPath> {
       });
     } else if (widget.subTheme == 3 || widget.subTheme == 4) {
       setState(() {
-        images[0] = "assets/themes_images/maison.png";
-        images[1] = "assets/themes_images/famille.png";
+        images[0] = "assets/images/themes/maison.png";
+        images[1] = "assets/images/themes/famille.png";
         titles[0] = "Maison";
         titles[1] = "Famille";
         background = "home";
@@ -53,8 +55,8 @@ class _LessonPathState extends State<LessonPath> {
       });
     } else if (widget.subTheme == 5 || widget.subTheme == 6) {
       setState(() {
-        images[0] = "assets/themes_images/cuisine.png";
-        images[1] = "assets/themes_images/aliments.png";
+        images[0] = "assets/images/themes/cuisine.png";
+        images[1] = "assets/images/themes/aliments.png";
         titles[0] = "Cuisine";
         titles[1] = "Aliments";
         background = "kitchen";
@@ -62,17 +64,17 @@ class _LessonPathState extends State<LessonPath> {
       });
     } else if (widget.subTheme == 7 || widget.subTheme == 8) {
       setState(() {
-        images[0] = "assets/themes_images/mammiferes.png";
-        images[1] = "assets/themes_images/oiseaux.png";
-        titles[0] = "Mammifères";
-        titles[1] = "Oiseaux et autres";
+        images[0] = "assets/images/themes/animaux.png";
+        images[1] = "assets/images/themes/mammiferes.png";
+        titles[0] = "Ferme";
+        titles[1] = "Forêt";
         background = "forest";
         color = Palette.animaux;
       });
     } else if (widget.subTheme == 9 || widget.subTheme == 10) {
       setState(() {
-        images[0] = "assets/themes_images/mon_corps.png";
-        images[1] = "assets/themes_images/mes_habits.png";
+        images[0] = "assets/images/themes/mon_corps.png";
+        images[1] = "assets/images/themes/mes_habits.png";
         titles[0] = "Mon corps";
         titles[1] = "Mes habits";
         background = "cloths";
@@ -80,8 +82,8 @@ class _LessonPathState extends State<LessonPath> {
       });
     } else if (widget.subTheme == 11 || widget.subTheme == 12) {
       setState(() {
-        images[0] = "assets/themes_images/sports.png";
-        images[1] = "assets/themes_images/loisirs.png";
+        images[0] = "assets/images/themes/sports.png";
+        images[1] = "assets/images/themes/loisirs.png";
         titles[0] = "Sports";
         titles[1] = "Loisirs";
         background = "sports";
@@ -93,12 +95,13 @@ class _LessonPathState extends State<LessonPath> {
   @override
   void dispose() {
     super.dispose();
-    Sfx.play("sfx/pop.mp3", 1);
+    Sfx.play("audios/sfx/pop.mp3", 1);
   }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: color,
@@ -123,22 +126,22 @@ class _LessonPathState extends State<LessonPath> {
       ),
       body: Stack(
         children: [
-          SvgPicture.asset(
-            'assets/themes_images/$background.svg',
-            alignment: Alignment.center,
-            fit: BoxFit.cover,
-          ),
+          SvgPicture.asset('assets/images/themes/backgrounds/$background.svg',
+              alignment: Alignment.center,
+              fit: BoxFit.cover,
+              color: Palette.white.withOpacity(0.65),
+              colorBlendMode: BlendMode.modulate),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20),
+                  padding: EdgeInsets.only(left: width > 500 ? 40 : 10),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Button(
                         callback: () {
-                          Sfx.play("sfx/plip.mp3", 1);
+                          Sfx.play("audios/sfx/plip.mp3", 1);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -150,21 +153,21 @@ class _LessonPathState extends State<LessonPath> {
                           );
                         },
                         content: Image.asset(
-                          "assets/themes_images/lesson.png",
-                          scale: 5,
+                          "assets/images/themes/lesson.png",
+                          scale: width > 500 ? 4 : 5,
                         ),
-                        heigth: 150,
-                        width: 150,
+                        heigth: width > 500 ? 200 : 150,
+                        width: width > 500 ? 200 : 150,
                         radius: 200,
                         color: color),
                   ),
                 ),
                 Positioned(
                     top: height / 6,
-                    right: 0,
+                    right: width > 500 ? 40 : 10,
                     child: Button(
                         callback: () {
-                          Sfx.play("sfx/plip.mp3", 1);
+                          Sfx.play("audios/sfx/plip.mp3", 1);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -178,51 +181,54 @@ class _LessonPathState extends State<LessonPath> {
                         content: Opacity(
                           opacity: 0.8,
                           child: Image.asset(
-                            "assets/themes_images/song.png",
-                            scale: 5,
+                            "assets/images/themes/song.png",
+                            scale: width > 500 ? 4 : 5,
                           ),
                         ),
-                        heigth: 150,
-                        width: 150,
+                        heigth: width > 500 ? 200 : 150,
+                        width: width > 500 ? 200 : 150,
                         radius: 200,
                         color: Palette.white)),
-                Padding(
-                  padding: const EdgeInsets.only(top: 250, left: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Button(
-                      callback: () {
-                        Sfx.play("sfx/plip.mp3", 1);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => QuizImageTexts(
-                              subTheme: widget.subTheme,
-                              user: widget.user,
+                Positioned(
+                  top: height / 3.2,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: width > 500 ? 40 : 10),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Button(
+                        callback: () {
+                          Sfx.play("audios/sfx/plip.mp3", 1);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuizImageTexts(
+                                subTheme: widget.subTheme,
+                                user: widget.user,
+                              ),
                             ),
+                          );
+                        },
+                        content: Opacity(
+                          opacity: 0.8,
+                          child: Image.asset(
+                            "assets/images/themes/images.png",
+                            scale: width > 500 ? 4 : 5,
                           ),
-                        );
-                      },
-                      content: Opacity(
-                        opacity: 0.8,
-                        child: Image.asset(
-                          "assets/themes_images/images.png",
-                          scale: 5,
                         ),
+                        heigth: width > 500 ? 200 : 150,
+                        width: width > 500 ? 200 : 150,
+                        radius: 200,
+                        color: Palette.white,
                       ),
-                      heigth: 150,
-                      width: 150,
-                      radius: 200,
-                      color: Palette.white,
                     ),
                   ),
                 ),
                 Positioned(
-                  top: 360,
-                  right: 0,
+                  top: height / 2.15,
+                  right: width > 500 ? 40 : 10,
                   child: Button(
                     callback: () {
-                      Sfx.play("sfx/plip.mp3", 1);
+                      Sfx.play("audios/sfx/plip.mp3", 1);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -236,22 +242,22 @@ class _LessonPathState extends State<LessonPath> {
                     content: Opacity(
                       opacity: 0.8,
                       child: Image.asset(
-                        "assets/themes_images/drag_and_drop.png",
-                        scale: 6,
+                        "assets/images/themes/drag_and_drop.png",
+                        scale: width > 500 ? 5 : 6,
                       ),
                     ),
-                    heigth: 150,
-                    width: 150,
+                    heigth: width > 500 ? 200 : 150,
+                    width: width > 500 ? 200 : 150,
                     radius: 200,
                     color: Palette.white,
                   ),
                 ),
                 Positioned(
-                  bottom: 20,
-                  left: 20,
+                  left: width > 500 ? 40 : 10,
+                  top: height / 1.6,
                   child: Button(
                     callback: () {
-                      Sfx.play("sfx/plip.mp3", 1);
+                      Sfx.play("audios/sfx/plip.mp3", 1);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -265,12 +271,12 @@ class _LessonPathState extends State<LessonPath> {
                     content: Opacity(
                       opacity: 0.8,
                       child: Image.asset(
-                        "assets/themes_images/lock.png",
-                        scale: 7,
+                        "assets/images/themes/lock.png",
+                        scale: width > 500 ? 6 : 7,
                       ),
                     ),
-                    heigth: 150,
-                    width: 150,
+                    heigth: width > 500 ? 200 : 150,
+                    width: width > 500 ? 200 : 150,
                     radius: 200,
                     color: Palette.white,
                     enabled: false,

@@ -6,7 +6,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mon_vocabulaire/Providers/theme_provider.dart';
+import 'package:mon_vocabulaire/Themes/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
 import 'package:mon_vocabulaire/View/Account/accounts.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
@@ -107,7 +107,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> loadCaptchaData() async {
     // Load the captcha data from a local JSON file
     String captchaDataJson =
-        await rootBundle.loadString('assets/captcha_data.json');
+        await rootBundle.loadString('assets/data/captcha_data.json');
     captchaData = json.decode(captchaDataJson);
     // Generate a new captcha image
     generateCaptchaImage();
@@ -121,7 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     captchaValue = captchaData[captchaCode];
     // Load the corresponding captcha image from assets
-    captchaImagePath = 'assets/captcha/$captchaCode.png';
+    captchaImagePath = 'assets/images/captcha/$captchaCode.png';
   }
 
   void verifyCaptcha(String input) {
@@ -147,7 +147,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void dispose() {
     super.dispose();
-    Sfx.play("sfx/pop.mp3", 1);
+    Sfx.play("audios/sfx/pop.mp3", 1);
     myController.dispose();
   }
 

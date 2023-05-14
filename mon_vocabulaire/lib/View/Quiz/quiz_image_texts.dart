@@ -81,13 +81,13 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
       case 7:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Mammifères';
+          subTheme = 'Ferme';
         });
         break;
       case 8:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Oiseaux et autres';
+          subTheme = 'Forêt';
         });
         break;
       case 9:
@@ -123,22 +123,23 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
   void startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        if (duration > 0) {
+        if (duration > 0 && !quizEnded) {
           duration -= 1; // decrement the duration every second
           time += 1;
-        } else if (chances > 0) {
+        } else if (chances > 0 && !quizEnded) {
           timer.cancel(); // stop the timer when the duration reaches 0
           nextQuestion(); // execute the function after the timer is done
           duration = 30;
           startTimer();
         }
-        if (index == size || chances == 0) {
+        if (index == size || chances == 0 || quizEnded) {
           duration = 0;
         }
       });
     });
   }
 
+  bool first = true;
   getQuestions() async {
     List<Proposition> quest =
         await quizModel.getRandomPropositions(theme, subTheme);
@@ -146,14 +147,18 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
       questions = quest;
     });
     setState(() {
-      size = quizModel.getSize();
+      if (quizModel.getSize() >= 10) {
+        size = 10;
+      } else {
+        size = quizModel.getSize();
+      }
     });
     nextQuestion();
   }
 
   int size = 5;
   nextQuestion() async {
-    if (index == 0) {
+    if (first) {
       setState(() {
         images = questions[index]
             .propositionsImages
@@ -168,7 +173,10 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
             .map((element) => element.toString())
             .toList();
         correct = reponse[3];
-        index += 1;
+        first = false;
+        if (didResponse) {
+          nextQuestion();
+        }
       });
     } else if (index < size) {
       setState(() {
@@ -195,13 +203,13 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
       setState(() {
         quizEnded = true;
       });
-      Sfx.play("sfx/win.mp3", 1);
+      Sfx.play("audios/sfx/win.mp3", 1);
       _controllerConfetti.play();
     } else if (chances == 0) {
       setState(() {
         quizEnded = true;
       });
-      Sfx.play("sfx/lose.mp3", 1);
+      Sfx.play("audios/sfx/lose.mp3", 1);
     }
   }
 
@@ -219,7 +227,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
   @override
   void dispose() {
     super.dispose();
-    Sfx.play("sfx/pop.mp3", 1);
+    Sfx.play("audios/sfx/pop.mp3", 1);
     AudioBK.playBK();
   }
 
@@ -227,6 +235,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    AudioBK.pauseBK();
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -238,7 +247,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
             chances: chances,
             duration: duration,
             user: widget.user,
-            question: index,
+            question: index >= size ? size : index + 1,
             size: size,
           )),
       body: Stack(
@@ -279,16 +288,22 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                 )),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: height / 10),
+                            padding: EdgeInsets.only(
+                                top: width > 500 ? height / 18 : height / 10),
                             child: Align(
                               alignment: Alignment.center,
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                child: Image.asset(
-                                  reponse[1],
-                                  scale: 3,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    left: width / 3.5,
+                                    right: width / 3.5,
+                                  ),
+                                  child: Image.asset(
+                                    reponse[1],
+                                  ),
                                 ),
                               ),
                             ),
@@ -348,7 +363,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                       response = key;
                                     });
                                     if (key == correct) {
-                                      Sfx.play("sfx/ding.mp3", 1);
+                                      Sfx.play("audios/sfx/ding.mp3", 1);
                                       Timer(const Duration(seconds: 1), () {
                                         nextQuestion();
                                         setState(() {
@@ -358,7 +373,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                         endQuiz();
                                       });
                                     } else {
-                                      Sfx.play("sfx/zew.mp3", 1);
+                                      Sfx.play("audios/sfx/zew.mp3", 1);
                                       Timer(const Duration(seconds: 1), () {
                                         nextQuestion();
                                         setState(() {

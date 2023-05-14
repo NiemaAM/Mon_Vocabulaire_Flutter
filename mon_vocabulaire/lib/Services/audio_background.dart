@@ -5,7 +5,7 @@ class AudioBK {
   static AudioPlayer playerBK = AudioPlayer();
 
   static void playBK() async {
-    playerBK.play(AssetSource("background_music.mp3"));
+    playerBK.play(AssetSource("audios/background_music.mp3"));
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final double? bkVolume = prefs.getDouble('bkVolume');
     playerBK.setVolume(bkVolume ?? 0.5);

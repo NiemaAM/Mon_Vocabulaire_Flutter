@@ -58,15 +58,15 @@ class _EditAccountState extends State<EditAccount> {
                       : CircleAvatar(
                           radius: 100,
                           backgroundColor: Palette.blue,
-                          backgroundImage: NetworkImage(widget.user.image),
+                          backgroundImage: AssetImage(widget.user.image),
                         ),
                   Positioned(
-                    bottom: 15,
-                    left: 50,
+                    bottom: 35,
+                    right: 10,
                     child: Button(
                         callback: () {},
                         heigth: 60,
-                        width: 100,
+                        width: 60,
                         color: Palette.pink,
                         content: IconButton(
                           onPressed: () {
