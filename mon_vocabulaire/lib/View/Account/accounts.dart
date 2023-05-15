@@ -217,7 +217,7 @@ class _AccountsState extends State<Accounts> {
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
-        title: const Center(child: Text("Mes Comptes")),
+        title: const Text("Mes Comptes"),
       ),
       body: Align(
         alignment: Alignment.center,

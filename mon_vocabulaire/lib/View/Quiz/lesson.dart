@@ -278,12 +278,13 @@ class _LessonPage extends State<LessonPage> {
                         child: Button(
                           content: Icon(
                             Icons.chevron_right_rounded,
-                            color: index != size ? Palette.white : Palette.grey,
+                            color:
+                                index != size ? Palette.white : Palette.white,
                             size: 40,
                           ),
                           color: index != size
                               ? Theme.of(context).secondaryHeaderColor
-                              : Palette.lightGrey,
+                              : Theme.of(context).secondaryHeaderColor,
                           callback: () {
                             if (index < size) {
                               Sfx.play("audios/sfx/plip.mp3", 1);

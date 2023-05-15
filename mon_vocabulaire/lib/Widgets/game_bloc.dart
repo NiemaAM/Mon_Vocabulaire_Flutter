@@ -8,13 +8,16 @@ class GameBloc extends StatefulWidget {
   final String image;
   final Color color;
   final Widget page;
-  const GameBloc(
-      {super.key,
-      required this.text,
-      required this.price,
-      required this.image,
-      required this.color,
-      required this.page});
+  final bool enabled;
+  const GameBloc({
+    super.key,
+    required this.text,
+    required this.price,
+    required this.image,
+    required this.color,
+    required this.page,
+    this.enabled = true,
+  });
 
   @override
   State<GameBloc> createState() => _GameBlocState();
@@ -26,6 +29,7 @@ class _GameBlocState extends State<GameBloc> {
     double width = MediaQuery.of(context).size.width;
     return Center(
       child: Button(
+        enabled: widget.enabled,
         callback: () {
           Navigator.push(
             context,
