@@ -86,9 +86,9 @@ class _FlipCardGameState extends State<FlipCardGame>
   void endGame() {
     if (duration > 0) {
       _controllerConfetti.play();
-      Sfx.play("sfx/win.mp3", 1);
+      Sfx.play("audios/sfx/win.mp3", 1);
     } else {
-      Sfx.play("sfx/lose.mp3", 1);
+      Sfx.play("audios/sfx/lose.mp3", 1);
     }
 
     AwesomeDialog(
@@ -128,7 +128,7 @@ class _FlipCardGameState extends State<FlipCardGame>
           child: Text(
             duration > 0
                 ? "Bravo, tu as une bonne mémoire !"
-                : "Tu es presque , essaye encore une fois",
+                : "Tu y étais presque, essaye encore une fois",
             style: const TextStyle(
               fontSize: 16,
             ),
@@ -195,17 +195,33 @@ class _FlipCardGameState extends State<FlipCardGame>
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColorLight,
+      appBar: AppBar(
+        backgroundColor: Palette.white,
+        elevation: 1,
+        iconTheme: const IconThemeData(color: Palette.black),
+        title: Row(
+          children: [
+            Image.asset(
+              "assets/images/games/JuMots.png",
+              width: 40,
+            ),
+            const Text(
+              "  JuMots",
+              style: TextStyle(color: Palette.black),
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
             LinearPercentIndicator(
               padding: const EdgeInsets.all(0),
               animation: true,
-              lineHeight: 14.0,
+              lineHeight: 10,
               animationDuration: 0,
               percent: duration / 180,
-              barRadius: const Radius.circular(100),
+              barRadius: const Radius.circular(0),
               progressColor: duration >= 120
                   ? Palette.lightGreen
                   : duration <= 60
@@ -213,48 +229,18 @@ class _FlipCardGameState extends State<FlipCardGame>
                       : Palette.orange,
               backgroundColor: Theme.of(context).shadowColor,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20, right: 5),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                    onPressed: () {
-                      AwesomeDialog(
-                        context: context,
-                        headerAnimationLoop: false,
-                        dialogType: DialogType.question,
-                        animType: AnimType.rightSlide,
-                        title: 'Quitter le quiz',
-                        desc: 'Es-tu sûr(e) de vouloir quitter ?',
-                        btnCancelText: "Quitter",
-                        btnCancelOnPress: () {
-                          Navigator.pop(context);
-                        },
-                        btnOkText: "Rester",
-                        btnOkOnPress: () {},
-                      ).show();
-                    },
-                    icon: const Icon(
-                      Icons.close,
-                      color: Palette.red,
-                    )),
-              ),
-            ),
             Align(
               alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(top: width > 500 ? 20 : 10),
-                child: BubbleMessage(
-                    message: countdown > 0
-                        ? countdown == 1
-                            ? "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown seconde."
-                            : "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown secondes."
-                        : "C'est parti !"),
-              ),
+              child: BubbleMessage(
+                  message: countdown > 0
+                      ? countdown == 1
+                          ? "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown seconde."
+                          : "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown secondes."
+                      : "C'est parti !"),
             ),
             Padding(
               padding: EdgeInsets.only(
-                  top: width > 500 ? 130 : height / 4.5,
+                  top: width > 500 ? 110 : height / 5,
                   left: width > 500 ? 30 : 0,
                   right: width > 500 ? 30 : 0),
               child: GridView.builder(

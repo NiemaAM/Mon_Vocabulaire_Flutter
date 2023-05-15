@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/quiz_prposition_lettres.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
 import '../../Model/quiz_model.dart';
 import '../../Services/audio_background.dart';
 import '../../Services/sfx.dart';
@@ -232,7 +233,7 @@ class _DragAndDropState extends State<DragAndDrop> {
             padding: const EdgeInsets.all(10),
             child: Text(
               chances == 3
-                  ? "Exellent travaille!"
+                  ? "Excellent travail !"
                   : chances == 2
                       ? "Bien joué!"
                       : "Bel effort!",
@@ -248,7 +249,7 @@ class _DragAndDropState extends State<DragAndDrop> {
               chances == 3
                   ? "Tu es un vrai champion!"
                   : chances == 2
-                      ? "Joli travaille, Continue comme ça!"
+                      ? "Joli travail, Continue comme ça!"
                       : "Pas mal, mais tu peux faire mieux!",
               style: const TextStyle(
                 fontSize: 16,
@@ -457,6 +458,44 @@ class _DragAndDropState extends State<DragAndDrop> {
             "assets/images/mascotte/lose.gif",
             scale: 5,
           ),
+          Button(
+              callback: () {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LessonPage(
+                      subTheme: widget.subTheme,
+                      user: widget.user,
+                    ),
+                  ),
+                );
+              },
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(),
+                  ),
+                  Icon(
+                    Icons.menu_book_rounded,
+                    color: Palette.white,
+                  ),
+                  Expanded(child: SizedBox()),
+                  Center(
+                    child: Text(
+                      "Réviser ma leçon",
+                      style: TextStyle(color: Palette.white, fontSize: 16),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(),
+                  ),
+                ],
+              ))
         ]),
         btnCancelIcon: Icons.home,
         btnCancelText: " ",
@@ -478,6 +517,34 @@ class _DragAndDropState extends State<DragAndDrop> {
         },
       ).show();
     }
+  }
+
+  bool _visible = false;
+  void heartVisible() {
+    Timer(const Duration(microseconds: 500), () {
+      setState(() {
+        _visible = true;
+      });
+      Timer(const Duration(seconds: 1), () {
+        setState(() {
+          _visible = false;
+        });
+      });
+    });
+  }
+
+  Widget looseHeart() {
+    return AnimatedOpacity(
+        // If the widget is visible, animate to 0.0 (invisible).
+        // If the widget is hidden, animate to 1.0 (fully visible).
+        opacity: _visible ? 1.0 : 0.0,
+        duration: const Duration(seconds: 1),
+        // The green box must be a child of the AnimatedOpacity widget.
+        child: const Icon(
+          Icons.heart_broken,
+          color: Palette.red,
+          size: 150,
+        ));
   }
 
   @override
@@ -577,11 +644,14 @@ class _DragAndDropState extends State<DragAndDrop> {
                               size: 50,
                             ),
                             callback: () {
-                              Voice.play(reponse[0], 1);
+                              if (!quizEnded) {
+                                Voice.play(reponse[0], 1);
+                              } else {
+                                endQuiz();
+                              }
                             },
                             width: 100,
                             heigth: 100,
-                            enabled: !quizEnded,
                           ),
                         ),
                       ),
@@ -594,11 +664,14 @@ class _DragAndDropState extends State<DragAndDrop> {
                                 Image.asset("assets/images/themes/snail.png"),
                             color: Palette.blue,
                             callback: () {
-                              Voice.play(reponse[0], 0.65);
+                              if (!quizEnded) {
+                                Voice.play(reponse[0], 0.65);
+                              } else {
+                                endQuiz();
+                              }
                             },
                             heigth: 35,
                             width: 35,
-                            enabled: !quizEnded,
                           ),
                         ),
                       ),
@@ -669,7 +742,18 @@ class _DragAndDropState extends State<DragAndDrop> {
                             });
                           } else {
                             if (!quizEnded) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Palette.red,
+                                content: Text(
+                                  'Mauvaise reponse',
+                                  style: TextStyle(
+                                      color: Palette.white, fontSize: 18),
+                                ),
+                              ));
                               Sfx.play("audios/sfx/zew.mp3", 1);
+                              heartVisible();
                             }
                             setState(() {
                               chances -= 1;
@@ -683,6 +767,16 @@ class _DragAndDropState extends State<DragAndDrop> {
                               duration = 30;
                             });
                             if (!quizEnded) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Palette.lightGreen,
+                                content: Text(
+                                  'Bonne reponse',
+                                  style: TextStyle(
+                                      color: Palette.white, fontSize: 18),
+                                ),
+                              ));
                               Timer(const Duration(milliseconds: 1000), () {
                                 Sfx.play("audios/sfx/ding.mp3", 1);
                               });
@@ -694,6 +788,8 @@ class _DragAndDropState extends State<DragAndDrop> {
                               nextQuestion();
                             });
                           }
+                        } else {
+                          endQuiz();
                         }
                       },
                       onWillAccept: (receivedItem) {
@@ -764,6 +860,13 @@ class _DragAndDropState extends State<DragAndDrop> {
               Palette.orange,
               Palette.purple
             ], // manually specify the colors to be used
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 130),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: looseHeart(),
+            ),
           ),
         ],
       ),

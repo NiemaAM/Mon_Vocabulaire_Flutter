@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Games/flip_card.dart';
 import 'package:mon_vocabulaire/View/Games/math_game.dart';
+import 'package:mon_vocabulaire/View/Games/puzzle.dart';
+import 'package:mon_vocabulaire/View/Games/tic_tac_toe.dart';
 import '../../Model/user.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/game_bloc.dart';
@@ -38,35 +40,14 @@ class _GamesState extends State<Games> {
             image: "assets/images/games/tic-tac-toe.png",
             price: '20',
             text: "Tic Tac Toe",
-            page: FlipCardGame(),
-          ),
-          GameBloc(
-            color: Palette.blue,
-            image: "assets/images/games/bubbles.png",
-            price: '50',
-            text: "NinjaBubbles",
-            page: FlipCardGame(),
-          ),
-          GameBloc(
-            color: Color.fromARGB(255, 206, 89, 227),
-            image: "assets/images/games/math_game.png",
-            price: '80',
-            text: "FruityMaths",
-            page: MathGame(),
+            page: TicTacToe(),
           ),
           GameBloc(
             color: Palette.pink,
             image: "assets/images/games/puzzle.png",
             price: '80',
             text: "Puzzle",
-            page: FlipCardGame(),
-          ),
-          GameBloc(
-            color: Color.fromARGB(255, 30, 173, 173),
-            image: "assets/images/games/apple.png",
-            price: '80',
-            text: "Recoltte",
-            page: FlipCardGame(),
+            page: Puzzle(),
           ),
           GameBloc(
             color: Palette.red,
@@ -74,6 +55,31 @@ class _GamesState extends State<Games> {
             price: '100',
             text: "Trouvailles",
             page: FlipCardGame(),
+            enabled: false,
+          ),
+          GameBloc(
+            color: Palette.blue,
+            image: "assets/images/games/bubbles.png",
+            price: '50',
+            text: "NinjaBubbles",
+            page: FlipCardGame(),
+            enabled: false,
+          ),
+          GameBloc(
+            color: Color.fromARGB(255, 30, 173, 173),
+            image: "assets/images/games/apple.png",
+            price: '80',
+            text: "Recoltte",
+            page: FlipCardGame(),
+            enabled: false,
+          ),
+          GameBloc(
+            color: Color.fromARGB(255, 206, 89, 227),
+            image: "assets/images/games/math_game.png",
+            price: '80',
+            text: "FruityMaths",
+            page: MathGame(),
+            enabled: false,
           ),
           GameBloc(
             color: Color.fromARGB(255, 171, 131, 85),
@@ -81,6 +87,7 @@ class _GamesState extends State<Games> {
             price: '100',
             text: "Dames",
             page: FlipCardGame(),
+            enabled: false,
           ),
         ],
       ),

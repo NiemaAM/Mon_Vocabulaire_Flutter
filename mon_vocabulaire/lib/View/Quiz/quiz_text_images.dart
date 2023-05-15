@@ -7,6 +7,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/quiz_model.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/quiz_app_bar.dart';
 import '../../Model/quiz_prposition.dart';
@@ -233,7 +234,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
             padding: const EdgeInsets.all(10),
             child: Text(
               chances == 3
-                  ? "Exellent travaille!"
+                  ? "Excellent travail !"
                   : chances == 2
                       ? "Bien joué!"
                       : "Bel effort!",
@@ -249,7 +250,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
               chances == 3
                   ? "Tu es un vrai champion!"
                   : chances == 2
-                      ? "Joli travaille, Continue comme ça!"
+                      ? "Joli travail, Continue comme ça!"
                       : "Pas mal, mais tu peux faire mieux!",
               style: const TextStyle(
                 fontSize: 16,
@@ -456,6 +457,44 @@ class _QuizTextImagesState extends State<QuizTextImages> {
             "assets/images/mascotte/lose.gif",
             scale: 5,
           ),
+          Button(
+              callback: () {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LessonPage(
+                      subTheme: widget.subTheme,
+                      user: widget.user,
+                    ),
+                  ),
+                );
+              },
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(),
+                  ),
+                  Icon(
+                    Icons.menu_book_rounded,
+                    color: Palette.white,
+                  ),
+                  Expanded(child: SizedBox()),
+                  Center(
+                    child: Text(
+                      "Réviser ma leçon",
+                      style: TextStyle(color: Palette.white, fontSize: 16),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(),
+                  ),
+                ],
+              ))
         ]),
         btnCancelIcon: Icons.home,
         btnCancelText: " ",
@@ -477,6 +516,34 @@ class _QuizTextImagesState extends State<QuizTextImages> {
         },
       ).show();
     }
+  }
+
+  bool _visible = false;
+  void heartVisible() {
+    Timer(const Duration(microseconds: 500), () {
+      setState(() {
+        _visible = true;
+      });
+      Timer(const Duration(seconds: 1), () {
+        setState(() {
+          _visible = false;
+        });
+      });
+    });
+  }
+
+  Widget looseHeart() {
+    return AnimatedOpacity(
+        // If the widget is visible, animate to 0.0 (invisible).
+        // If the widget is hidden, animate to 1.0 (fully visible).
+        opacity: _visible ? 1.0 : 0.0,
+        duration: const Duration(seconds: 1),
+        // The green box must be a child of the AnimatedOpacity widget.
+        child: const Icon(
+          Icons.heart_broken,
+          color: Palette.red,
+          size: 150,
+        ));
   }
 
   @override
@@ -592,11 +659,14 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                   size: 50,
                                 ),
                                 callback: () {
-                                  Voice.play(reponse[0], 1);
+                                  if (!quizEnded) {
+                                    Voice.play(reponse[0], 1);
+                                  } else {
+                                    endQuiz();
+                                  }
                                 },
                                 width: 100,
                                 heigth: 100,
-                                enabled: !quizEnded,
                               ),
                             ),
                           ),
@@ -609,11 +679,14 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                     "assets/images/themes/snail.png"),
                                 color: Palette.pink,
                                 callback: () {
-                                  Voice.play(reponse[0], 0.60);
+                                  if (!quizEnded) {
+                                    Voice.play(reponse[0], 0.60);
+                                  } else {
+                                    endQuiz();
+                                  }
                                 },
                                 heigth: 35,
                                 width: 35,
-                                enabled: !quizEnded,
                               ),
                             ),
                           ),
@@ -643,7 +716,6 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                     String value = images[index];
                     return Center(
                       child: Button(
-                        enabled: !quizEnded,
                         content: Padding(
                           padding: const EdgeInsets.all(12),
                           child: Image.asset(
@@ -666,6 +738,16 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                               response = key;
                             });
                             if (key == correct) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Palette.lightGreen,
+                                content: Text(
+                                  'Bonne reponse',
+                                  style: TextStyle(
+                                      color: Palette.white, fontSize: 18),
+                                ),
+                              ));
                               Sfx.play("audios/sfx/ding.mp3", 1);
                               Timer(const Duration(seconds: 1), () {
                                 nextQuestion();
@@ -676,8 +758,19 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                 endQuiz();
                               });
                             } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Palette.red,
+                                content: Text(
+                                  'Mauvaise reponse',
+                                  style: TextStyle(
+                                      color: Palette.white, fontSize: 18),
+                                ),
+                              ));
                               Sfx.play("audios/sfx/zew.mp3", 1);
-                              Timer(const Duration(seconds: 1), () {
+                              heartVisible();
+                              Timer(const Duration(seconds: 2), () {
                                 nextQuestion();
                                 setState(() {
                                   chances -= 1;
@@ -687,6 +780,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                 endQuiz();
                               });
                             }
+                          } else {
+                            endQuiz();
                           }
                         },
                         heigth: width > 500 ? width / 2.8 : width / 2.2,
@@ -714,6 +809,13 @@ class _QuizTextImagesState extends State<QuizTextImages> {
               Palette.orange,
               Palette.purple
             ], // manually specify the colors to be used
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 130),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: looseHeart(),
+            ),
           ),
         ],
       ),
