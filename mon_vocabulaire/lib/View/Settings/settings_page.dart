@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:mon_vocabulaire/Themes/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
 import 'package:mon_vocabulaire/View/Account/accounts.dart';
+import 'package:mon_vocabulaire/View/Account/first_screen.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:provider/provider.dart';
@@ -630,7 +631,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Accounts(),
+                        builder: (context) => const FirstSceen(),
                       ),
                     );
                   },

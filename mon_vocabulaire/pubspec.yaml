@@ -47,6 +47,7 @@ dependencies:
   confetti: ^0.7.0
   animator: ^3.2.0
   flip_card: ^0.7.0
+  image: ^4.0.17
 
 dev_dependencies:
   flutter_test:

@@ -98,7 +98,7 @@ class _SubThemesState extends State<SubThemes> {
   @override
   void dispose() {
     super.dispose();
-    Sfx.play("sfx/pop.mp3", 1);
+    Sfx.play("audios/sfx/pop.mp3", 1);
   }
 
   @override
