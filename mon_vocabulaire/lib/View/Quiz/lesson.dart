@@ -70,13 +70,13 @@ class _LessonPage extends State<LessonPage> {
       case 7:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Mammifères';
+          subTheme = 'Ferme';
         });
         break;
       case 8:
         setState(() {
           theme = 'Animaux';
-          subTheme = 'Oiseaux et autres';
+          subTheme = 'Forêt';
         });
         break;
       case 9:
@@ -111,7 +111,11 @@ class _LessonPage extends State<LessonPage> {
     List<Lesson> les = await quizModel.getLesson(theme, subTheme);
     setState(() {
       lesson = les;
-      size = quizModel.getLessonSize() - 1;
+      if (quizModel.getSize() >= 10) {
+        size = 9;
+      } else {
+        size = quizModel.getSize() - 1;
+      }
     });
   }
 
@@ -126,7 +130,7 @@ class _LessonPage extends State<LessonPage> {
   @override
   void dispose() {
     super.dispose();
-    Sfx.play("sfx/pop.mp3", 1);
+    Sfx.play("audios/sfx/pop.mp3", 1);
     AudioBK.playBK();
   }
 
@@ -135,6 +139,7 @@ class _LessonPage extends State<LessonPage> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     AudioBK.pauseBK();
+    Voice.play(lesson[index].audio, 1);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -256,11 +261,12 @@ class _LessonPage extends State<LessonPage> {
                               : Palette.lightGrey,
                           callback: () {
                             if (index > 0) {
-                              Sfx.play("sfx/plip.mp3", 1);
+                              Sfx.play("audios/sfx/plip.mp3", 1);
                               setState(() {
                                 index -= 1;
                               });
                             }
+                            Voice.play(lesson[index].audio, 1);
                           },
                           heigth: 60,
                           width: 60,
@@ -280,12 +286,12 @@ class _LessonPage extends State<LessonPage> {
                               : Palette.lightGrey,
                           callback: () {
                             if (index < size) {
-                              Sfx.play("sfx/plip.mp3", 1);
+                              Sfx.play("audios/sfx/plip.mp3", 1);
                               setState(() {
                                 index += 1;
                               });
                             } else {
-                              Sfx.play("sfx/done.mp3", 1);
+                              Sfx.play("audios/sfx/done.mp3", 1);
                               AwesomeDialog(
                                 context: context,
                                 headerAnimationLoop: false,
@@ -397,10 +403,10 @@ class _LessonPage extends State<LessonPage> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Button(
-                        content: Image.asset("assets/themes_images/snail.png"),
+                        content: Image.asset("assets/images/themes/snail.png"),
                         color: Palette.blue,
                         callback: () {
-                          Voice.play(lesson[index].audio, 0.75);
+                          Voice.play(lesson[index].audio, 0.60);
                         },
                         heigth: 35,
                         width: 35,

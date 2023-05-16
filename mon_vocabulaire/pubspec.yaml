@@ -45,6 +45,8 @@ dependencies:
   provider: ^6.0.5
   awesome_dialog: ^3.0.2
   confetti: ^0.7.0
+  animator: ^3.2.0
+  flip_card: ^0.7.0
 
 dev_dependencies:
   flutter_test:
@@ -71,14 +73,20 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    - assets/themes_images/
     - assets/images/
-    - assets/avatars/
+    - assets/images/avatars/
+    - assets/images/captcha/
+    - assets/images/games/
+    - assets/images/games/backgrounds/
+    - assets/images/levels/
+    - assets/images/mascotte/
+    - assets/images/pics/
+    - assets/images/themes/
+    - assets/images/themes/backgrounds/
     - assets/audios/
-    - assets/sfx/
-    - assets/mascotte/
-    - assets/captcha/
-  #   - images/a_dot_ham.jpeg
+    - assets/audios/sfx/
+    - assets/audios/voices/
+    - assets/data/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

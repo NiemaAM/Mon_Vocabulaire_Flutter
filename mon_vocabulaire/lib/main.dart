@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'View/Quiz/drag_and_drop.dart';
 import 'package:flutter/services.dart';
+import 'package:mon_vocabulaire/View/Home/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Providers/theme_provider.dart';
-import 'View/splash_screen.dart';
+import 'Themes/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
