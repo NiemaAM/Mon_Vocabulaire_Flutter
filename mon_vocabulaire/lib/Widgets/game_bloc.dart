@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Games/ninja_bubble.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
-
 import 'Palette.dart';
 
 class GameBloc extends StatefulWidget {
@@ -9,12 +7,17 @@ class GameBloc extends StatefulWidget {
   final String price;
   final String image;
   final Color color;
-  const GameBloc(
-      {super.key,
-      required this.text,
-      required this.price,
-      required this.image,
-      required this.color});
+  final Widget page;
+  final bool enabled;
+  const GameBloc({
+    super.key,
+    required this.text,
+    required this.price,
+    required this.image,
+    required this.color,
+    required this.page,
+    this.enabled = true,
+  });
 
   @override
   State<GameBloc> createState() => _GameBlocState();
@@ -26,11 +29,12 @@ class _GameBlocState extends State<GameBloc> {
     double width = MediaQuery.of(context).size.width;
     return Center(
       child: Button(
+        enabled: widget.enabled,
         callback: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const NinjaBubble(),
+              builder: (context) => widget.page,
             ),
           );
         },
@@ -60,7 +64,7 @@ class _GameBlocState extends State<GameBloc> {
                   ),
                 ),
                 Image.asset(
-                  "assets/themes_images/coin.png",
+                  "assets/images/themes/coin.png",
                   scale: width >= 700
                       ? 16
                       : width >= 500

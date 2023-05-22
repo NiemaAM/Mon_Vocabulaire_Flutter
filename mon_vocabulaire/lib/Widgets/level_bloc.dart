@@ -44,7 +44,7 @@ class _LevelBlocState extends State<LevelBloc> {
                   widget.locked
                       ? Opacity(
                           opacity: 0.5,
-                          child: Image.asset("assets/themes_images/lock.png"),
+                          child: Image.asset("assets/images/themes/lock.png"),
                         )
                       : Image.asset(widget.image),
                   Padding(

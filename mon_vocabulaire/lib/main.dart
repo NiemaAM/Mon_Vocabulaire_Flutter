@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mon_vocabulaire/View/Account/avatar.dart';
+import 'package:mon_vocabulaire/View/Home/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Providers/theme_provider.dart';
-import 'package:mon_vocabulaire/View/message_mascotte.dart';
-import 'View/splash_screen.dart';
+import 'Themes/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

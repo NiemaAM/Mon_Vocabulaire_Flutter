@@ -31,7 +31,7 @@ class _QuizAppBarState extends State<QuizAppBar> {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Text(
-              "${widget.question}/${widget.size}",
+              "${widget.question} sur ${widget.size} questions",
               style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
             ),
@@ -114,7 +114,7 @@ class _QuizAppBarState extends State<QuizAppBar> {
                         width: 8,
                       ),
                       Image.asset(
-                        'assets/themes_images/coin.png',
+                        'assets/images/themes/coin.png',
                         scale: 20,
                       ),
                     ],
