@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
+import '../../Services/audio_background.dart';
 import '../../Widgets/Palette.dart';
 
 class TicTacToe extends StatefulWidget {
@@ -31,6 +32,13 @@ class TicTacToe_state extends State<TicTacToe> {
   void initState() {
     super.initState();
     game.board = Game.initGameBoard();
+    AudioBK.pauseBK();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    AudioBK.playBK();
   }
 
   bool Win() {
@@ -171,8 +179,8 @@ class TicTacToe_state extends State<TicTacToe> {
                   headerAnimationLoop: false,
                   dialogType: DialogType.info,
                   animType: AnimType.rightSlide,
-                  title: 'Resultat',
-                  desc: 'Tu as gagner',
+                  title: 'Résultat',
+                  desc: 'Tu as gagné',
                   btnOkText: "Tour suivant",
                   btnOkOnPress: () {})
               .show();
@@ -198,7 +206,7 @@ class TicTacToe_state extends State<TicTacToe> {
                   headerAnimationLoop: false,
                   dialogType: DialogType.info,
                   animType: AnimType.rightSlide,
-                  title: 'Resultat',
+                  title: 'Résultat',
                   desc: 'Tu as perdu',
                   btnOkText: "Tour suivant",
                   btnOkOnPress: () {})
@@ -286,10 +294,10 @@ class TicTacToe_state extends State<TicTacToe> {
             padding: const EdgeInsets.only(bottom: 10),
             child: Text(
               win > loose
-                  ? "Bravo, Tu as gagner !"
+                  ? "Bravo, Tu as gagné !"
                   : win == loose
                       ? "Égalité !"
-                      : "Dommage, Tu as perdue.",
+                      : "Dommage, Tu as perdu.",
               style: const TextStyle(
                 fontSize: 16,
               ),
