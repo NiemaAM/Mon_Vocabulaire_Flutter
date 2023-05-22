@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
-
-import '../../Widgets/palette.dart';
+import 'package:mon_vocabulaire/Animation/animationRoute.dart';
+import '../../Widgets/Palette.dart';
 import '../Settings/settings_page.dart';
 import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 
@@ -19,29 +19,30 @@ class _ProfilState extends State<Profil> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mon Profil"),
-        elevation: 1,
-        leading: IconButton(
+      appBar: AppBar(title: const Text("Mon Profil"), elevation: 1, actions: [
+        IconButton(
           onPressed: () {
-            Navigator.of(context).push(SlideRight(
-              Page: SettingsPage(
-                user: widget.user,
+            Navigator.of(context).push(
+              SlideRight(
+                Page: SettingsPage(
+                  user: widget.user,
+                ),
               ),
-            ));
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => SettingsPage(
-            //       user: widget.user,
-            //     ),
-            //   ),
-            // );
+            );
           },
           icon: const Icon(Icons.settings),
           tooltip: "Paramètres",
         ),
-      ),
+      ]),
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => SettingsPage(
+      //       user: widget.user,
+      //     ),
+      //   ),
+      // );
+
       body: ListView(
         children: [
           Padding(

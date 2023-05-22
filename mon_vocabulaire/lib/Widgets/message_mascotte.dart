@@ -1,56 +1,55 @@
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, avoid_types_as_parameter_names
+
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Widgets/triangle.dart';
 import 'package:animator/animator.dart';
 
 class BubbleMessage extends StatelessWidget {
-  final String message;
-  const BubbleMessage({Key? key, required this.message}) : super(key: key);
+  // final String message;
+  final Widget widget;
+  const BubbleMessage({Key? key, required this.widget}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      width: width,
+      width: width - 20,
       height: width > 500 ? 150 : width / 2,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Flexible(
             child: Container(
-              width: width - 100,
-              padding: const EdgeInsets.all(15),
-              margin: const EdgeInsets.only(
-                bottom: 5,
-              ),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(19)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(134, 80, 80, 80),
-                    blurRadius: 5.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(0.0, 6.0),
-                  )
-                ],
-              ),
-              child: Text(
-                message,
-                style: const TextStyle(color: Color(0xFF0E57AC), fontSize: 15),
-              ),
-            ),
+                width: width - 100,
+                padding: const EdgeInsets.all(15),
+                margin: const EdgeInsets.only(
+                  bottom: 5,
+                ),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(19)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(134, 80, 80, 80),
+                      blurRadius: 5.0,
+                      spreadRadius: 1.0,
+                      offset: Offset(0.0, 6.0),
+                    )
+                  ],
+                ),
+                child: widget),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: CustomPaint(painter: Triangle(Colors.white)),
           ),
-          Container(
+          SizedBox(
             width: 100,
             height: 100,
             child: Animator<double>(
-                tween: Tween<double>(begin: 50, end: 100),
-                duration: Duration(seconds: 2),
+                tween: Tween<double>(begin: 70, end: 80),
+                duration: Duration(seconds: 3),
                 cycles: 0,
                 builder: (context, AnimatorState, child) => Center(
                       child: Container(
@@ -58,7 +57,7 @@ class BubbleMessage extends StatelessWidget {
                           height: AnimatorState.value,
                           width: AnimatorState.value,
                           child: const Image(
-                            image: AssetImage("assets/logo.png"),
+                            image: AssetImage("assets/images/logo.png"),
                           )),
                     )),
           ),

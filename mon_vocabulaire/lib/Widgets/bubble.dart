@@ -3,8 +3,8 @@ import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/star.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Animation/animationRoute.dart';
+import 'button.dart';
 
 class Bubble extends StatefulWidget {
   final String image;
@@ -46,14 +46,8 @@ class _BubbleState extends State<Bubble> {
       children: [
         Button(
           callback: () {
-            Sfx.play("sfx/plip.mp3", 1);
+            Sfx.play("audios/sfx/plip.mp3", 1);
             Navigator.of(context).push(SizedSlide(Page: widget.callback));
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => widget.callback,
-            //   ),
-            // );
           },
           content: SizedBox(
             height: 140,
@@ -116,11 +110,9 @@ class _BubbleState extends State<Bubble> {
               borderRadius: const BorderRadius.all(Radius.circular(19)),
               boxShadow: [
                 BoxShadow(
-                  color: widget.hasShadow
-                      ? const Color.fromARGB(231, 255, 255, 255)
-                      : Colors.transparent,
-                  blurRadius: 40.0,
-                  spreadRadius: 20.0,
+                  color: widget.hasShadow ? Colors.white : Colors.transparent,
+                  blurRadius: 25.0,
+                  spreadRadius: 5.0,
                 )
               ],
             ),

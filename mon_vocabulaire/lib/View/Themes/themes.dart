@@ -28,7 +28,7 @@ class _ThemesState extends State<Themes> {
                 children: [
                   ////
                   Bubble(
-                    image: "assets/themes_images/ecole.png",
+                    image: "assets/images/themes/ecole.png",
                     nbStars: widget.user.stars_per_subtheme[5]! +
                         widget.user.stars_per_subtheme[6]!,
                     stage: widget.user.words_per_subtheme[5]! +
@@ -48,7 +48,7 @@ class _ThemesState extends State<Themes> {
                     children: [
                       const Expanded(child: SizedBox()),
                       Bubble(
-                        image: "assets/themes_images/maison.png",
+                        image: "assets/images/themes/maison.png",
                         nbStars: widget.user.stars_per_subtheme[9]! +
                             widget.user.stars_per_subtheme[10]!,
                         stage: widget.user.words_per_subtheme[9]! +
@@ -67,7 +67,7 @@ class _ThemesState extends State<Themes> {
                         child: SizedBox(),
                       ),
                       Bubble(
-                        image: "assets/themes_images/cuisine_et_aliments.png",
+                        image: "assets/images/themes/cuisine_et_aliments.png",
                         nbStars: widget.user.stars_per_subtheme[11]! +
                             widget.user.stars_per_subtheme[12]!,
                         stage: widget.user.words_per_subtheme[11]! +
@@ -88,21 +88,9 @@ class _ThemesState extends State<Themes> {
                   CircleAvatar(
                     radius: width >= 500 ? 90 : 0,
                     backgroundColor: Colors.transparent,
-                    child: Animator<double>(
-                        tween: Tween<double>(begin: 50, end: 100),
-                        duration: Duration(seconds: 1),
-                        cycles: 0,
-                        builder: (context, AnimatorState, child) => Center(
-                              child: Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                height: AnimatorState.value,
-                                width: AnimatorState.value,
-                                child: Image.asset(
-                                  "assets/logo.png",
-                                ),
-                              ),
-                            )),
+                    child: Image.asset(
+                      "assets/images/logo.png",
+                    ),
                   ),
 
                   Row(
@@ -110,7 +98,7 @@ class _ThemesState extends State<Themes> {
                     children: [
                       const Expanded(child: SizedBox()),
                       Bubble(
-                        image: "assets/themes_images/animaux.png",
+                        image: "assets/images/themes/animaux.png",
                         nbStars: widget.user.stars_per_subtheme[1]! +
                             widget.user.stars_per_subtheme[2]!,
                         stage: widget.user.words_per_subtheme[1]! +
@@ -129,7 +117,7 @@ class _ThemesState extends State<Themes> {
                         child: SizedBox(),
                       ),
                       Bubble(
-                        image: "assets/themes_images/mes_habits.png",
+                        image: "assets/images/themes/mes_habits.png",
                         nbStars: widget.user.stars_per_subtheme[3]! +
                             widget.user.stars_per_subtheme[4]!,
                         stage: widget.user.words_per_subtheme[3]! +
@@ -147,7 +135,7 @@ class _ThemesState extends State<Themes> {
                     ],
                   ),
                   Bubble(
-                    image: "assets/themes_images/sports.png",
+                    image: "assets/images/themes/sports.png",
                     nbStars: widget.user.stars_per_subtheme[7]! +
                         widget.user.stars_per_subtheme[8]!,
                     stage: widget.user.words_per_subtheme[7]! +

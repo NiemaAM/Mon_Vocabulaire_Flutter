@@ -10,7 +10,6 @@ class QuizModel {
   List<Proposition> questions = [];
   List<PropositionLettres> questionsLettres = [];
   int size = 5;
-  int loopsize = 5;
   List<dynamic> propositions = ["sons.mp3", "image.png", "article", "mot"];
   List<dynamic> propositionsImages = [
     "sons.mp3",
@@ -25,7 +24,7 @@ class QuizModel {
 
   Future<List<Lesson>> getLesson(String theme, String subtheme) async {
     // Load the JSON data from the asset file
-    String jsonStr = await rootBundle.loadString('assets/data.json');
+    String jsonStr = await rootBundle.loadString('assets/data/data.json');
 
     // Parse the JSON string to a map
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
@@ -48,8 +47,8 @@ class QuizModel {
     List<Lesson> lesson = [];
     for (int i = 0; i < motList.length; i++) {
       Lesson l = Lesson(
-          image: "assets/images/${codeList[i]}.png",
-          audio: "audios/${codeList[i]}.mp3",
+          image: "assets/images/pics/${codeList[i]}.png",
+          audio: "audios/voices/${codeList[i]}.mp3",
           article: articleList[i],
           mot: motList[i]);
       if (!lesson.contains(l)) {
@@ -62,7 +61,7 @@ class QuizModel {
   Future<PropositionLettres> getRandomLettres(
       String theme, String subtheme) async {
     // Load the JSON data from the asset file
-    String jsonStr = await rootBundle.loadString('assets/data.json');
+    String jsonStr = await rootBundle.loadString('assets/data/data.json');
 
     // Parse the JSON string to a map
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
@@ -70,11 +69,6 @@ class QuizModel {
     // Get the map of elements
     Map<String, dynamic> elementsMap = jsonMap[theme][subtheme];
     size = elementsMap.length;
-    if (size >= 10) {
-      loopsize = 10;
-    } else {
-      loopsize = size;
-    }
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
         elementsMap.values.map((valueMap) => valueMap['mot']).toList();
@@ -91,8 +85,8 @@ class QuizModel {
     int randomNumber = random.nextInt(motList.length);
     List<String> rep = ["", "", "", ""];
 
-    rep[0] = "audios/${codeList[randomNumber]}.mp3";
-    rep[1] = "assets/images/${codeList[randomNumber]}.png";
+    rep[0] = "audios/voices/${codeList[randomNumber]}.mp3";
+    rep[1] = "assets/images/pics/${codeList[randomNumber]}.png";
     rep[2] = articleList[randomNumber];
     rep[3] = motList[randomNumber];
 
@@ -137,7 +131,7 @@ class QuizModel {
     List<PropositionLettres> prop = [];
     Set<String> uniqueValues = <String>{};
     PropositionLettres prop1;
-    while (prop.length <= loopsize) {
+    while (prop.length < size) {
       prop1 = await getRandomLettres(theme, subtheme);
       if (!uniqueValues.contains(prop1.reponse[3])) {
         uniqueValues.add(prop1.reponse[3]);
@@ -152,7 +146,7 @@ class QuizModel {
 
   Future<void> getRandomWords(String theme, String subtheme) async {
     // Load the JSON data from the asset file
-    String jsonStr = await rootBundle.loadString('assets/data.json');
+    String jsonStr = await rootBundle.loadString('assets/data/data.json');
 
     // Parse the JSON string to a map
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
@@ -199,14 +193,14 @@ class QuizModel {
       articleList[randomNumber3],
       articleList[randomNumber4]
     ];
-    propositionsImages[0] = "assets/images/${code[0]}.png";
-    propositionsImages[1] = "assets/images/${code[1]}.png";
-    propositionsImages[2] = "assets/images/${code[2]}.png";
-    propositionsImages[3] = "assets/images/${code[3]}.png";
+    propositionsImages[0] = "assets/images/pics/${code[0]}.png";
+    propositionsImages[1] = "assets/images/pics/${code[1]}.png";
+    propositionsImages[2] = "assets/images/pics/${code[2]}.png";
+    propositionsImages[3] = "assets/images/pics/${code[3]}.png";
 
     int randomNumber5 = random.nextInt(4);
-    reponse[0] = "audios/${code[randomNumber5]}.mp3";
-    reponse[1] = "assets/images/${code[randomNumber5]}.png";
+    reponse[0] = "audios/voices/${code[randomNumber5]}.mp3";
+    reponse[1] = "assets/images/pics/${code[randomNumber5]}.png";
     reponse[2] = articles[randomNumber5];
     reponse[3] = propositions[randomNumber5];
   }
@@ -217,7 +211,7 @@ class QuizModel {
         propositionsImages: ["", "", "", ""],
         reponse: ["", "", "", ""]);
     // Load the JSON data from the asset file
-    String jsonStr = await rootBundle.loadString('assets/data.json');
+    String jsonStr = await rootBundle.loadString('assets/data/data.json');
 
     // Parse the JSON string to a map
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
@@ -226,11 +220,6 @@ class QuizModel {
     Map<String, dynamic> elementsMap = jsonMap[theme][subtheme];
 
     size = elementsMap.length;
-    if (size >= 10) {
-      loopsize = 10;
-    } else {
-      loopsize = size;
-    }
 
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
@@ -277,14 +266,14 @@ class QuizModel {
       motList[randomNumber3],
       motList[randomNumber4]
     ];
-    proposition.propositionsImages[0] = "assets/images/${code[0]}.png";
-    proposition.propositionsImages[1] = "assets/images/${code[1]}.png";
-    proposition.propositionsImages[2] = "assets/images/${code[2]}.png";
-    proposition.propositionsImages[3] = "assets/images/${code[3]}.png";
+    proposition.propositionsImages[0] = "assets/images/pics/${code[0]}.png";
+    proposition.propositionsImages[1] = "assets/images/pics/${code[1]}.png";
+    proposition.propositionsImages[2] = "assets/images/pics/${code[2]}.png";
+    proposition.propositionsImages[3] = "assets/images/pics/${code[3]}.png";
 
     int randomNumber5 = random.nextInt(4);
-    proposition.reponse[0] = "audios/${code[randomNumber5]}.mp3";
-    proposition.reponse[1] = "assets/images/${code[randomNumber5]}.png";
+    proposition.reponse[0] = "audios/voices/${code[randomNumber5]}.mp3";
+    proposition.reponse[1] = "assets/images/pics/${code[randomNumber5]}.png";
     proposition.reponse[2] = articles[randomNumber5];
     proposition.reponse[3] = mots[randomNumber5];
 
@@ -296,7 +285,7 @@ class QuizModel {
     List<Proposition> prop = [];
     Set<String> uniqueValues = <String>{};
     Proposition prop1;
-    while (prop.length < loopsize) {
+    while (prop.length < size) {
       prop1 = await getRandomProps(theme, subtheme);
       if (!uniqueValues.contains(prop1.reponse[3])) {
         uniqueValues.add(prop1.reponse[3]);
@@ -310,10 +299,6 @@ class QuizModel {
   }
 
   int getSize() {
-    return loopsize;
-  }
-
-  int getLessonSize() {
     return size;
   }
 
