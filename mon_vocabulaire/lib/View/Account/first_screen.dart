@@ -14,8 +14,6 @@ class FirstSceen extends StatefulWidget {
 }
 
 class _FirstSceenState extends State<FirstSceen> {
-  double _opacity = 0;
-
   List<String> images = ["", ""];
   String background = "";
   Color color = Palette.blue;
