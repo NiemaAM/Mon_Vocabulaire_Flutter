@@ -13,6 +13,7 @@ import 'package:mon_vocabulaire/View/Account/accounts.dart';
 import 'package:mon_vocabulaire/View/Account/first_screen.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Services/audio_background.dart';
@@ -106,6 +107,100 @@ class _SettingsPageState extends State<SettingsPage> {
     Voice.volume(voiceVolume);
   }
 
+  Future<void> loadCaptchaData() async {
+    // Load the captcha data from a local JSON file
+    String captchaDataJson =
+        await rootBundle.loadString('assets/data/captcha_data.json');
+    captchaData = json.decode(captchaDataJson);
+    // Generate a new captcha image
+    generateCaptchaImage();
+  }
+
+  void generateCaptchaImage() {
+    // Generate a random captcha image code
+    List<String> captchaCodes = captchaData.keys.toList();
+    // final Random random = Random();
+    String captchaCode = captchaCodes[Random().nextInt(captchaCodes.length)];
+
+    captchaValue = captchaData[captchaCode];
+    // Load the corresponding captcha image from assets
+    captchaImagePath = 'assets/images/captcha/$captchaCode.png';
+  }
+
+  void verifyCaptcha(String input) {
+    // Verify the user's input against the captcha value
+    captchaVerified = input == captchaValue;
+    generateCaptchaImage();
+
+    if (captchaVerified) {
+      AwesomeDialog(
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        context: context,
+        headerAnimationLoop: false,
+        dialogType: DialogType.success,
+        animType: AnimType.rightSlide,
+        body: Center(
+            child: Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 30),
+          child: Column(
+            children: const [
+              Text(
+                'Verrouillage Parental',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Compte supprimé'),
+              ),
+            ],
+          ),
+        )),
+      ).show();
+    } else {
+      AwesomeDialog(
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        context: context,
+        headerAnimationLoop: false,
+        dialogType: DialogType.error,
+        animType: AnimType.rightSlide,
+        body: Center(
+            child: Column(
+          children: [
+            const Text(
+              'Verrouillage Parental',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Code erroné.\nEntrez le code affiché ci-dessous :',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(captchaImagePath),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration:
+                    const InputDecoration(hintText: 'Entrez le code ici'),
+                controller: myController,
+              ),
+            ),
+          ],
+        )),
+        btnCancelText: "Vérifier",
+        btnCancelOnPress: () {
+          verifyCaptcha(myController.text);
+          myController.clear();
+        },
+      ).show();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -120,7 +215,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void dispose() {
     super.dispose();
-    Sfx.play("sfx/pop.mp3", 1);
+    Sfx.play("audios/sfx/pop.mp3", 1);
+    myController.dispose();
   }
 
   @override
@@ -563,61 +659,81 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   onTap: () {
                     AwesomeDialog(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      dismissOnTouchOutside: false,
+                      context: context,
+                      headerAnimationLoop: false,
+                      dialogType: DialogType.info,
+                      animType: AnimType.rightSlide,
+                      title: 'Cette action est irréversible',
+                      desc:
+                          'Êtes-vous certain de vouloir supprimer ce compte ?',
+                      btnOk: Button(
+                        callback: () {
+                          Navigator.pop(context);
+                        },
+                        content: const Center(
+                            child: Text(
+                          "Annuler",
+                          style: TextStyle(color: Palette.white),
+                        )),
+                        width: 100,
+                        heigth: 50,
+                      ),
+                      btnCancel: Button(
+                        callback: () {
+                          Navigator.pop(context);
+                          AwesomeDialog(
                             padding: const EdgeInsets.only(left: 15, right: 15),
                             context: context,
                             headerAnimationLoop: false,
-                            dialogType: DialogType.warning,
+                            dialogType: DialogType.noHeader,
                             animType: AnimType.rightSlide,
-                            title: 'Cette action est irréversible',
-                            desc:
-                                'Êtes-vous certain de vouloir supprimer ce compte ?',
-                            btnCancelText: "Supprimer",
+                            body: Center(
+                                child: Column(
+                              children: [
+                                const Text(
+                                  'Verrouillage Parental',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 25),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                      'Entrez le code affiché ci-dessous :'),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(captchaImagePath),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    decoration: const InputDecoration(
+                                        hintText: 'Entrez le code ici'),
+                                    controller: myController,
+                                  ),
+                                ),
+                              ],
+                            )),
+                            btnCancelText: "Vérifier",
                             btnCancelOnPress: () {
-                              AwesomeDialog(
-                                padding:
-                                    const EdgeInsets.only(left: 15, right: 15),
-                                context: context,
-                                headerAnimationLoop: false,
-                                dialogType: DialogType.noHeader,
-                                animType: AnimType.rightSlide,
-                                body: Center(
-                                    child: Column(
-                                  children: [
-                                    const Text(
-                                      'Verrouillage Parental',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                          'Entrez le code affiché ci-dessous :'),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image.asset(captchaImagePath),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: TextField(
-                                        decoration: const InputDecoration(
-                                            hintText: 'Entrez le code ici'),
-                                        controller: myController,
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                                btnCancelText: "Vérifier",
-                                btnCancelOnPress: () {
-                                  verifyCaptcha(myController.text);
-                                  myController.clear();
-                                },
-                              ).show();
+                              verifyCaptcha(myController.text);
+                              myController.clear();
                             },
-                            btnOkText: "Annuler",
-                            btnOkOnPress: () {})
-                        .show();
+                          ).show();
+                        },
+                        content: const Center(
+                            child: Text(
+                          "Supprimer",
+                          style: TextStyle(color: Palette.white),
+                        )),
+                        width: 100,
+                        heigth: 50,
+                        color: Palette.red,
+                      ),
+                    ).show();
                   },
                 ),
               ],

@@ -384,7 +384,7 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
             children: [
               const Expanded(flex: 2, child: SizedBox()),
               Button(
-                content: const Row(
+                content: Row(
                   children: [
                     Expanded(child: SizedBox()),
                     Icon(
@@ -407,7 +407,7 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
               ),
               const Expanded(child: SizedBox()),
               Button(
-                content: const Row(
+                content: Row(
                   children: [
                     Expanded(child: SizedBox()),
                     Icon(
