@@ -243,7 +243,7 @@ class _FermeState extends State<Ferme> {
                 child: Stack(children: [
                   //tortue
                   Positioned(
-                    top: height > 800 ? height - 580 : height - 500,
+                    top: height > 800 ? height - 580 : height - 520,
                     right: width > 550 ? width - 500 : width - 300,
                     child: IconButton(
                         iconSize: 50,
@@ -255,8 +255,8 @@ class _FermeState extends State<Ferme> {
 
                   //cheval
                   Positioned(
-                    top: height > 800 ? height - 1000 : height - 600,
-                    right: width > 550 ? width - 500 : width - 400,
+                    top: height > 800 ? height - 1000 : height - 820,
+                    right: width > 550 ? width - 500 : width - 300,
                     bottom: 1,
                     child: IconButton(
                         iconSize: 80,
@@ -268,8 +268,8 @@ class _FermeState extends State<Ferme> {
 
                   //niche
                   Positioned(
-                    top: height > 800 ? height - 920 : height - 690,
-                    right: width > 500 ? width - 180 : width - 200,
+                    top: height > 800 ? height - 920 : height - 785,
+                    right: width > 500 ? width - 180 : width - 120,
                     bottom: 1,
                     child: IconButton(
                         iconSize: 80,
@@ -281,11 +281,11 @@ class _FermeState extends State<Ferme> {
 
                   //arbre
                   Positioned(
-                    top: height > 800 ? height - 1200 : height - 780,
+                    top: height > 800 ? height - 1200 : height - 1050,
                     right: width > 550 ? width - 350 : width - 250,
                     bottom: -180,
                     child: IconButton(
-                        iconSize: 190,
+                        iconSize: 180,
                         onPressed: () {
                           print(width);
                         },
@@ -295,7 +295,7 @@ class _FermeState extends State<Ferme> {
                   ),
                   //vache
                   Positioned(
-                    top: height > 800 ? height - 1050 : height - 780,
+                    top: height > 800 ? height - 1050 : height - 900,
                     right: width > 550 ? width - 360 : width - 250,
                     bottom: -180,
                     child: IconButton(
@@ -309,7 +309,7 @@ class _FermeState extends State<Ferme> {
                   ),
                   //mouton
                   Positioned(
-                    top: height > 800 ? height - 990 : height - 780,
+                    top: height > 800 ? height - 990 : height - 800,
                     right: width > 550 ? width - 380 : width - 250,
                     bottom: -180,
                     child: IconButton(
@@ -324,8 +324,8 @@ class _FermeState extends State<Ferme> {
 
                   //Poulailler
                   Positioned(
-                    top: height > 800 ? height - 850 : height - 780,
-                    right: width > 550 ? width - 220 : width - 250,
+                    top: height > 800 ? height - 850 : height - 700,
+                    right: width > 550 ? width - 220 : width - 150,
                     bottom: -180,
                     child: IconButton(
                         iconSize: 90,
@@ -339,7 +339,7 @@ class _FermeState extends State<Ferme> {
 
                   //poule
                   Positioned(
-                    top: height > 800 ? height - 800 : height - 780,
+                    top: height > 800 ? height - 800 : height - 650,
                     right: width > 550 ? width - 340 : width - 250,
                     bottom: -180,
                     child: IconButton(
@@ -354,8 +354,8 @@ class _FermeState extends State<Ferme> {
 
                   //coq
                   Positioned(
-                    top: height > 800 ? height - 750 : height - 780,
-                    right: width > 550 ? width - 300 : width - 250,
+                    top: height > 800 ? height - 750 : height - 600,
+                    right: width > 550 ? width - 300 : width - 230,
                     bottom: -180,
                     child: IconButton(
                         iconSize: 70,
@@ -369,8 +369,8 @@ class _FermeState extends State<Ferme> {
 
                   //poussin1
                   Positioned(
-                    top: height > 800 ? height - 700 : height - 780,
-                    right: width > 550 ? width - 350 : width - 250,
+                    top: height > 800 ? height - 700 : height - 610,
+                    right: width > 550 ? width - 350 : width - 290,
                     bottom: -180,
                     child: IconButton(
                         iconSize: 30,
@@ -383,7 +383,7 @@ class _FermeState extends State<Ferme> {
                   ),
                   //poussin2
                   Positioned(
-                    top: height > 800 ? height - 750 : height - 780,
+                    top: height > 800 ? height - 750 : height - 570,
                     right: width > 550 ? width - 380 : width - 250,
                     bottom: -180,
                     child: IconButton(
@@ -397,8 +397,8 @@ class _FermeState extends State<Ferme> {
                   ),
                   //poussin3
                   Positioned(
-                    top: height > 800 ? height - 680 : height - 780,
-                    right: width > 550 ? width - 400 : width - 250,
+                    top: height > 800 ? height - 680 : height - 680,
+                    right: width > 550 ? width - 400 : width - 270,
                     bottom: -180,
                     child: IconButton(
                         iconSize: 30,
@@ -412,8 +412,8 @@ class _FermeState extends State<Ferme> {
 
                   //chien
                   Positioned(
-                    top: height > 800 ? height - 1050 : height - 780,
-                    right: width > 550 ? width - 150 : width - 250,
+                    top: height > 800 ? height - 1050 : height - 915,
+                    right: width > 550 ? width - 150 : width - 90,
                     bottom: -180,
                     child: IconButton(
                         iconSize: 20,
