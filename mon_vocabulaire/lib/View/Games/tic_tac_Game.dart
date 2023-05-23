@@ -138,154 +138,282 @@ bool variswin=false;
     // child:  ),
       Scaffold(
      backgroundColor: Colors.white,
-
+        appBar: AppBar(
+          backgroundColor: Palette.white,
+          elevation: 1,
+          iconTheme: const IconThemeData(color: Palette.black),
+          title: Row(
+            children: [
+              Image.asset(
+                "assets/images/games/tic-tac-toe.png",
+                width: 40,
+              ),
+              const Text(
+                " Tic-Tac-Toe",
+                style: TextStyle(color: Palette.black),
+              ),
+            ],
+          ),
+        ),
         body:
         Column(children: [
     
-         SizedBox(height: 15,),
-          Container(  
-          width: boardwidth,
-          height: boardheight*0.72,
-          child: GridView.count(crossAxisCount: Game.boardlenth ~/ 3,
-          padding: const EdgeInsets.all(20.0),
-          mainAxisSpacing: 0.0,
-          crossAxisSpacing: 0.0,
-           children: 
-            List.generate(Game.boardlenth, (index){
-              return
-               InkWell(
-                onTap: gameover ?null:(){
-                  setState(() {
-                    if(game.board![index]==""){
-                    game.board![index] = "assets/images/127.png";
-                     Random random = new Random();
-                    List<int> casenum=[];
-                    for(int j=0; j<9;j++){
-                      if(game.board![j] == ""){
-                       casenum.add(j);
-                      }
-                    }
-                    int randomIndex = random.nextInt(casenum.length);
-                    randomNumber = casenum[randomIndex];
-                    print(randomNumber);
-                    game.board![randomNumber]="assets/images/128.png";
-                    
-                    }
-                    if(game.board![0] == game.board![1] && game.board![1] == game.board![2] && game.board![0]!=""){
-                     // variswin=true;
-                      // Future.delayed(Duration(seconds: 2), ()=>
-                       iswin(game.board![0]);
-                     //  );
-                    }else if(game.board![0] == game.board![3] && game.board![3] == game.board![6] && game.board![0]!=""){
-                     // variswin=true;
-                       iswin(game.board![0]);
-                    }else if(game.board![0] == game.board![4] && game.board![4] == game.board![8] && game.board![0]!=""){
-                       //variswin=true;
-                       iswin(game.board![0]);
-                    }else if(game.board![3] == game.board![4] && game.board![4] == game.board![5] && game.board![3]!=""){
-                     //   variswin=true;
-                       iswin(game.board![3]);
-                    }else if(game.board![6] == game.board![7] && game.board![7] == game.board![8] && game.board![6]!=""){
-                      //  variswin=true;
-                       iswin(game.board![6]);
-                    }else if( game.board![1] == game.board![4] && game.board![4] == game.board![7] && game.board![1]!=""){
-                      // variswin=true;
-                       iswin(game.board![1]);
-                    }else if(game.board![2] == game.board![5] && game.board![5] == game.board![8] && game.board![2]!=""){
-                     //   variswin=true;
-                       iswin(game.board![2]);
-                    }else if(game.board![2] == game.board![4] && game.board![4] == game.board![6] && game.board![2]!=""){
-                     //  variswin=true;
-                       iswin(game.board![2]);
-                    }else{
-                      int count=0;
-                      for(int i=0;i<9;i++){
-                        if(game.board![i]!=""){
-                            count++;
+         Center(
+           child: Container(
+            color: Color.fromARGB(84, 3, 168, 244),
+            width: boardwidth,
+            height: 100,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1,color: Colors.black),
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child:Row(children: [
+                Image.asset("assets/images/avatars/avatar_girl.png",width: 80,height: 80,),
+                Image.asset("assets/lettre-x.png",width: 50,height: 50,),
+                  ],)),
+
+                SizedBox(width: boardwidth/21,),
+                Text("0",style: TextStyle(fontSize: 30,color: Colors.black),),
+                SizedBox(width: boardwidth/9,),
+                Text("0",style: TextStyle(fontSize: 30,color: Colors.black),),
+                SizedBox(width: boardwidth/21,),
+                
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1,color: Colors.black),
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child:Row(children: [
+                    Image.asset("assets/images/logo.png",width: 80,height: 80,),
+                    Image.asset("assets/lettre-o.png",width: 50,height: 50,)
+                  ],)),
+
+               ],
+            ),
+           )
+         ),
+          SizedBox(height: 15,),
+          Center(
+            child: SizedBox.square(  dimension: boardwidth/1.2,
+                   // width: boardwidth*2.1,
+                   // height: boardheight*0.2,
+            child: GridView.count(crossAxisCount: Game.boardlenth ~/ 3,
+            padding: const EdgeInsets.all(20.0),
+            mainAxisSpacing: 0.0,
+            crossAxisSpacing: 0.0,
+             children: 
+              List.generate(Game.boardlenth, (index){
+                return
+                 InkWell(
+                  onTap: gameover ?null:(){
+                    setState(() {
+                      if(game.board![index]==""){
+                      game.board![index] = "assets/lettre-x.png";
+                       Random random = new Random();
+                      List<int> casenum=[];
+                      for(int j=0; j<9;j++){
+                        if(game.board![j] == ""){
+                         casenum.add(j);
                         }
                       }
-                      if(count == 9){
-                        voidgame();
+                      int randomIndex = random.nextInt(casenum.length);
+                      randomNumber = casenum[randomIndex];
+                      print(randomNumber);
+                      game.board![randomNumber]="assets/lettre-o.png";
+                      
                       }
-                    }
-    
-                  });
-                },
-                 child: Container(
-                  width: Game.blocsize,
-                  height: Game.blocsize,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                   // borderRadius: BorderRadius.circular(6.0),
-                    border: Border.all(color: Colors.black),
-                    boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromARGB(115, 137, 197, 239),
-                      blurRadius: 3,
-                      spreadRadius: 0.4,
-                      offset: Offset(2.0, 1),
-                    )
-                    ],
-                  ),
-                  child: Center(
-                    child:
-                     game.board![index].isEmpty ? Text("")
-                     : Image.asset(game.board![index],width: 100,height: 100,),
-                  ),
-                  ),
-               );
-            })
-          ,),
-        ), 
-    
-        Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-                  Container(
-                    width: boardwidth*0.3,
-                    height: 180,
+                      if(game.board![0] == game.board![1] && game.board![1] == game.board![2] && game.board![0]!=""){
+                       // variswin=true;
+                        // Future.delayed(Duration(seconds: 2), ()=>
+                         iswin(game.board![0]);
+                       //  );
+                      }else if(game.board![0] == game.board![3] && game.board![3] == game.board![6] && game.board![0]!=""){
+                       // variswin=true;
+                         iswin(game.board![0]);
+                      }else if(game.board![0] == game.board![4] && game.board![4] == game.board![8] && game.board![0]!=""){
+                         //variswin=true;
+                         iswin(game.board![0]);
+                      }else if(game.board![3] == game.board![4] && game.board![4] == game.board![5] && game.board![3]!=""){
+                       //   variswin=true;
+                         iswin(game.board![3]);
+                      }else if(game.board![6] == game.board![7] && game.board![7] == game.board![8] && game.board![6]!=""){
+                        //  variswin=true;
+                         iswin(game.board![6]);
+                      }else if( game.board![1] == game.board![4] && game.board![4] == game.board![7] && game.board![1]!=""){
+                        // variswin=true;
+                         iswin(game.board![1]);
+                      }else if(game.board![2] == game.board![5] && game.board![5] == game.board![8] && game.board![2]!=""){
+                       //   variswin=true;
+                         iswin(game.board![2]);
+                      }else if(game.board![2] == game.board![4] && game.board![4] == game.board![6] && game.board![2]!=""){
+                       //  variswin=true;
+                         iswin(game.board![2]);
+                      }else{
+                        int count=0;
+                        for(int i=0;i<9;i++){
+                          if(game.board![i]!=""){
+                              count++;
+                          }
+                        }
+                        if(count == 9){
+                          voidgame();
+                        }
+                      }
+              
+                    });
+                  },
+                   child: Container(
+                    width: Game.blocsize,
+                    height: Game.blocsize,
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(115, 137, 197, 239),
-                      border: Border.all(
-                        width: 1,
-                        color: Colors.black
-                      ),
-                      borderRadius: BorderRadius.circular(12),
+                          color: Colors.transparent,
+                          border: index == 0
+                              ? const Border(
+                                  top: BorderSide(
+                                      color: Colors.transparent, width: 3),
+                                  left: BorderSide(
+                                      color: Colors.transparent, width: 3),
+                                  right: BorderSide(
+                                      color: Colors.black, width: 3),
+                                  bottom: BorderSide(
+                                      color: Colors.black, width: 3),
+                                )
+                              : index == 1
+                                  ? const Border(
+                                      top: BorderSide(
+                                          color: Colors.transparent, width: 3),
+                                      left: BorderSide(
+                                          color: Colors.black, width: 3),
+                                      right: BorderSide(
+                                          color: Colors.black, width: 3),
+                                      bottom: BorderSide(
+                                          color: Colors.black, width: 3),
+                                    )
+                                  : index == 2
+                                      ? const Border(
+                                          top: BorderSide(
+                                              color: Colors.transparent,
+                                              width: 3),
+                                          left: BorderSide(
+                                              color: Colors.black, width: 3),
+                                          right: BorderSide(
+                                              color: Colors.transparent,
+                                              width: 3),
+                                          bottom: BorderSide(
+                                              color: Colors.black, width: 3),
+                                        )
+                                      : index == 3
+                                          ? const Border(
+                                              top: BorderSide(
+                                                  color: Colors.black,
+                                                  width: 3),
+                                              left: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 3),
+                                              right: BorderSide(
+                                                  color: Colors.black,
+                                                  width: 3),
+                                              bottom: BorderSide(
+                                                  color: Colors.black,
+                                                  width: 3),
+                                            )
+                                          : index == 5
+                                              ? const Border(
+                                                  top: BorderSide(
+                                                      color: Colors.black,
+                                                      width: 3),
+                                                  left: BorderSide(
+                                                      color: Colors.black,
+                                                      width: 3),
+                                                  right: BorderSide(
+                                                      color: Colors.transparent,
+                                                      width: 3),
+                                                  bottom: BorderSide(
+                                                      color: Colors.black,
+                                                      width: 3),
+                                                )
+                                              : index == 6
+                                                  ? const Border(
+                                                      top: BorderSide(
+                                                          color: Colors.black,
+                                                          width: 3),
+                                                      left: BorderSide(
+                                                          color:
+                                                              Colors.transparent,
+                                                          width: 3),
+                                                      right: BorderSide(
+                                                          color: Colors.black,
+                                                          width: 3),
+                                                      bottom: BorderSide(
+                                                          color:
+                                                              Colors.transparent,
+                                                          width: 3),
+                                                    )
+                                                  : index == 7
+                                                      ? const Border(
+                                                          top: BorderSide(
+                                                              color: Colors.black,
+                                                              width: 3),
+                                                          left: BorderSide(
+                                                              color: Colors.black,
+                                                              width: 3),
+                                                          right: BorderSide(
+                                                              color: Colors.black,
+                                                              width: 3),
+                                                          bottom: BorderSide(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              width: 3),
+                                                        )
+                                                      : index == 8
+                                                          ? const Border(
+                                                              top: BorderSide(
+                                                                  color: Colors.black,
+                                                                  width: 3),
+                                                              left: BorderSide(
+                                                                  color: Colors.black,
+                                                                  width: 3),
+                                                              right: BorderSide(
+                                                                  color: Colors
+                                                                      .transparent,
+                                                                  width: 3),
+                                                              bottom: BorderSide(
+                                                                  color: Colors
+                                                                      .transparent,
+                                                                  width: 3),
+                                                            )
+                                                          : const Border(
+                                                              top: BorderSide(
+                                                                  color: Colors.black,
+                                                                  width: 3),
+                                                              left: BorderSide(
+                                                                  color: Colors.black,
+                                                                  width: 3),
+                                                              right: BorderSide(
+                                                                  color: Colors.black,
+                                                                  width: 3),
+                                                              bottom: BorderSide(
+                                                                  color: Colors.black,
+                                                                  width: 3),
+                                                            ),
+                        ),
+                    child: Center(
+                      child:
+                       game.board![index].isEmpty ? Text("")
+                       : Image.asset(game.board![index],width: 100,height: 100,),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(child: const Image(image: NetworkImage('https://cdn-icons-png.flaticon.com/512/3371/3371822.png'),width: 50,height: 50,),
-                        decoration: BoxDecoration(border: Border.all(color: Colors.pink), borderRadius:BorderRadius.circular(50))
-                        ), 
-                        const Text("SALMA",style: TextStyle(color: Colors.pink,fontSize: 18, fontWeight: FontWeight.bold),),        
-                        Image(image: AssetImage('assets/images/127.png'),width: 50,height: 50,)            ],
                     ),
+                 );
+              })
+            ,),
                   ),
-                  SizedBox(width: 50,),
-                  Container(
-                    width: boardwidth*0.3,
-                    height: 180,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(115, 137, 197, 239),
-                      border: Border.all(
-                        width: 1,
-                        color: Colors.black
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(child: const Image(image: NetworkImage('https://cdn-icons-png.flaticon.com/128/2686/2686204.png'),width: 50,height: 50,),
-                        decoration: BoxDecoration(border: Border.all(color: Colors.pink), borderRadius:BorderRadius.circular(50))
-                        ), 
-                        const Text("CPU",style: TextStyle(color: Colors.pink,fontSize: 18, fontWeight: FontWeight.bold),),        
-                        Image(image: AssetImage('assets/images/128.png'),width: 50,height: 50,)            ],
-                    ),
-                  ),
-            ],
-          ),
+          ), 
+    
+       
         ],)
        
        

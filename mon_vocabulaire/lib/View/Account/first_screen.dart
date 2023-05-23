@@ -180,8 +180,12 @@ class _FirstSceenState extends State<FirstSceen> {
                   child: SizedBox(),
                 ),
                 const BubbleMessage(
-                  message: "Bienvenu sur Mon vocabulaire !"
-                      " je suis Bubble, et je vais t'aider a améliorer ton vocabulaire.",
+                    widget: Text(
+                    "Salut, je suis ton compagnon Bubble ! Et je vais t'aider à apprendre le français.",
+                    style:
+                        const TextStyle(color: Color(0xFF0E57AC), fontSize: 15),
+                  ),
+
                 ),
                 const Expanded(
                   flex: 20,

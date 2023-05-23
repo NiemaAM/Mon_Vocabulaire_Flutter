@@ -4,6 +4,7 @@ import 'package:mon_vocabulaire/View/Games/math_game.dart';
 import 'package:mon_vocabulaire/View/Games/puzzle.dart';
 import 'package:mon_vocabulaire/View/Games/tic_tac_toe.dart';
 import 'package:mon_vocabulaire/View/Games/tic_tac_Game.dart';
+import 'package:mon_vocabulaire/View/Games/trouvaille.dart';
 import '../../Model/user.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/game_bloc.dart';
@@ -41,7 +42,7 @@ class _GamesState extends State<Games> {
             image: "assets/images/games/tic-tac-toe.png",
             price: '20',
             text: "Tic Tac Toe",
-            page: TicTacToe(),
+            page: tic_tac(),
           ),
           GameBloc(
             color: Palette.pink,
@@ -55,7 +56,7 @@ class _GamesState extends State<Games> {
             image: "assets/images/games/search.png",
             price: '100',
             text: "Trouvailles",
-            page: FlipCardGame(),
+            page: TrouvailleBureau(),
             enabled: false,
           ),
           GameBloc(
