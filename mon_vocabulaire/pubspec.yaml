@@ -46,7 +46,6 @@ dependencies:
   animator: ^3.2.0
   flip_card: ^0.7.0
   image: ^4.0.17
-  google_mlkit_object_detection: ^0.7.0
 
 dev_dependencies:
   flutter_test:
