@@ -4,10 +4,10 @@ import 'package:mon_vocabulaire/View/Games/math_game.dart';
 import 'package:mon_vocabulaire/View/Games/puzzle.dart';
 import 'package:mon_vocabulaire/View/Games/tic_tac_toe.dart';
 import 'package:mon_vocabulaire/View/Games/tic_tac_Game.dart';
-import 'package:mon_vocabulaire/View/Games/trouvaille.dart';
 import '../../Model/user.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/game_bloc.dart';
+import 'Trouvaille/Trouvaille_Bureau.dart';
 
 class Games extends StatefulWidget {
   final User user;

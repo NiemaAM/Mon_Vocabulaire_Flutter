@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvailleCuizine.dart';
 import 'View/Quiz/drag_and_drop.dart';
 import 'package:flutter/services.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Bureau.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
             theme: MyThemes.lightTheme,
             darkTheme: MyThemes.darkTheme,
             themeMode: themeProvider.themeMode,
-            home: TrouvailleBureau(),
+            home: cuizine(),
           );
         },
       ),
