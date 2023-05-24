@@ -232,11 +232,23 @@ class _FlipCardGameState extends State<FlipCardGame>
             Align(
               alignment: Alignment.topCenter,
               child: BubbleMessage(
-                  message: countdown > 0
+                  widget: countdown > 0
                       ? countdown == 1
-                          ? "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown seconde."
-                          : "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown secondes."
-                      : "C'est parti !"),
+                          ? Text(
+                              "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown seconde.",
+                              style: const TextStyle(
+                                  color: Color(0xFF0E57AC), fontSize: 15),
+                            )
+                          : Text(
+                              "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown secondes.",
+                              style: const TextStyle(
+                                  color: Color(0xFF0E57AC), fontSize: 15),
+                            )
+                      : Text(
+                          "C'est parti !",
+                          style: const TextStyle(
+                              color: Color(0xFF0E57AC), fontSize: 15),
+                        )),
             ),
             Padding(
               padding: EdgeInsets.only(
