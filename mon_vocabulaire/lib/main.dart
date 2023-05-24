@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/ferme1.dart';
+
 import 'package:mon_vocabulaire/View/Games/Trouvaille/foret.dart';
 
 import 'package:mon_vocabulaire/View/Home/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Themes/theme_provider.dart';
+import 'View/Games/Trouvaille/acceuil_themes.dart';
 import 'View/Games/Trouvaille/ferme.dart';
 
 void main() async {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
             theme: MyThemes.lightTheme,
             darkTheme: MyThemes.darkTheme,
             themeMode: themeProvider.themeMode,
-            home: Ferme(),
+            home: TrouvailleThemes(),
           );
         },
       ),

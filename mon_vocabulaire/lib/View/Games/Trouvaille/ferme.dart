@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/ferme1.dart';
+
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../../Widgets/message_mascotte.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
