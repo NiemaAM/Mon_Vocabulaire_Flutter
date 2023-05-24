@@ -12,7 +12,8 @@ class Palette {
   static const magenta = Color.fromARGB(255, 129, 0, 127);
   static const indigo = Color.fromARGB(255, 0, 99, 199);
   static const blue = Colors.blueAccent;
-  static const lightBlue = Color.fromARGB(255, 98, 152, 245);
+  static const lightBlue = Color.fromARGB(255, 54, 180, 254);
+  static const darkBlue = Color.fromARGB(255, 12, 132, 201);
   static const darkGreen = Color.fromARGB(255, 0, 171, 0);
   static const lightGreen = Color.fromARGB(255, 10, 202, 10);
   static const lighterGreen = Color.fromARGB(255, 95, 228, 74);

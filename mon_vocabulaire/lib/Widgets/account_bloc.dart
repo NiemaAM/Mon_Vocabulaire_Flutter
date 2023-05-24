@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Home/home.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
@@ -22,17 +23,17 @@ class _AccountBlocState extends State<AccountBloc> {
       alignment: Alignment.center,
       child: Button(
         callback: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Home(
+          Navigator.of(context).pushReplacement(
+            SlideButtom(
+              page: Home(
                 user: widget.user,
               ),
             ),
           );
         },
         content: Padding(
-          padding: const EdgeInsets.all(10),
+          padding:
+              const EdgeInsets.only(right: 10, left: 10, bottom: 10, top: 5),
           child: Stack(
             children: [
               Positioned(
@@ -41,13 +42,11 @@ class _AccountBlocState extends State<AccountBloc> {
                   child: Row(
                     children: [
                       Text(
-                        widget.user.coins.toString(),
+                        "${widget.user.coins.toString()} ",
                         style: TextStyle(
-                            color: Palette.yellow,
-                            fontSize: width > 500 ? 18 : 14),
-                      ),
-                      SizedBox(
-                        width: width > 500 ? 4 : 8,
+                            color: const Color.fromARGB(255, 241, 158, 4),
+                            fontSize: width > 500 ? 18 : 18,
+                            fontWeight: FontWeight.bold),
                       ),
                       Image.asset(
                         'assets/images/themes/coin.png',
@@ -58,11 +57,11 @@ class _AccountBlocState extends State<AccountBloc> {
               Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: width / 25),
+                    padding: EdgeInsets.only(bottom: width / 29),
                     child: LinearPercentIndicator(
                       width: width > 500 ? width - 130 : width - 110,
                       animation: true,
-                      lineHeight: width / 17,
+                      lineHeight: width / 15,
                       animationDuration: 1000,
                       percent: widget.user
                               .words_per_level[widget.user.current_level]! /
@@ -81,17 +80,20 @@ class _AccountBlocState extends State<AccountBloc> {
                   ),
                   Row(
                     children: [
-                      CircleAvatar(
-                        radius: width > 500 ? width / 9 : width / 11,
-                        backgroundColor: Palette.blue,
-                        child: ClipOval(
-                          child: Image.asset(
-                            widget.user.image,
-                            fit: BoxFit.cover,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: CircleAvatar(
+                          radius: width > 500 ? width / 9 : width / 9.5,
+                          backgroundColor: Palette.blue,
+                          child: ClipOval(
+                            child: Image.asset(
+                              widget.user.image,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
-                      const Expanded(child: SizedBox()),
+                      const Expanded(flex: 2, child: SizedBox()),
                       Padding(
                         padding: const EdgeInsets.only(right: 50),
                         child: Column(
@@ -101,15 +103,15 @@ class _AccountBlocState extends State<AccountBloc> {
                               widget.user.name,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Palette.white,
-                                  fontSize: width / 20,
+                                  color: Palette.indigo,
+                                  fontSize: width / 15,
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
                               "Niveau ${(widget.user.current_level).toString()} - ${widget.user.current_level.toString()}AEP",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Palette.white, fontSize: width / 25),
+                                  color: Palette.indigo, fontSize: width / 25),
                             ),
                           ],
                         ),
@@ -122,7 +124,7 @@ class _AccountBlocState extends State<AccountBloc> {
             ],
           ),
         ),
-        color: Palette.pink,
+        color: Palette.white,
         heigth: width / 2.5,
         width: width - 20,
         radius: 20,

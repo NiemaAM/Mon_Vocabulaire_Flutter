@@ -1,15 +1,14 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
-
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/quiz_model.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
-import 'package:mon_vocabulaire/Widgets/quiz_app_bar.dart';
+import 'package:mon_vocabulaire/Widgets/Appbars/quiz_app_bar.dart';
+import 'package:mon_vocabulaire/Widgets/Popups/quiz_popup.dart';
 import '../../Model/quiz_prposition.dart';
 import '../../Services/audio_background.dart';
 import '../../Services/sfx.dart';
@@ -138,6 +137,12 @@ class _QuizTextImagesState extends State<QuizTextImages> {
         if (index == size || chances == 0 || quizEnded) {
           duration = 0;
         }
+        if (duration <= 0 && !didResponse && !quizEnded) {
+          chances--;
+          Sfx.play("audios/sfx/zew.mp3", 1);
+          heartVisible();
+          endQuiz();
+        }
       });
     });
   }
@@ -206,315 +211,92 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   }
 
   void endQuiz() {
+    if (chances == 0) {
+      setState(() {
+        quizEnded = true;
+      });
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return QuizPopup(
+            chances: chances,
+            timer: time.toDouble(),
+            onButton1Pressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            onButton2Pressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuizTextImages(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+            onButton3Pressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LessonPage(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
+    }
     if (index == size && chances != 0) {
       setState(() {
         quizEnded = true;
       });
-      Sfx.play("audios/sfx/win.mp3", 1);
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return QuizPopup(
+            chances: chances,
+            timer: time.toDouble(),
+            onButton1Pressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            onButton2Pressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuizTextImages(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+            onButton3Pressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LessonPage(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
       _controllerConfetti.play();
-      AwesomeDialog(
-        context: context,
-        headerAnimationLoop: false,
-        customHeader: Container(
-          height: 100,
-          width: 100,
-          decoration: BoxDecoration(
-              color: chances == 3 ? Palette.yellow : Palette.lightGrey,
-              borderRadius: const BorderRadius.all(Radius.circular(50))),
-          child: const Icon(
-            Icons.star_rounded,
-            color: Palette.white,
-            size: 80,
-          ),
-        ),
-        dialogType: DialogType.success,
-        animType: AnimType.bottomSlide,
-        body: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text(
-              chances == 3
-                  ? "Excellent travail !"
-                  : chances == 2
-                      ? "Bien joué!"
-                      : "Bel effort!",
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Palette.pink),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Text(
-              chances == 3
-                  ? "Tu es un vrai champion!"
-                  : chances == 2
-                      ? "Joli travail, Continue comme ça!"
-                      : "Pas mal, mais tu peux faire mieux!",
-              style: const TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-          Image.asset(
-            chances == 3
-                ? "assets/images/mascotte/win.gif"
-                : chances == 2
-                    ? "assets/images/mascotte/win2.gif"
-                    : "assets/images/mascotte/win3.gif",
-            scale: 5,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              const Expanded(flex: 2, child: SizedBox()),
-              Column(
-                children: [
-                  const Icon(
-                    Icons.timer_outlined,
-                    size: 40,
-                    color: Palette.blue,
-                  ),
-                  const Text(
-                    "Temps",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Palette.blue),
-                  ),
-                  Row(
-                    children: [
-                      Center(
-                        child: Text(
-                          time < 60 ? "$time" : "${time ~/ 60}",
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Palette.blue),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          time < 60 ? " secondes" : " minutes",
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 12, color: Palette.blue),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              const Expanded(child: SizedBox()),
-              Column(
-                children: [
-                  const Icon(
-                    Icons.star_rounded,
-                    size: 40,
-                    color: Palette.yellow,
-                  ),
-                  const Text(
-                    "Etoiles",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Palette.yellow),
-                  ),
-                  Center(
-                    child: Text(
-                      chances == 3 ? "+ 1" : "+ 0",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: chances == 3
-                              ? Palette.yellow
-                              : Palette.lightGrey),
-                    ),
-                  )
-                ],
-              ),
-              const Expanded(child: SizedBox()),
-              Column(
-                children: [
-                  Image.asset(
-                    "assets/images/themes/coin.png",
-                    scale: 13,
-                  ),
-                  const Text(
-                    "Pièces",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Palette.orange),
-                  ),
-                  Center(
-                    child: Text(
-                      chances == 3
-                          ? "+ 15"
-                          : chances == 2
-                              ? "+ 10"
-                              : "+ 5",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Palette.orange),
-                    ),
-                  )
-                ],
-              ),
-              const Expanded(child: SizedBox()),
-              Column(
-                children: const [
-                  Icon(
-                    Icons.arrow_upward_rounded,
-                    size: 40,
-                    color: Palette.lightGreen,
-                  ),
-                  Text(
-                    "Mots",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Palette.lightGreen),
-                  ),
-                  Center(
-                    child: Text(
-                      "+ 10",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Palette.lightGreen),
-                    ),
-                  )
-                ],
-              ),
-              const Expanded(flex: 2, child: SizedBox()),
-            ],
-          ),
-        ]),
-        btnCancelIcon: Icons.home,
-        btnCancelText: " ",
-        btnCancelOnPress: () {
-          Navigator.pop(context);
-        },
-        btnOkIcon: Icons.restart_alt_rounded,
-        btnOkText: " ",
-        btnOkOnPress: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => QuizTextImages(
-                subTheme: widget.subTheme,
-                user: widget.user,
-              ),
-            ),
-          );
-        },
-      ).show();
-    } else if (chances == 0) {
-      setState(() {
-        quizEnded = true;
-      });
-      Sfx.play("audios/sfx/lose.mp3", 1);
-      AwesomeDialog(
-        context: context,
-        headerAnimationLoop: false,
-        customHeader: Container(
-          height: 100,
-          width: 100,
-          decoration: const BoxDecoration(
-              color: Palette.red,
-              borderRadius: BorderRadius.all(Radius.circular(50))),
-          child: const Icon(
-            Icons.heart_broken,
-            color: Palette.white,
-            size: 70,
-          ),
-        ),
-        dialogType: DialogType.success,
-        animType: AnimType.bottomSlide,
-        body: Column(children: [
-          const Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              "Oh non ...",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Palette.pink),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: Text(
-              "Tu n'as plus de coeurs",
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-          Image.asset(
-            "assets/images/mascotte/lose.gif",
-            scale: 5,
-          ),
-          Button(
-              callback: () {
-                Navigator.pop(context);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LessonPage(
-                      subTheme: widget.subTheme,
-                      user: widget.user,
-                    ),
-                  ),
-                );
-              },
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  Expanded(
-                    flex: 2,
-                    child: SizedBox(),
-                  ),
-                  Icon(
-                    Icons.menu_book_rounded,
-                    color: Palette.white,
-                  ),
-                  Expanded(child: SizedBox()),
-                  Center(
-                    child: Text(
-                      "Réviser ma leçon",
-                      style: TextStyle(color: Palette.white, fontSize: 16),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: SizedBox(),
-                  ),
-                ],
-              ))
-        ]),
-        btnCancelIcon: Icons.home,
-        btnCancelText: " ",
-        btnCancelOnPress: () {
-          Navigator.pop(context);
-        },
-        btnOkIcon: Icons.restart_alt_rounded,
-        btnOkText: " ",
-        btnOkOnPress: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => QuizTextImages(
-                subTheme: widget.subTheme,
-                user: widget.user,
-              ),
-            ),
-          );
-        },
-      ).show();
     }
   }
 
@@ -540,7 +322,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
         duration: const Duration(seconds: 1),
         // The green box must be a child of the AnimatedOpacity widget.
         child: const Icon(
-          Icons.heart_broken,
+          Icons.heart_broken_rounded,
           color: Palette.red,
           size: 150,
         ));
@@ -577,6 +359,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
           automaticallyImplyLeading: false,
           titleSpacing: 0,
           title: QuizAppBar(
+            totalDuration: 30,
             chances: chances,
             duration: duration,
             user: widget.user,
@@ -625,27 +408,18 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                         Stack(children: [
                           Align(
                             alignment: Alignment.topRight,
-                            child: IconButton(
-                                onPressed: () {
-                                  AwesomeDialog(
-                                    context: context,
-                                    headerAnimationLoop: false,
-                                    dialogType: DialogType.question,
-                                    animType: AnimType.rightSlide,
-                                    title: 'Quitter le quiz',
-                                    desc: 'Es-tu sûr(e) de vouloir quitter ?',
-                                    btnCancelText: "Quitter",
-                                    btnCancelOnPress: () {
-                                      Navigator.pop(context);
-                                    },
-                                    btnOkText: "Rester",
-                                    btnOkOnPress: () {},
-                                  ).show();
-                                },
-                                icon: const Icon(
-                                  Icons.close,
-                                  color: Palette.red,
-                                )),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: const Icon(
+                                    Icons.close_rounded,
+                                    color: Palette.red,
+                                    size: 40,
+                                  )),
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 20),

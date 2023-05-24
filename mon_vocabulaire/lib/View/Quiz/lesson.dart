@@ -1,7 +1,8 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/lesson_model.dart';
+import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Quiz/quiz_text_images.dart';
+import 'package:mon_vocabulaire/Widgets/Popups/done_popup.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../Model/quiz_model.dart';
@@ -194,27 +195,18 @@ class _LessonPage extends State<LessonPage> {
                 child: Stack(alignment: Alignment.topCenter, children: [
                   Align(
                     alignment: Alignment.topRight,
-                    child: IconButton(
-                        onPressed: () {
-                          AwesomeDialog(
-                            context: context,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.question,
-                            animType: AnimType.rightSlide,
-                            title: 'Quitter la leçon',
-                            desc: 'Es-tu sûr(e) de vouloir quitter ?',
-                            btnCancelText: "Quitter",
-                            btnCancelOnPress: () {
-                              Navigator.pop(context);
-                            },
-                            btnOkText: "Rester",
-                            btnOkOnPress: () {},
-                          ).show();
-                        },
-                        icon: const Icon(
-                          Icons.close,
-                          color: Palette.red,
-                        )),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            color: Palette.red,
+                            size: 40,
+                          )),
+                    ),
                   ),
                   Stack(
                     children: [
@@ -292,31 +284,29 @@ class _LessonPage extends State<LessonPage> {
                                 index += 1;
                               });
                             } else {
-                              Sfx.play("audios/sfx/done.mp3", 1);
-                              AwesomeDialog(
+                              showDialog(
                                 context: context,
-                                headerAnimationLoop: false,
-                                dialogType: DialogType.success,
-                                animType: AnimType.rightSlide,
-                                title: 'Leçon terminée',
-                                desc: 'Bravo ! Tu as terminé ta leçon.',
-                                btnCancelText: "Retour",
-                                btnCancelOnPress: () {
-                                  Navigator.pop(context);
-                                },
-                                btnOkText: "Suivant",
-                                btnOkOnPress: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => QuizTextImages(
-                                        subTheme: widget.subTheme,
-                                        user: widget.user,
-                                      ),
-                                    ),
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return DonePopup(
+                                    onButton1Pressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    onButton2Pressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.of(context).pushReplacement(
+                                        SlideRight(
+                                          page: QuizTextImages(
+                                            subTheme: widget.subTheme,
+                                            user: widget.user,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
-                              ).show();
+                              );
                             }
                           },
                           heigth: 60,
