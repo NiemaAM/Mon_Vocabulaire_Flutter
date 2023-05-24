@@ -21,6 +21,12 @@ class Ferme extends StatefulWidget {
 }
 
 class _FermeState extends State<Ferme> {
+  bool _isCowClicked = false;
+  bool _isHorClicked = false;
+  bool _isChiClicked = false;
+  bool _isTorClicked = false;
+  bool _isTreeClicked = false;
+  bool _isPouClicked = false;
   int countdown = 10;
   late Timer _timer;
   int duration = 60;
@@ -245,191 +251,204 @@ class _FermeState extends State<Ferme> {
                   Positioned(
                     top: height > 800 ? height - 580 : height - 520,
                     right: width > 550 ? width - 500 : width - 300,
-                    child: IconButton(
-                        iconSize: 50,
-                        onPressed: () {
-                          print(width);
+                    child: GestureDetector(
+                        onTap: () {
+                          _isTorClicked = true;
+                          print("tortue");
                         },
-                        icon: new Image.asset('assets/images/pics/156.png')),
+                        child: Image.asset(
+                          'assets/images/pics/156.png',
+                          width: 50,
+                          height: 50,
+                        )),
                   ),
 
                   //cheval
                   Positioned(
-                    top: height > 800 ? height - 1000 : height - 820,
-                    right: width > 550 ? width - 500 : width - 300,
-                    bottom: 1,
-                    child: IconButton(
-                        iconSize: 80,
-                        onPressed: () {
-                          print(height);
+                      top: height > 800 ? height - 1000 : height - 820,
+                      right: width > 550 ? width - 500 : width - 300,
+                      bottom: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          _isHorClicked = true;
+                          print("horse");
                         },
-                        icon: new Image.asset('assets/images/pics/133.png')),
-                  ),
+                        child: Image.asset(
+                          'assets/images/pics/133.png',
+                          height: 80,
+                          width: 80,
+                        ),
+                      )),
 
                   //niche
                   Positioned(
-                    top: height > 800 ? height - 920 : height - 785,
-                    right: width > 500 ? width - 180 : width - 120,
-                    bottom: 1,
-                    child: IconButton(
-                        iconSize: 80,
-                        onPressed: () {},
-                        icon: new Image.asset(
-                          'assets/images/pics/145.png',
-                        )),
-                  ),
+                      top: height > 800 ? height - 920 : height - 785,
+                      right: width > 500 ? width - 180 : width - 120,
+                      bottom: 1,
+                      child: Image.asset(
+                        'assets/images/pics/145.png',
+                        height: 80,
+                        width: 80,
+                      )),
 
                   //arbre
                   Positioned(
-                    top: height > 800 ? height - 1200 : height - 1050,
-                    right: width > 550 ? width - 350 : width - 250,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 180,
-                        onPressed: () {
-                          print(width);
+                      top: height > 800 ? height - 1200 : height - 1050,
+                      right: width > 550 ? width - 350 : width - 250,
+                      bottom: -180,
+                      child: GestureDetector(
+                        onTap: () {
+                          _isTreeClicked = true;
+                          print("tree");
                         },
-                        icon: new Image.asset(
+                        child: Image.asset(
                           'assets/images/pics/2.png',
-                        )),
-                  ),
+                          height: 200,
+                          width: 200,
+                        ),
+                      )),
+
                   //vache
                   Positioned(
                     top: height > 800 ? height - 1050 : height - 900,
                     right: width > 550 ? width - 360 : width - 250,
                     bottom: -180,
-                    child: IconButton(
-                        iconSize: 100,
-                        onPressed: () {
-                          print(width);
+                    child: GestureDetector(
+                        onTap: () {
+                          _isPouClicked = true;
+                          print("cow");
                         },
-                        icon: new Image.asset(
+                        child: Image.asset(
                           'assets/images/pics/148.png',
+                          height: 110,
+                          width: 110,
                         )),
                   ),
                   //mouton
                   Positioned(
-                    top: height > 800 ? height - 990 : height - 800,
-                    right: width > 550 ? width - 380 : width - 250,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 70,
-                        onPressed: () {
-                          print(width);
-                        },
-                        icon: new Image.asset(
-                          'assets/images/pics/144.png',
-                        )),
-                  ),
+                      top: height > 800 ? height - 990 : height - 800,
+                      right: width > 550 ? width - 380 : width - 250,
+                      bottom: -180,
+                      child: Image.asset(
+                        'assets/images/pics/144.png',
+                        height: 80,
+                        width: 80,
+                      )),
 
                   //Poulailler
                   Positioned(
-                    top: height > 800 ? height - 850 : height - 700,
-                    right: width > 550 ? width - 220 : width - 150,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 90,
-                        onPressed: () {
-                          print(width);
-                        },
-                        icon: new Image.asset(
-                          'assets/images/pics/126.png',
-                        )),
-                  ),
+                      top: height > 800 ? height - 850 : height - 700,
+                      right: width > 550 ? width - 220 : width - 150,
+                      bottom: -180,
+                      child: Image.asset(
+                        'assets/images/pics/126.png',
+                        height: 80,
+                        width: 80,
+                      )),
 
                   //poule
                   Positioned(
-                    top: height > 800 ? height - 800 : height - 650,
-                    right: width > 550 ? width - 340 : width - 250,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 65,
-                        onPressed: () {
-                          print(width);
+                      top: height > 800 ? height - 800 : height - 650,
+                      right: width > 550 ? width - 340 : width - 250,
+                      bottom: -180,
+                      child: GestureDetector(
+                        onTap: () {
+                          _isChiClicked = true;
+                          print("chicken");
                         },
-                        icon: new Image.asset(
+                        child: Image.asset(
                           'assets/images/pics/127.png',
-                        )),
-                  ),
+                          height: 60,
+                          width: 60,
+                        ),
+                      )),
 
                   //coq
                   Positioned(
-                    top: height > 800 ? height - 750 : height - 600,
-                    right: width > 550 ? width - 300 : width - 230,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 70,
-                        onPressed: () {
-                          print(width);
-                        },
-                        icon: new Image.asset(
-                          'assets/images/pics/121.png',
-                        )),
-                  ),
-
-                  //poussin1
-                  Positioned(
-                    top: height > 800 ? height - 700 : height - 610,
-                    right: width > 550 ? width - 350 : width - 290,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 30,
-                        onPressed: () {
-                          print(width);
-                        },
-                        icon: new Image.asset(
-                          'assets/images/pics/128.png',
-                        )),
-                  ),
-                  //poussin2
-                  Positioned(
-                    top: height > 800 ? height - 750 : height - 570,
-                    right: width > 550 ? width - 380 : width - 250,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 30,
-                        onPressed: () {
-                          print(width);
-                        },
-                        icon: new Image.asset(
-                          'assets/images/pics/128.png',
-                        )),
-                  ),
-                  //poussin3
-                  Positioned(
-                    top: height > 800 ? height - 680 : height - 680,
-                    right: width > 550 ? width - 400 : width - 270,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 30,
-                        onPressed: () {
-                          print(width);
-                        },
-                        icon: new Image.asset(
-                          'assets/images/pics/128.png',
-                        )),
-                  ),
+                      top: height > 800 ? height - 750 : height - 600,
+                      right: width > 550 ? width - 300 : width - 230,
+                      bottom: -180,
+                      child: Image.asset(
+                        'assets/images/pics/121.png',
+                        height: 70,
+                        width: 70,
+                      )),
 
                   //chien
                   Positioned(
-                    top: height > 800 ? height - 1050 : height - 915,
-                    right: width > 550 ? width - 150 : width - 90,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 20,
-                        onPressed: () {
-                          print(width);
-                        },
-                        icon: new Image.asset(
-                          'assets/images/pics/135.png',
-                        )),
-                  ),
+                      top: height > 800 ? height - 1050 : height - 915,
+                      right: width > 550 ? width - 150 : width - 90,
+                      bottom: -180,
+                      child: Image.asset(
+                        'assets/images/pics/135.png',
+                        width: 30,
+                        height: 30,
+                      )),
+
+                  // //poussin1
+                  // Positioned(
+                  //     top: height > 800 ? height - 700 : height - 610,
+                  //     right: width > 550 ? width - 350 : width - 290,
+                  //     bottom: -180,
+                  //     child: GestureDetector(
+                  //       onTap: () {
+                  //         print("poussin");
+                  //         _isTreeClicked = true;
+                  //       },
+                  //       child: Image.asset(
+                  //         'assets/images/pics/128.png',
+                  //         height: 30,
+                  //         width: 30,
+                  //       ),
+                  //     )),
                 ]),
               ),
             ],
           ),
-
-          //monkey
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset(
+                  'assets/images/pics/156.png',
+                  height: 40,
+                  width: 40,
+                  color: _isTorClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/148.png',
+                  height: 75,
+                  width: 75,
+                  color: _isCowClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/133.png',
+                  height: 75,
+                  width: 75,
+                  color: _isHorClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/127.png',
+                  height: 50,
+                  width: 50,
+                  color: _isChiClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/128.png',
+                  height: 45,
+                  width: 45,
+                  color: _isPouClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/2.png',
+                  height: 75,
+                  width: 75,
+                  color: _isTreeClicked ? null : Colors.black,
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

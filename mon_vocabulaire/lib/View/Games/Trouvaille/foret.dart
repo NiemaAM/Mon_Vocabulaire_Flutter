@@ -22,6 +22,9 @@ class Foret extends StatefulWidget {
 }
 
 class _ForetState extends State<Foret> {
+  bool _isEleClicked = false;
+  bool _isGiClicked = false;
+  bool _isLiClicked = false;
   int countdown = 10;
   late Timer _timer;
   int duration = 60;
@@ -244,80 +247,115 @@ class _ForetState extends State<Foret> {
                 child: Stack(children: [
                   //monkey
                   Positioned(
-                    top: height > 800 ? height - 620 : height - 550,
+                    top: height > 800 ? height - 610 : height - 550,
                     right: width > 550 ? width - 500 : width - 300,
-                    child: IconButton(
-                        iconSize: 70,
-                        onPressed: () {
-                          print(width);
-                        },
-                        icon:
-                            new Image.asset('assets/images/games/monkey.png')),
+                    child: Image.asset(
+                      'assets/images/games/monkey.png',
+                      height: 70,
+                      width: 70,
+                    ),
                   ),
 
                   //snake
                   Positioned(
                     bottom: height > 800 ? height - 900 : height - 750,
                     right: width > 550 ? width - 300 : width - 220,
-                    child: IconButton(
-                        iconSize: 60,
-                        onPressed: () {},
-                        icon: new Image.asset('assets/images/games/snake.png')),
+                    child: Image.asset(
+                      'assets/images/games/snake.png',
+                      height: 70,
+                      width: 70,
+                    ),
                   ),
                   //owel
                   Positioned(
                     top: height > 800 ? height - 800 : height - 750,
                     right: width > 550 ? width - 250 : width - 200,
-                    child: IconButton(
-                        iconSize: 100,
-                        onPressed: () {
-                          print(height);
-                        },
-                        icon: new Image.asset('assets/images/games/owel.png')),
+                    child: Image.asset(
+                      'assets/images/games/owel.png',
+                      height: 90,
+                      width: 90,
+                    ),
                   ),
                   //LION
                   Positioned(
                     top: height > 800 ? height - 700 : height - 600,
                     right: width > 550 ? width - 600 : width - 400,
                     bottom: 1,
-                    child: IconButton(
-                        iconSize: 200,
-                        onPressed: () {
-                          print(height);
+                    child: GestureDetector(
+                        onTap: () {
+                          _isLiClicked = true;
+                          print("lion");
                         },
-                        icon: new Image.asset('assets/images/pics/143.png')),
+                        child: Image.asset(
+                          'assets/images/pics/143.png',
+                          height: 200,
+                          width: 200,
+                        )),
                   ),
 
+                  //ELEPHANT
+                  Positioned(
+                    top: height > 800 ? height - 915 : height - 780,
+                    right: width > 550 ? width - 350 : width - 320,
+                    bottom: -180,
+                    child: GestureDetector(
+                        onTap: () {
+                          _isEleClicked = true;
+                          print("elephant");
+                        },
+                        child: Image.asset(
+                          'assets/images/pics/138.png',
+                          height: 300,
+                          width: 300,
+                        )),
+                  ),
                   //GIRAFF
                   Positioned(
                     top: height > 800 ? height - 800 : height - 690,
                     right: width > 500 ? width - 250 : width - 200,
                     bottom: 1,
-                    child: IconButton(
-                        iconSize: 250,
-                        onPressed: () {},
-                        icon: new Image.asset(
-                          'assets/images/pics/140.png',
-                        )),
-                  ),
-                  //ELEPHANT
-                  Positioned(
-                    top: height > 800 ? height - 850 : height - 780,
-                    right: width > 550 ? width - 350 : width - 250,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 240,
-                        onPressed: () {
-                          print(width);
+                    child: GestureDetector(
+                        onTap: () {
+                          _isGiClicked = true;
+                          print("giraffe");
                         },
-                        icon: new Image.asset(
-                          'assets/images/pics/138.png',
+                        child: Image.asset(
+                          'assets/images/pics/140.png',
+                          height: 300,
+                          width: 300,
                         )),
                   ),
                 ]),
               ),
             ],
           ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset(
+                  'assets/images/pics/138.png',
+                  height: 75,
+                  width: 75,
+                  color: _isEleClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/140.png',
+                  height: 75,
+                  width: 75,
+                  color: _isGiClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/143.png',
+                  height: 75,
+                  width: 75,
+                  color: _isLiClicked ? null : Colors.black,
+                ),
+              ],
+            ),
+          )
 
           //monkey
         ],
