@@ -44,17 +44,10 @@ class _cuizineState extends State<cuizine> {
               ),
             ),
           ),
-          Positioned(
-            top: height * 0.08, // Adjust the percentage as needed
-            right: width * 0.372,
-            child: IconButton(
-                iconSize: width * 0.12,
-                onPressed: () {},
-                icon: new Image.asset('assets/images/pics/7.png')),
-          ),
+
           Positioned(
             right: 1,
-            top: -60,
+            top: -25,
             child: BubbleMessage(
               widget: Row(
                 children: [
@@ -79,6 +72,15 @@ class _cuizineState extends State<cuizine> {
               ),
             ),
           ),
+          Positioned(
+            top: height * 0.08, // Adjust the percentage as needed
+            right: width * 0.372,
+            child: IconButton(
+                iconSize: width * 0.12,
+                onPressed: () {},
+                icon: new Image.asset('assets/images/pics/7.png')),
+          ),
+          
         ],
       ),
     );

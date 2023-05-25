@@ -3,8 +3,8 @@ import 'package:mon_vocabulaire/View/Home/home.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../Model/user.dart';
-import 'Palette.dart';
-import 'button.dart';
+import 'package:mon_vocabulaire/Widgets/palette.dart';
+import 'package:mon_vocabulaire/Widgets/button.dart';
 
 class AccountBloc extends StatefulWidget {
   final User user;

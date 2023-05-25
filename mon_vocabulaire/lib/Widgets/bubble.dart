@@ -3,7 +3,7 @@ import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/star.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import '../Services/animation_route.dart';
+import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 import 'button.dart';
 
 class Bubble extends StatefulWidget {
@@ -47,7 +47,7 @@ class _BubbleState extends State<Bubble> {
         Button(
           callback: () {
             Sfx.play("audios/sfx/plip.mp3", 1);
-            Navigator.of(context).push(SizedSlide(page: widget.callback));
+            Navigator.of(context).push(SizedSlide(Page: widget.callback));
           },
           content: SizedBox(
             height: 140,

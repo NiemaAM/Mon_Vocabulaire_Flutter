@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
-import 'package:mon_vocabulaire/Services/animation_route.dart';
+import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 import '../../Widgets/Palette.dart';
 import '../Settings/settings_page.dart';
+import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 
 class Profil extends StatefulWidget {
   final User user;
@@ -23,7 +24,7 @@ class _ProfilState extends State<Profil> {
           onPressed: () {
             Navigator.of(context).push(
               SlideRight(
-                page: SettingsPage(
+                Page: SettingsPage(
                   user: widget.user,
                 ),
               ),
@@ -33,6 +34,15 @@ class _ProfilState extends State<Profil> {
           tooltip: "Paramètres",
         ),
       ]),
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => SettingsPage(
+      //       user: widget.user,
+      //     ),
+      //   ),
+      // );
+
       body: ListView(
         children: [
           Padding(

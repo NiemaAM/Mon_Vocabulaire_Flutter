@@ -8,22 +8,26 @@ import '../../Model/user.dart';
 import '../../Services/sfx.dart';
 import '../../Widgets/message_mascotte.dart';
 import 'sub_theme_path.dart';
+import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 
 class SubThemes extends StatefulWidget {
   final String title;
   final int theme;
   final User user;
-  const SubThemes(
-      {super.key,
-      required this.title,
-      required this.theme,
-      required this.user});
+
+  const SubThemes({
+    super.key,
+    required this.title,
+    required this.theme,
+    required this.user,
+  });
 
   @override
   State<SubThemes> createState() => _SubThemesState();
 }
 
-class _SubThemesState extends State<SubThemes> {
+class _SubThemesState extends State<SubThemes>
+    with SingleTickerProviderStateMixin {
   List<String> images = ["", ""];
   String background = "";
   Color color = Palette.blue;
@@ -122,13 +126,16 @@ class _SubThemesState extends State<SubThemes> {
                 const Expanded(
                   child: SizedBox(),
                 ),
+
+                ///////////////////////////////////test///////////////////////////////
+                //AnimatedBuilder(),
+                //////////////////////////////////endTest/////////////////////////////
+
                 const BubbleMessage(
                   widget: Text(
-                    "Salut, je suis ton compagnon Bubble ! Et je vais t'aider à apprendre le français.",
-                    style:
-                        const TextStyle(color: Color(0xFF0E57AC), fontSize: 15),
-                  ),
+                      "Salut, je suis ton compagnon Bubble ! Et je vais t'aider à apprendre le français."),
                 ),
+
                 Bubble(
                   hasShadow: true,
                   image: images[0],

@@ -11,7 +11,7 @@ import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
 import '../../Model/quiz_model.dart';
 import '../../Services/audio_background.dart';
 import '../../Services/sfx.dart';
-import '../../Widgets/Palette.dart';
+import '../../Widgets/palette.dart';
 import '../../Widgets/button.dart';
 import '../../Widgets/quiz_app_bar.dart';
 

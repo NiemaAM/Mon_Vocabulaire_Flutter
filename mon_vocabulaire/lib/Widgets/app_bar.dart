@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../Model/user.dart';
-import 'Palette.dart';
+import 'package:mon_vocabulaire/Widgets/palette.dart';
 
 class AppBarHome extends StatefulWidget {
   final User user;

@@ -235,7 +235,7 @@ class _FlipCardGameState extends State<FlipCardGame>
                   widget: countdown > 0
                       ? countdown == 1
                           ? Text(
-                              "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown seconde.",
+                              "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown secondes.",
                               style: const TextStyle(
                                   color: Color(0xFF0E57AC), fontSize: 15),
                             )

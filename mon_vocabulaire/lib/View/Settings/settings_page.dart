@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mon_vocabulaire/Themes/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
-import 'package:mon_vocabulaire/View/Account/accounts.dart';
+import 'package:mon_vocabulaire/View/Account/accouts.dart';
 import 'package:mon_vocabulaire/View/Account/first_screen.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
@@ -17,10 +17,14 @@ import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Services/audio_background.dart';
+import 'package:mon_vocabulaire/View/Account/accouts.dart';
 import '../../Services/sfx.dart';
 import '../../Services/voice.dart';
 import '../../Widgets/round_icon_widget.dart';
 import '../Account/edit_account.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
+import 'dart:math';
 
 class SettingsPage extends StatefulWidget {
   final User user;

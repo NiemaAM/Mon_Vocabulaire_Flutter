@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../Model/user.dart';
-import 'Palette.dart';
+import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'button.dart';
 
 class LevelBloc extends StatefulWidget {

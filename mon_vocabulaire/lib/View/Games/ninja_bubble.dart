@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../Widgets/Palette.dart';
+import 'package:mon_vocabulaire/Widgets/palette.dart';
 
 class NinjaBubble extends StatefulWidget {
   const NinjaBubble({super.key});
