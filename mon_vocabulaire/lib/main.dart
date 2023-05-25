@@ -5,6 +5,7 @@ import 'package:mon_vocabulaire/View/Home/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Themes/theme_provider.dart';
+import 'View/Games/Trouvaille/Trouvaille_Foret.dart';
 import 'View/Games/Trouvaille/trouvaillecour.dart';
 
 void main() async {
