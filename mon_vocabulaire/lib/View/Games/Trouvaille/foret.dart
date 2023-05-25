@@ -256,16 +256,6 @@ class _ForetState extends State<Foret> {
                     ),
                   ),
 
-                  //snake
-                  Positioned(
-                    bottom: height > 800 ? height - 900 : height - 750,
-                    right: width > 550 ? width - 300 : width - 220,
-                    child: Image.asset(
-                      'assets/images/games/snake.png',
-                      height: 70,
-                      width: 70,
-                    ),
-                  ),
                   //owel
                   Positioned(
                     top: height > 800 ? height - 800 : height - 750,
@@ -295,7 +285,7 @@ class _ForetState extends State<Foret> {
 
                   //ELEPHANT
                   Positioned(
-                    top: height > 800 ? height - 915 : height - 780,
+                    top: height > 800 ? height - 915 : height - 800,
                     right: width > 550 ? width - 350 : width - 320,
                     bottom: -180,
                     child: GestureDetector(
@@ -324,6 +314,17 @@ class _ForetState extends State<Foret> {
                           height: 300,
                           width: 300,
                         )),
+                  ),
+
+                  //snake
+                  Positioned(
+                    bottom: height > 800 ? height - 900 : height - 750,
+                    right: width > 550 ? width - 300 : width - 200,
+                    child: Image.asset(
+                      'assets/images/games/snake.png',
+                      height: 70,
+                      width: 70,
+                    ),
                   ),
                 ]),
               ),

@@ -41,15 +41,15 @@ class _TrouvailleSubThemesState extends State<TrouvailleSubThemes> {
           child: Column(
             children: [
               Bubble2(
-                image: "assets/images/themes/ecole.png",
-                text: 'L’école',
+                image: "assets/images/themes/animaux.png",
+                text: 'Ferme',
                 callback: Ferme(),
                 color: Palette.ecole,
                 type: "theme",
               ),
               Bubble2(
-                image: "assets/images/themes/maison.png",
-                text: 'Maison et famille',
+                image: "assets/images/themes/animaux.png",
+                text: 'Foret',
                 callback: Foret(),
                 color: Palette.maison,
                 type: "theme",

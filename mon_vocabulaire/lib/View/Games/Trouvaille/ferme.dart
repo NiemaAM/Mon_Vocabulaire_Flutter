@@ -223,7 +223,7 @@ class _FermeState extends State<Ferme> {
                               ),
                             ),
                             Text(
-                              "Un chien",
+                              "Une vache",
                               style: const TextStyle(
                                   color: Color(0xFF0E57AC), fontSize: 25),
                             ),
@@ -247,26 +247,10 @@ class _FermeState extends State<Ferme> {
                   ),
                 ),
                 child: Stack(children: [
-                  //tortue
-                  Positioned(
-                    top: height > 800 ? height - 580 : height - 520,
-                    right: width > 550 ? width - 500 : width - 300,
-                    child: GestureDetector(
-                        onTap: () {
-                          _isTorClicked = true;
-                          print("tortue");
-                        },
-                        child: Image.asset(
-                          'assets/images/pics/156.png',
-                          width: 50,
-                          height: 50,
-                        )),
-                  ),
-
                   //cheval
                   Positioned(
                       top: height > 800 ? height - 1000 : height - 820,
-                      right: width > 550 ? width - 500 : width - 300,
+                      right: width > 550 ? width - 500 : width - 320,
                       bottom: 1,
                       child: GestureDetector(
                         onTap: () {
@@ -280,21 +264,10 @@ class _FermeState extends State<Ferme> {
                         ),
                       )),
 
-                  //niche
-                  Positioned(
-                      top: height > 800 ? height - 920 : height - 785,
-                      right: width > 500 ? width - 180 : width - 120,
-                      bottom: 1,
-                      child: Image.asset(
-                        'assets/images/pics/145.png',
-                        height: 80,
-                        width: 80,
-                      )),
-
                   //arbre
                   Positioned(
                       top: height > 800 ? height - 1200 : height - 1050,
-                      right: width > 550 ? width - 350 : width - 250,
+                      right: width > 550 ? width - 350 : width - 200,
                       bottom: -180,
                       child: GestureDetector(
                         onTap: () {
@@ -310,12 +283,12 @@ class _FermeState extends State<Ferme> {
 
                   //vache
                   Positioned(
-                    top: height > 800 ? height - 1050 : height - 900,
-                    right: width > 550 ? width - 360 : width - 250,
+                    top: height > 800 ? height - 1050 : height - 850,
+                    right: width > 550 ? width - 360 : width - 260,
                     bottom: -180,
                     child: GestureDetector(
                         onTap: () {
-                          _isPouClicked = true;
+                          _isCowClicked = true;
                           print("cow");
                         },
                         child: Image.asset(
@@ -324,21 +297,11 @@ class _FermeState extends State<Ferme> {
                           width: 110,
                         )),
                   ),
-                  //mouton
-                  Positioned(
-                      top: height > 800 ? height - 990 : height - 800,
-                      right: width > 550 ? width - 380 : width - 250,
-                      bottom: -180,
-                      child: Image.asset(
-                        'assets/images/pics/144.png',
-                        height: 80,
-                        width: 80,
-                      )),
 
                   //Poulailler
                   Positioned(
                       top: height > 800 ? height - 850 : height - 700,
-                      right: width > 550 ? width - 220 : width - 150,
+                      right: width > 550 ? width - 220 : width - 120,
                       bottom: -180,
                       child: Image.asset(
                         'assets/images/pics/126.png',
@@ -346,10 +309,20 @@ class _FermeState extends State<Ferme> {
                         width: 80,
                       )),
 
-                  //poule
+                  //coq
                   Positioned(
                       top: height > 800 ? height - 800 : height - 650,
-                      right: width > 550 ? width - 340 : width - 250,
+                      right: width > 550 ? width - 340 : width - 220,
+                      bottom: -180,
+                      child: Image.asset(
+                        'assets/images/pics/121.png',
+                        height: 70,
+                        width: 70,
+                      )),
+                  //poule
+                  Positioned(
+                      top: height > 800 ? height - 750 : height - 600,
+                      right: width > 550 ? width - 300 : width - 180,
                       bottom: -180,
                       child: GestureDetector(
                         onTap: () {
@@ -362,45 +335,6 @@ class _FermeState extends State<Ferme> {
                           width: 60,
                         ),
                       )),
-
-                  //coq
-                  Positioned(
-                      top: height > 800 ? height - 750 : height - 600,
-                      right: width > 550 ? width - 300 : width - 230,
-                      bottom: -180,
-                      child: Image.asset(
-                        'assets/images/pics/121.png',
-                        height: 70,
-                        width: 70,
-                      )),
-
-                  //chien
-                  Positioned(
-                      top: height > 800 ? height - 1050 : height - 915,
-                      right: width > 550 ? width - 150 : width - 90,
-                      bottom: -180,
-                      child: Image.asset(
-                        'assets/images/pics/135.png',
-                        width: 30,
-                        height: 30,
-                      )),
-
-                  // //poussin1
-                  // Positioned(
-                  //     top: height > 800 ? height - 700 : height - 610,
-                  //     right: width > 550 ? width - 350 : width - 290,
-                  //     bottom: -180,
-                  //     child: GestureDetector(
-                  //       onTap: () {
-                  //         print("poussin");
-                  //         _isTreeClicked = true;
-                  //       },
-                  //       child: Image.asset(
-                  //         'assets/images/pics/128.png',
-                  //         height: 30,
-                  //         width: 30,
-                  //       ),
-                  //     )),
                 ]),
               ),
             ],
@@ -410,12 +344,6 @@ class _FermeState extends State<Ferme> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset(
-                  'assets/images/pics/156.png',
-                  height: 40,
-                  width: 40,
-                  color: _isTorClicked ? null : Colors.black,
-                ),
                 Image.asset(
                   'assets/images/pics/148.png',
                   height: 75,
@@ -433,12 +361,6 @@ class _FermeState extends State<Ferme> {
                   height: 50,
                   width: 50,
                   color: _isChiClicked ? null : Colors.black,
-                ),
-                Image.asset(
-                  'assets/images/pics/128.png',
-                  height: 45,
-                  width: 45,
-                  color: _isPouClicked ? null : Colors.black,
                 ),
                 Image.asset(
                   'assets/images/pics/2.png',
