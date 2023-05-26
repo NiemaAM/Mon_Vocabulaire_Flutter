@@ -5,9 +5,11 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../../Services/audio_background.dart';
 import '../../../Services/sfx.dart';
+import '../../../Services/voice.dart';
 import '../../../Widgets/Palette.dart';
 import '../../../Widgets/message_mascotte.dart';
 
@@ -39,8 +41,18 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
     'Une trousse',
     'Une règle',
     'Un livre',
-    'Un cartable'
+    'Un cartable',
+    'Une brosse'
   ];
+  Map<String, String> ElementsAudios = {
+    'Une gomme': "20.mp3",
+    'Une colle': "18.mp3",
+    'Une trousse': "27.mp3",
+    'Une règle': "32.mp3",
+    'Un livre': "30.mp3",
+    'Un cartable': "23.mp3",
+    'Une brosse': "25.mp3"
+  };
   String randomSchoolFunc() {
     School.shuffle();
 
@@ -119,7 +131,7 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
           padding: const EdgeInsets.only(bottom: 10),
           child: Text(
             duration > 0
-                ? "Bravo, tu as trouvé tous les animaux !"
+                ? "Bravo, tu as trouvé tous les élements de la classe !"
                 : "Tu y étais presque, essaye encore une fois",
             style: const TextStyle(
               fontSize: 16,
@@ -205,34 +217,60 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
       body: Column(
         children: [
           //Mot à trouver mascotte
-          Positioned(
-            right: 1,
-            top: -55,
-            child: BubbleMessage(
-              widget: Row(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 8, right: 20, bottom: 8),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.volume_up,
-                        color: Color(0xFF0E57AC),
-                        size: 35,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    "$randomSchool",
-                    style: const TextStyle(
-                        color: Color(0xFF0E57AC),
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
+          SafeArea(
+            child: Stack(children: [
+              LinearPercentIndicator(
+                padding: const EdgeInsets.all(0),
+                animation: true,
+                lineHeight: 10,
+                animationDuration: 0,
+                percent: duration / 60,
+                barRadius: const Radius.circular(0),
+                progressColor: duration >= 30
+                    ? Palette.lightGreen
+                    : duration <= 15
+                        ? Palette.red
+                        : Palette.orange,
+                backgroundColor: Theme.of(context).shadowColor,
               ),
-            ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: BubbleMessage(
+                  widget: countdown > 0
+                      ? Text(
+                          "Trouvez l'animal dans : $countdown",
+                          style: const TextStyle(
+                              color: Color(0xFF0E57AC), fontSize: 15),
+                        )
+                      : Row(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 8, right: 10),
+                              child: IconButton(
+                                onPressed: () {
+                                  Voice.play(
+                                      'audios/voices/${ElementsAudios['$randomSchool']}',
+                                      1);
+                                },
+                                icon: Icon(
+                                  Icons.volume_up,
+                                  color: Color(0xFF0E57AC),
+                                  size: 35,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "$randomSchool",
+                              style: const TextStyle(
+                                  color: Color(0xFF0E57AC), fontSize: 25),
+                            ),
+                          ],
+                        ),
+                  // widget:
+                ),
+              ),
+            ]),
           ),
           Stack(children: [
             Container(
@@ -255,6 +293,8 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
                     var element = "Un cartable";
                     if (element == randomSchool) {
                       _isCaClicked = true;
+                      Voice.play(
+                          "audios/voices/${ElementsAudios['Un cartable']}", 1);
                       print("You win");
                       randomSchoolFunc();
                     } else {
@@ -276,6 +316,8 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
                     var element = "Une brosse";
                     if (element == randomSchool) {
                       _isBrClicked = true;
+                      Voice.play(
+                          "audios/voices/${ElementsAudios['Une brosse']}", 1);
                       print("You win");
                       randomSchoolFunc();
                     } else {
@@ -297,6 +339,8 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
                     var element = "Un livre";
                     if (element == randomSchool) {
                       _isLiClicked = true;
+                      Voice.play(
+                          "audios/voices/${ElementsAudios['Un livre']}", 1);
                       print("You win");
                       randomSchoolFunc();
                     } else {
@@ -311,13 +355,15 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
             ),
             //Trousse
             Positioned(
-              bottom: height * 0.15,
+              bottom: height * 0.18,
               right: width * 0.55,
               child: GestureDetector(
                   onTap: () {
                     var element = "Une trousse";
                     if (element == randomSchool) {
                       _isTrClicked = true;
+                      Voice.play(
+                          "audios/voices/${ElementsAudios['Une trousse']}", 1);
                       print("You win");
                       randomSchoolFunc();
                     } else {
@@ -332,13 +378,15 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
             ),
             //Règle
             Positioned(
-              bottom: height * 0.14,
-              right: width * 0.35,
+              bottom: height * 0.15,
+              right: width > 500 ? width * 0.38 : width * 0.42,
               child: GestureDetector(
                   onTap: () {
                     var element = "Une règle";
                     if (element == randomSchool) {
                       _isReClicked = true;
+                      Voice.play(
+                          "audios/voices/${ElementsAudios['Une règle']}", 1);
                       print("You win");
                       randomSchoolFunc();
                     } else {
@@ -353,13 +401,15 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
             ),
             //colle
             Positioned(
-              bottom: height * 0.16,
-              right: width * 0.38,
+              bottom: height * 0.18,
+              right: width > 500 ? width * 0.38 : width * 0.42,
               child: GestureDetector(
                   onTap: () {
                     var element = "Une colle";
                     if (element == randomSchool) {
                       _isCoClicked = true;
+                      Voice.play(
+                          "audios/voices/${ElementsAudios['Une colle']}", 1);
                       print("You win");
                       randomSchoolFunc();
                     } else {
@@ -378,9 +428,11 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
               right: width > 500 ? width * 0.1 : width * 0.02,
               child: GestureDetector(
                   onTap: () {
-                    var element = "Un cartable";
+                    var element = "Une gomme";
                     if (element == randomSchool) {
                       _isGoClicked = true;
+                      Voice.play(
+                          "audios/voices/${ElementsAudios['Une gomme']}", 1);
                       print("You win");
                       randomSchoolFunc();
                     } else {
@@ -389,13 +441,63 @@ class _TrouvailleBureauState extends State<TrouvailleBureau> {
                   },
                   child: Image.asset(
                     'assets/images/pics/25.png',
-                    height: 25,
-                    width: 25,
+                    height: 30,
+                    width: 30,
                   )),
             ),
           ]),
 
           //élements à trouver
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset(
+                  'assets/images/pics/20.png',
+                  height: 50,
+                  width: 50,
+                  color: _isCaClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/18.png',
+                  height: 50,
+                  width: 50,
+                  color: _isBrClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/27.png',
+                  height: 50,
+                  width: 50,
+                  color: _isLiClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/32.png',
+                  height: 50,
+                  width: 50,
+                  color: _isTrClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/30.png',
+                  height: 50,
+                  width: 50,
+                  color: _isReClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/23.png',
+                  height: 50,
+                  width: 50,
+                  color: _isCoClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/25.png',
+                  height: 50,
+                  width: 50,
+                  color: _isGoClicked ? null : Colors.black,
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

@@ -28,21 +28,28 @@ class _ForetState extends State<Foret> {
   late Timer _timer;
   int duration = 60;
   bool isGameFinish = false;
+  late String selectedAnimal;
   late ConfettiController _controllerConfetti;
   late var randomAnimal;
   List<String> animals = ['Un lion', 'Un éléphant', 'Une giraffe'];
+  Map<String, String> animalsAudios = {
+    'Un lion': "143.mp3",
+    'Un éléphant': "138.mp3",
+    'Une giraffe': "140.mp3"
+  };
   String randomAnimalFunc() {
     animals.shuffle();
 
     if (animals.isNotEmpty) {
       randomAnimal = animals[0];
+
       print(randomAnimal);
       animals.removeAt(0);
     } else {
       print("Fin du jeu");
       endGame();
     }
-
+    //Voice.play("/", 1);
     return randomAnimal;
   }
 
@@ -227,8 +234,12 @@ class _ForetState extends State<Foret> {
                               padding:
                                   const EdgeInsets.only(left: 8, right: 10),
                               child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
+                                onPressed: () {
+                                  Voice.play(
+                                      'audios/voices/${animalsAudios['$randomAnimal']}',
+                                      1);
+                                },
+                                icon: const Icon(
                                   Icons.volume_up,
                                   color: Color(0xFF0E57AC),
                                   size: 35,
@@ -297,9 +308,11 @@ class _ForetState extends State<Foret> {
                     bottom: 1,
                     child: GestureDetector(
                         onTap: () {
-                          var animal = "Un lion";
-                          if (animal == randomAnimal) {
+                          selectedAnimal = "Un lion";
+                          if (selectedAnimal == randomAnimal) {
                             _isLiClicked = true;
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Un lion']}", 1);
                             print("You win");
                             randomAnimalFunc();
                           } else {
@@ -319,9 +332,12 @@ class _ForetState extends State<Foret> {
                     bottom: -180,
                     child: GestureDetector(
                         onTap: () {
-                          var animal = "Un éléphant";
-                          if (animal == randomAnimal) {
+                          selectedAnimal = "Un éléphant";
+                          if (selectedAnimal == randomAnimal) {
                             _isEleClicked = true;
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Un éléphant']}",
+                                1);
                             print("You win");
                             randomAnimalFunc();
                           } else {
@@ -342,8 +358,13 @@ class _ForetState extends State<Foret> {
                     bottom: 1,
                     child: GestureDetector(
                         onTap: () {
-                          var animal = "Une giraffe";
-                          if (animal == randomAnimal) {
+                          selectedAnimal = "Une giraffe";
+                          if (selectedAnimal == randomAnimal) {
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Une giraffe']}",
+                                1);
+                            print(
+                                "audios/voices/${animalsAudios['Une giraffe']}");
                             _isGiClicked = true;
                             print("You win");
                             randomAnimalFunc();
