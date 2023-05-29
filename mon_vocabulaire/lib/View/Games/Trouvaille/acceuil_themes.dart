@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/bureau.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/classRoom.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/ferme.dart';
-import 'package:mon_vocabulaire/Services/audio_background.dart';
-import '../../../Widgets/Palette.dart';
-import '../../../Widgets/bubble2.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/foret.dart';
+import 'package:mon_vocabulaire/View/Themes/sub_themes.dart';
+import 'package:mon_vocabulaire/Widgets/palette.dart';
+import 'package:mon_vocabulaire/Widgets/bubble.dart';
+import 'package:animator/animator.dart';
+
 import 'package:mon_vocabulaire/Model/user.dart';
-import '../../Account/profil.dart';
-import '../../Themes/themes.dart';
-import '../jeux.dart';
-import 'acceuil_subTheme.dart';
 
 class TrouvailleThemes extends StatefulWidget {
   final User user;
@@ -19,170 +18,84 @@ class TrouvailleThemes extends StatefulWidget {
   State<TrouvailleThemes> createState() => _TrouvailleThemesState();
 }
 
-class _TrouvailleThemesState extends State<TrouvailleThemes>
-    with WidgetsBindingObserver {
-  List<Widget> page = [];
-  int _selectedIndex = 0;
-  bool _isHome = true;
-  bool _isProfil = false;
-  bool _isGames = false;
-
-  @override
-  void initState() {
-    super.initState();
-    AudioBK.playBK();
-    WidgetsBinding.instance.addObserver(this);
-    setState(() {
-      page = [
-        Themes(user: widget.user),
-        Profil(user: widget.user),
-        Games(user: widget.user)
-      ];
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    AudioBK.pauseBK();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      AudioBK.pauseBK();
-    } else {
-      AudioBK.playBK();
-    }
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      switch (_selectedIndex) {
-        case 0:
-          setState(() {
-            _isHome = true;
-            _isProfil = false;
-            _isGames = false;
-          });
-          break;
-        case 1:
-          setState(() {
-            _isHome = false;
-            _isProfil = true;
-            _isGames = false;
-          });
-          break;
-        case 2:
-          setState(() {
-            _isHome = false;
-            _isProfil = false;
-            _isGames = true;
-          });
-          break;
-        default:
-      }
-    });
-  }
-
+class _TrouvailleThemesState extends State<TrouvailleThemes> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Palette.white,
-        elevation: 1,
-        iconTheme: const IconThemeData(color: Palette.black),
-        title: Row(
-          children: [
-            Image.asset(
-              "assets/images/games/search.png",
-              width: 40,
-            ),
-            const Text(
-              "  Trouvaille",
-              style: TextStyle(color: Palette.black),
-            ),
-          ],
+        body: GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      childAspectRatio: width > 500 ? 1 : 0.89,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      children: [
+        Bubble(
+          image: "assets/images/themes/ecole.png",
+          nbStars: widget.user.stars_per_subtheme[5]! +
+              widget.user.stars_per_subtheme[6]!,
+          stage: widget.user.words_per_subtheme[5]! +
+              widget.user.words_per_subtheme[6]!,
+          text: 'L’école',
+          callback: Bureau(),
+          color: Palette.ecole,
+          type: "theme",
         ),
-      ),
-      // body: page[_selectedIndex],
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Bubble2(
-                    image: "assets/images/themes/ecole.png",
-                    text: 'L’école',
-                    callback: TrouvailleSubThemes(),
-                    color: Palette.ecole,
-                    type: "theme",
-                  ),
-                  const Expanded(
-                    flex: 1,
-                    child: SizedBox(),
-                  ),
-                  Bubble2(
-                    image: "assets/images/themes/maison.png",
-                    text: 'Maison et famille',
-                    callback: TrouvailleSubThemes(),
-                    color: Palette.maison,
-                    type: "theme",
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Bubble2(
-                    image: "assets/images/themes/cuisine_et_aliments.png",
-                    text: 'cuisine_et_aliments',
-                    callback: TrouvailleSubThemes(),
-                    color: Palette.cuisine,
-                    type: "theme",
-                  ),
-                  const Expanded(
-                    flex: 2,
-                    child: SizedBox(),
-                  ),
-                  Bubble2(
-                    image: "assets/images/themes/animaux.png",
-                    text: 'animaux',
-                    callback: TrouvailleSubThemes(),
-                    color: Palette.animaux,
-                    type: "theme",
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Bubble2(
-                    image: "assets/images/themes/mes_habits.png",
-                    text: 'mes_habits',
-                    callback: TrouvailleSubThemes(),
-                    color: Palette.corps,
-                    type: "theme",
-                  ),
-                  const Expanded(
-                    flex: 2,
-                    child: SizedBox(),
-                  ),
-                  Bubble2(
-                    image: "assets/images/themes/sports.png",
-                    text: 'sports',
-                    callback: TrouvailleSubThemes(),
-                    color: Palette.sports,
-                    type: "theme",
-                  ),
-                ],
-              ),
-            ],
-          ),
+        Bubble(
+          image: "assets/images/themes/maison.png",
+          nbStars: widget.user.stars_per_subtheme[9]! +
+              widget.user.stars_per_subtheme[10]!,
+          stage: widget.user.words_per_subtheme[9]! +
+              widget.user.words_per_subtheme[10]!,
+          text: 'Maison et famille',
+          callback: Foret(),
+          color: Palette.maison,
+          type: "theme",
         ),
-      ),
-    );
+        Bubble(
+          image: "assets/images/themes/cuisine_et_aliments.png",
+          nbStars: widget.user.stars_per_subtheme[11]! +
+              widget.user.stars_per_subtheme[12]!,
+          stage: widget.user.words_per_subtheme[11]! +
+              widget.user.words_per_subtheme[12]!,
+          text: 'Cuisine et aliments',
+          callback: ClassRoom(),
+          color: Palette.cuisine,
+          type: "theme",
+        ),
+        Bubble(
+          image: "assets/images/themes/animaux.png",
+          nbStars: widget.user.stars_per_subtheme[1]! +
+              widget.user.stars_per_subtheme[2]!,
+          stage: widget.user.words_per_subtheme[1]! +
+              widget.user.words_per_subtheme[2]!,
+          text: 'Animaux',
+          callback: Ferme(),
+          color: Palette.animaux,
+          type: "theme",
+        ),
+        Bubble(
+          image: "assets/images/themes/mes_habits.png",
+          nbStars: widget.user.stars_per_subtheme[3]! +
+              widget.user.stars_per_subtheme[4]!,
+          stage: widget.user.words_per_subtheme[3]! +
+              widget.user.words_per_subtheme[4]!,
+          text: 'Mon corps et mes habits',
+          callback: ClassRoom(),
+          color: Palette.corps,
+          type: "theme",
+        ),
+        Bubble(
+          image: "assets/images/themes/sports.png",
+          nbStars: widget.user.stars_per_subtheme[7]! +
+              widget.user.stars_per_subtheme[8]!,
+          stage: widget.user.words_per_subtheme[7]! +
+              widget.user.words_per_subtheme[8]!,
+          text: 'Sports et loisirs',
+          callback: ClassRoom(),
+          color: Palette.sports,
+          type: "theme",
+        ),
+      ],
+    ));
   }
 }

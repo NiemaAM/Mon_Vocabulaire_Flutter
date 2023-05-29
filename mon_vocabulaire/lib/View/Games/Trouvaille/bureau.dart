@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/acceuil_themes.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/ferme.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
@@ -150,7 +151,12 @@ class _BureauState extends State<Bureau> {
       btnCancelIcon: Icons.home,
       btnCancelText: " ",
       btnCancelOnPress: () {
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Ferme(),
+          ),
+        );
       },
       btnOkIcon: Icons.restart_alt_rounded,
       btnOkText: " ",
