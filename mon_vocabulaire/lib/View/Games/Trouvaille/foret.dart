@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/acceuil_themes.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/ferme.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/Bureau.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../../Widgets/message_mascotte.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
@@ -25,11 +24,34 @@ class _ForetState extends State<Foret> {
   bool _isEleClicked = false;
   bool _isGiClicked = false;
   bool _isLiClicked = false;
-  int countdown = 10;
+  int countdown = 5;
   late Timer _timer;
   int duration = 60;
   bool isGameFinish = false;
+  late String selectedAnimal;
   late ConfettiController _controllerConfetti;
+  late var randomAnimal;
+  List<String> animals = ['Un lion', 'Un éléphant', 'Une giraffe'];
+  Map<String, String> animalsAudios = {
+    'Un lion': "143.mp3",
+    'Un éléphant': "138.mp3",
+    'Une giraffe': "140.mp3"
+  };
+  String randomAnimalFunc() {
+    animals.shuffle();
+
+    if (animals.isNotEmpty) {
+      randomAnimal = animals[0];
+
+      print(randomAnimal);
+      animals.removeAt(0);
+    } else {
+      print("Fin du jeu");
+      endGame();
+    }
+    //Voice.play("/", 1);
+    return randomAnimal;
+  }
 
   void startTimer() {
     {
@@ -120,7 +142,7 @@ class _ForetState extends State<Foret> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const Ferme(),
+            builder: (context) => const Bureau(),
           ),
         );
       },
@@ -130,7 +152,7 @@ class _ForetState extends State<Foret> {
   @override
   void initState() {
     super.initState();
-
+    randomAnimalFunc();
     AudioBK.pauseBK();
 
     _controllerConfetti =
@@ -212,8 +234,12 @@ class _ForetState extends State<Foret> {
                               padding:
                                   const EdgeInsets.only(left: 8, right: 10),
                               child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
+                                onPressed: () {
+                                  Voice.play(
+                                      'audios/voices/${animalsAudios['$randomAnimal']}',
+                                      1);
+                                },
+                                icon: const Icon(
                                   Icons.volume_up,
                                   color: Color(0xFF0E57AC),
                                   size: 35,
@@ -221,7 +247,7 @@ class _ForetState extends State<Foret> {
                               ),
                             ),
                             Text(
-                              "Un éléphant",
+                              "$randomAnimal",
                               style: const TextStyle(
                                   color: Color(0xFF0E57AC), fontSize: 25),
                             ),
@@ -239,13 +265,12 @@ class _ForetState extends State<Foret> {
                 height: height > 800 ? height * 0.65 : height * 0.6,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(
-                        'assets/images/games/backgrounds/foret1.jpg'),
-                    fit: BoxFit.fill,
+                    image:
+                        AssetImage('assets/images/games/backgrounds/foret.jpg'),
+                    fit: BoxFit.fitHeight,
                   ),
                 ),
                 child: Stack(children: [
-                  //monkey
                   Positioned(
                     top: height > 800 ? height - 610 : height - 550,
                     right: width > 550 ? width - 500 : width - 300,
@@ -256,6 +281,16 @@ class _ForetState extends State<Foret> {
                     ),
                   ),
 
+                  //snake
+                  Positioned(
+                    bottom: height > 800 ? height - 900 : height - 750,
+                    right: width > 550 ? width - 300 : width - 220,
+                    child: Image.asset(
+                      'assets/images/games/snake.png',
+                      height: 70,
+                      width: 70,
+                    ),
+                  ),
                   //owel
                   Positioned(
                     top: height > 800 ? height - 800 : height - 750,
@@ -273,8 +308,16 @@ class _ForetState extends State<Foret> {
                     bottom: 1,
                     child: GestureDetector(
                         onTap: () {
-                          _isLiClicked = true;
-                          print("lion");
+                          selectedAnimal = "Un lion";
+                          if (selectedAnimal == randomAnimal) {
+                            _isLiClicked = true;
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Un lion']}", 1);
+                            print("You win");
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
                         },
                         child: Image.asset(
                           'assets/images/pics/143.png',
@@ -282,16 +325,24 @@ class _ForetState extends State<Foret> {
                           width: 200,
                         )),
                   ),
-
                   //ELEPHANT
                   Positioned(
-                    top: height > 800 ? height - 915 : height - 800,
-                    right: width > 550 ? width - 350 : width - 320,
+                    top: height > 800 ? height - 915 : height - 780,
+                    right: width > 550 ? width - 350 : width - 250,
                     bottom: -180,
                     child: GestureDetector(
                         onTap: () {
-                          _isEleClicked = true;
-                          print("elephant");
+                          selectedAnimal = "Un éléphant";
+                          if (selectedAnimal == randomAnimal) {
+                            _isEleClicked = true;
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Un éléphant']}",
+                                1);
+                            print("You win");
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
                         },
                         child: Image.asset(
                           'assets/images/pics/138.png',
@@ -299,6 +350,7 @@ class _ForetState extends State<Foret> {
                           width: 300,
                         )),
                   ),
+
                   //GIRAFF
                   Positioned(
                     top: height > 800 ? height - 800 : height - 690,
@@ -306,25 +358,25 @@ class _ForetState extends State<Foret> {
                     bottom: 1,
                     child: GestureDetector(
                         onTap: () {
-                          _isGiClicked = true;
-                          print("giraffe");
+                          selectedAnimal = "Une giraffe";
+                          if (selectedAnimal == randomAnimal) {
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Une giraffe']}",
+                                1);
+                            print(
+                                "audios/voices/${animalsAudios['Une giraffe']}");
+                            _isGiClicked = true;
+                            print("You win");
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
                         },
                         child: Image.asset(
                           'assets/images/pics/140.png',
                           height: 300,
                           width: 300,
                         )),
-                  ),
-
-                  //snake
-                  Positioned(
-                    bottom: height > 800 ? height - 900 : height - 750,
-                    right: width > 550 ? width - 300 : width - 200,
-                    child: Image.asset(
-                      'assets/images/games/snake.png',
-                      height: 70,
-                      width: 70,
-                    ),
                   ),
                 ]),
               ),

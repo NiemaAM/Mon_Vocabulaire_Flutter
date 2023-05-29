@@ -133,7 +133,10 @@ class _SubThemesState extends State<SubThemes>
 
                 const BubbleMessage(
                   widget: Text(
-                      "Salut, je suis ton compagnon Bubble ! Et je vais t'aider à apprendre le français."),
+                    "Salut, je suis ton compagnon Bubble ! Et je vais t'aider à apprendre le français.",
+                    style:
+                        const TextStyle(color: Color(0xFF0E57AC), fontSize: 15),
+                  ),
                 ),
 
                 Bubble(

@@ -24,14 +24,37 @@ class _FermeState extends State<Ferme> {
   bool _isCowClicked = false;
   bool _isHorClicked = false;
   bool _isChiClicked = false;
-  bool _isTorClicked = false;
-  bool _isTreeClicked = false;
-  bool _isPouClicked = false;
-  int countdown = 10;
+  bool _isCheClicked = false;
+  int countdown = 5;
   late Timer _timer;
   int duration = 60;
   bool isGameFinish = false;
+  late String selectedAnimal;
   late ConfettiController _controllerConfetti;
+  late var randomAnimal;
+  List<String> animals = ['Une vache', 'Une poule', 'Un cheval', "Un mouton"];
+  Map<String, String> animalsAudios = {
+    'Une vache': "148.mp3",
+    'Un cheval': "133.mp3",
+    'Une poule': "127.mp3",
+    'Un mouton': "144.mp3"
+  };
+
+  String randomAnimalFunc() {
+    animals.shuffle();
+
+    if (animals.isNotEmpty) {
+      randomAnimal = animals[0];
+
+      print(randomAnimal);
+      animals.removeAt(0);
+    } else {
+      print("Fin du jeu");
+      endGame();
+    }
+    //Voice.play("/", 1);
+    return randomAnimal;
+  }
 
   void startTimer() {
     {
@@ -132,7 +155,7 @@ class _FermeState extends State<Ferme> {
   @override
   void initState() {
     super.initState();
-
+    randomAnimalFunc();
     AudioBK.pauseBK();
 
     _controllerConfetti =
@@ -214,7 +237,11 @@ class _FermeState extends State<Ferme> {
                               padding:
                                   const EdgeInsets.only(left: 8, right: 10),
                               child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Voice.play(
+                                      'audios/voices/${animalsAudios['$randomAnimal']}',
+                                      1);
+                                },
                                 icon: Icon(
                                   Icons.volume_up,
                                   color: Color(0xFF0E57AC),
@@ -223,7 +250,7 @@ class _FermeState extends State<Ferme> {
                               ),
                             ),
                             Text(
-                              "Une vache",
+                              "$randomAnimal",
                               style: const TextStyle(
                                   color: Color(0xFF0E57AC), fontSize: 25),
                             ),
@@ -247,54 +274,55 @@ class _FermeState extends State<Ferme> {
                   ),
                 ),
                 child: Stack(children: [
-                  //cheval
+                  //mouton
                   Positioned(
-                      top: height > 800 ? height - 1000 : height - 820,
-                      right: width > 550 ? width - 500 : width - 320,
-                      bottom: 1,
+                      bottom: height > 800 ? height - 1200 : height * 0.001,
+                      right: width > 550 ? width - 350 : width * 0.10,
                       child: GestureDetector(
                         onTap: () {
-                          _isHorClicked = true;
-                          print("horse");
+                          selectedAnimal = "Un mouton";
+                          print("mouton");
+                          if (selectedAnimal == randomAnimal) {
+                            _isCheClicked = true;
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Un mouton']}",
+                                1);
+                            print("You win");
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
                         },
                         child: Image.asset(
-                          'assets/images/pics/133.png',
-                          height: 80,
-                          width: 80,
-                        ),
-                      )),
-
-                  //arbre
-                  Positioned(
-                      top: height > 800 ? height - 1200 : height - 1050,
-                      right: width > 550 ? width - 350 : width - 200,
-                      bottom: -180,
-                      child: GestureDetector(
-                        onTap: () {
-                          _isTreeClicked = true;
-                          print("tree");
-                        },
-                        child: Image.asset(
-                          'assets/images/pics/2.png',
-                          height: 200,
-                          width: 200,
+                          'assets/images/pics/144.png',
+                          width: 90,
                         ),
                       )),
 
                   //vache
                   Positioned(
-                    top: height > 800 ? height - 1050 : height - 850,
-                    right: width > 550 ? width - 360 : width - 260,
+                    top: height > 800 ? height - 1050 : height * -0.3,
+                    left: width > 550 ? width - 360 : width * 0.15,
                     bottom: -180,
                     child: GestureDetector(
                         onTap: () {
-                          _isCowClicked = true;
-                          print("cow");
+                          selectedAnimal = "Une vache";
+                          print("vache");
+                          if (selectedAnimal == randomAnimal) {
+                            _isCowClicked = true;
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Une vache']}",
+                                1);
+                            print("You win");
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
                         },
                         child: Image.asset(
                           'assets/images/pics/148.png',
-                          height: 110,
-                          width: 110,
+                          height: 100,
+                          width: 100,
                         )),
                   ),
 
@@ -326,13 +354,50 @@ class _FermeState extends State<Ferme> {
                       bottom: -180,
                       child: GestureDetector(
                         onTap: () {
-                          _isChiClicked = true;
-                          print("chicken");
+                          selectedAnimal = "Une poule";
+                          print("poule");
+                          if (selectedAnimal == randomAnimal) {
+                            _isChiClicked = true;
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Une poule']}",
+                                1);
+                            print("You win");
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
                         },
                         child: Image.asset(
                           'assets/images/pics/127.png',
                           height: 60,
                           width: 60,
+                        ),
+                      )),
+
+                  //cheval
+                  Positioned(
+                      top: height > 800 ? height - 1000 : height * -0.1,
+                      right: width > 550 ? width - 500 : width * 0.15,
+                      bottom: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          selectedAnimal = "Un cheval";
+                          print("$selectedAnimal");
+                          print("$randomAnimal");
+                          if (selectedAnimal == randomAnimal) {
+                            _isHorClicked = true;
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Un cheval']}",
+                                1);
+                            print("You win");
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
+                        },
+                        child: Image.asset(
+                          'assets/images/pics/133.png',
+                          width: 80,
                         ),
                       )),
                 ]),
@@ -363,10 +428,10 @@ class _FermeState extends State<Ferme> {
                   color: _isChiClicked ? null : Colors.black,
                 ),
                 Image.asset(
-                  'assets/images/pics/2.png',
+                  'assets/images/pics/144.png',
                   height: 75,
                   width: 75,
-                  color: _isTreeClicked ? null : Colors.black,
+                  color: _isCheClicked ? null : Colors.black,
                 ),
               ],
             ),
