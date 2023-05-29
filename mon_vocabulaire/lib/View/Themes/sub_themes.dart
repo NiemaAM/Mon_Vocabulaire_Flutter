@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
+import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import '../../Model/user.dart';
 import '../../Services/sfx.dart';
-import '../../Widgets/message_mascotte.dart';
 import 'sub_theme_path.dart';
 import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 
@@ -108,9 +108,10 @@ class _SubThemesState extends State<SubThemes>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: color,
-        title: Text(widget.title),
+      appBar: CustomAppBar(
+        title: widget.title.toUpperCase(),
+        color: color,
+        automaticallyImplyLeading: true,
       ),
       body: Stack(
         children: [
@@ -124,21 +125,9 @@ class _SubThemesState extends State<SubThemes>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Expanded(
+                  flex: 5,
                   child: SizedBox(),
                 ),
-
-                ///////////////////////////////////test///////////////////////////////
-                //AnimatedBuilder(),
-                //////////////////////////////////endTest/////////////////////////////
-
-                const BubbleMessage(
-                  widget: Text(
-                    "Salut, je suis ton compagnon Bubble ! Et je vais t'aider à apprendre le français.",
-                    style:
-                        const TextStyle(color: Color(0xFF0E57AC), fontSize: 15),
-                  ),
-                ),
-
                 Bubble(
                   hasShadow: true,
                   image: images[0],

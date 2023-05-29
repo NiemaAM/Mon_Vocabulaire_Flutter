@@ -1,12 +1,15 @@
 // ignore_for_file: file_names, equal_keys_in_map
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'package:mon_vocabulaire/View/Account/create_account.dart';
 import 'package:mon_vocabulaire/Widgets/account_bloc.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
 import '../../Model/user.dart';
+import '../../Services/animation_route.dart';
 
 class Accounts extends StatefulWidget {
   const Accounts({super.key});
@@ -210,56 +213,88 @@ class _AccountsState extends State<Accounts> {
         12: {4: false},
         12: {5: false},
       });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 1,
-        title: const Center(child: Text("Mes Comptes")),
+      backgroundColor: Palette.lightBlue,
+      body: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: Image.asset(
+                "assets/images/logo.png",
+                height: 200,
+              ),
+            ),
+          ),
+          Center(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                AccountBloc(
+                  user: user_salam,
+                ),
+                AccountBloc(
+                  user: user_mehdi,
+                ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              child: Text(
+                "Mon Vocabulaire",
+                style: GoogleFonts.acme(
+                  textStyle: const TextStyle(
+                    color: Palette.white,
+                    fontSize: 30,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
-      body: Align(
-        alignment: Alignment.center,
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            AccountBloc(
-              user: user_salam,
-            ),
-            AccountBloc(
-              user: user_mehdi,
-            ),
-          ],
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: Button(
+          callback: () {
+            Navigator.of(context).push(
+              SlideButtom(page: const CreateAccount()),
+            );
+          },
+          content: Row(
+            children: const [
+              Expanded(
+                flex: 20,
+                child: Center(
+                    child: Text(
+                  "AJOUTER",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                )),
+              ),
+              Icon(
+                Icons.add_rounded,
+                color: Palette.white,
+              ),
+              Expanded(
+                flex: 2,
+                child: SizedBox(),
+              )
+            ],
+          ),
+          width: 170,
+          heigth: 60,
+          color: Palette.pink,
         ),
-      ),
-      floatingActionButton: Button(
-        callback: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CreateAccount(),
-            ),
-          );
-        },
-        content: Row(
-          children: const [
-            Expanded(
-              flex: 20,
-              child: Center(
-                  child: Text(
-                "Ajouter un compte",
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              )),
-            ),
-            Icon(
-              Icons.add,
-              color: Palette.white,
-            ),
-            Expanded(child: SizedBox())
-          ],
-        ),
-        width: 200,
-        heigth: 60,
-        color: Palette.blue,
       ),
     );
   }

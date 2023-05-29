@@ -145,55 +145,51 @@ class _PuzzleState extends State<Puzzle> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     AudioBK.pauseBK();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Palette.white,
-        elevation: 1,
-        iconTheme: const IconThemeData(color: Palette.black),
-        title: Row(
-          children: [
-            Image.asset(
-              "assets/images/games/puzzle.png",
-              width: 40,
-            ),
-            const Text(
-              "  Puzzle",
-              style: TextStyle(color: Palette.black),
-            ),
-          ],
+        appBar: AppBar(
+          backgroundColor: Palette.white,
+          elevation: 1,
+          iconTheme: const IconThemeData(color: Palette.black),
+          title: Row(
+            children: [
+              Image.asset(
+                "assets/images/games/puzzle.png",
+                width: 40,
+              ),
+              const Text(
+                "  Puzzle",
+                style: TextStyle(color: Palette.black),
+              ),
+            ],
+          ),
         ),
-      ),
-      body: Stack(children: [
-        SizedBox(
-          height: height,
-          child: Image.asset('assets/images/games/backgrounds/puzzlee.jpg',
-              alignment: Alignment.center,
-              fit: BoxFit.cover,
-              color: Palette.white.withOpacity(0.50),
-              colorBlendMode: BlendMode.modulate),
-        ),
-        LinearPercentIndicator(
-          padding: const EdgeInsets.all(0),
-          animation: true,
-          lineHeight: 10,
-          animationDuration: 0,
-          percent: duration / 180,
-          barRadius: const Radius.circular(0),
-          progressColor: duration >= 120
-              ? Palette.lightGreen
-              : duration <= 60
-                  ? Palette.red
-                  : Palette.orange,
-          backgroundColor: Theme.of(context).shadowColor,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: Button(
+        body: Column(children: [
+          LinearPercentIndicator(
+            padding: const EdgeInsets.all(0),
+            animation: true,
+            lineHeight: 10,
+            animationDuration: 0,
+            percent: duration / 180,
+            barRadius: const Radius.circular(0),
+            progressColor: duration >= 120
+                ? Palette.lightGreen
+                : duration <= 60
+                    ? Palette.red
+                    : Palette.orange,
+            backgroundColor: Theme.of(context).shadowColor,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Image.asset(
+                  image,
+                  width: 120,
+                ),
+              ),
+              Button(
                 color: Palette.blue,
                 content: const Icon(
                   Icons.volume_up,
@@ -206,15 +202,11 @@ class _PuzzleState extends State<Puzzle> {
                 width: 100,
                 heigth: 100,
               ),
-            ),
-          ],
-        ),
-        SafeArea(
-            child: Column(children: [
+            ],
+          ),
           Padding(
-            padding: const EdgeInsets.only(top: 90),
-            child: Container(
-              margin: const EdgeInsets.all(60),
+            padding: const EdgeInsets.only(top: 20),
+            child: Center(
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return SizedBox(
@@ -230,9 +222,7 @@ class _PuzzleState extends State<Puzzle> {
               ),
             ),
           ),
-        ]))
-      ]),
-    );
+        ]));
   }
 }
 
@@ -378,14 +368,14 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
                 ).toList()
             ])),
         Padding(
-          padding: const EdgeInsets.only(top: 50),
+          padding: const EdgeInsets.only(top: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Expanded(flex: 2, child: SizedBox()),
               Button(
                 content: Row(
-                  children: [
+                  children: const [
                     Expanded(child: SizedBox()),
                     Icon(
                       Icons.play_arrow_rounded,
@@ -408,7 +398,7 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
               const Expanded(child: SizedBox()),
               Button(
                 content: Row(
-                  children: [
+                  children: const [
                     Expanded(child: SizedBox()),
                     Icon(
                       Icons.image_rounded,
@@ -593,74 +583,74 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
       success = true;
     } else {
       success = false;
-      if (success == true) {
-        TimerGame.setTimer(false);
-        Sfx.play("audios/sfx/win.mp3", 1);
-        AwesomeDialog(
-          context: context,
-          headerAnimationLoop: false,
-          customHeader: Container(
-            height: 100,
-            width: 100,
-            decoration: const BoxDecoration(
-                color: Palette.yellow,
-                borderRadius: BorderRadius.all(Radius.circular(50))),
-            child: const Icon(
-              Icons.star_rounded,
-              color: Palette.white,
-              size: 80,
+    }
+    if (success == true) {
+      TimerGame.setTimer(false);
+      Sfx.play("audios/sfx/win.mp3", 1);
+      AwesomeDialog(
+        context: context,
+        headerAnimationLoop: false,
+        customHeader: Container(
+          height: 100,
+          width: 100,
+          decoration: const BoxDecoration(
+              color: Palette.yellow,
+              borderRadius: BorderRadius.all(Radius.circular(50))),
+          child: const Icon(
+            Icons.star_rounded,
+            color: Palette.white,
+            size: 80,
+          ),
+        ),
+        dialogType: DialogType.success,
+        animType: AnimType.bottomSlide,
+        body: Column(children: [
+          const Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              "Très bon travail !",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                color: Palette.pink,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
-          dialogType: DialogType.success,
-          animType: AnimType.bottomSlide,
-          body: Column(children: [
-            const Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                "Très bon travail !",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Palette.pink,
-                ),
-                textAlign: TextAlign.center,
+          const Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Text(
+              "Bravo, tu as une bonne mémoire !",
+              style: TextStyle(
+                fontSize: 16,
               ),
+              textAlign: TextAlign.center,
             ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10),
-              child: Text(
-                "Bravo, tu as une bonne mémoire !",
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
-              ),
+          ),
+          Image.asset(
+            "assets/images/mascotte/win.gif",
+            scale: 4,
+          ),
+        ]),
+        btnCancelIcon: Icons.home,
+        btnCancelText: " ",
+        btnCancelOnPress: () {
+          Navigator.pop(context);
+        },
+        btnOkIcon: Icons.restart_alt_rounded,
+        btnOkText: " ",
+        btnOkOnPress: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Puzzle(),
             ),
-            Image.asset(
-              "assets/images/mascotte/win.gif",
-              scale: 4,
-            ),
-          ]),
-          btnCancelIcon: Icons.home,
-          btnCancelText: " ",
-          btnCancelOnPress: () {
-            Navigator.pop(context);
-          },
-          btnOkIcon: Icons.restart_alt_rounded,
-          btnOkText: " ",
-          btnOkOnPress: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Puzzle(),
-              ),
-            );
-          },
-        ).show();
-      }
-      startSlide = true;
-      setState(() {});
+          );
+        },
+      ).show();
     }
+    startSlide = true;
+    setState(() {});
   }
 
   clearPuzzle() {

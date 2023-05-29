@@ -2,8 +2,6 @@
 
 import 'dart:convert';
 import 'dart:math';
-
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +11,8 @@ import 'package:mon_vocabulaire/View/Account/accouts.dart';
 import 'package:mon_vocabulaire/View/Account/first_screen.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
-import 'package:mon_vocabulaire/Widgets/button.dart';
+import 'package:mon_vocabulaire/Widgets/Popups/alert_popup.dart';
+import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Services/audio_background.dart';
@@ -137,71 +136,62 @@ class _SettingsPageState extends State<SettingsPage> {
     generateCaptchaImage();
 
     if (captchaVerified) {
-      AwesomeDialog(
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        context: context,
-        headerAnimationLoop: false,
-        dialogType: DialogType.success,
-        animType: AnimType.rightSlide,
-        body: Center(
-            child: Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 30),
-          child: Column(
-            children: const [
-              Text(
-                'Verrouillage Parental',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Compte supprimé'),
-              ),
-            ],
-          ),
-        )),
-      ).show();
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertPopup(
+              onButton1Pressed: () {
+                Navigator.pop(context);
+              },
+              onButton2Pressed: () {
+                Navigator.pop(context);
+              },
+              buttonOnly: true,
+              button1: 'OK',
+              button2: '',
+              titre: 'Verrouillage Parental',
+              description: 'Compte supprimé',
+            );
+          });
     } else {
-      AwesomeDialog(
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        context: context,
-        headerAnimationLoop: false,
-        dialogType: DialogType.error,
-        animType: AnimType.rightSlide,
-        body: Center(
-            child: Column(
-          children: [
-            const Text(
-              'Verrouillage Parental',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Code erroné.\nEntrez le code affiché ci-dessous :',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.red),
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertPopup(
+              onButton1Pressed: () {
+                Navigator.pop(context);
+              },
+              onButton2Pressed: () {
+                verifyCaptcha(myController.text);
+                myController.clear();
+              },
+              content: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(captchaImagePath),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      decoration:
+                          const InputDecoration(hintText: 'Entrez le code ici'),
+                      controller: myController,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(captchaImagePath),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                decoration:
-                    const InputDecoration(hintText: 'Entrez le code ici'),
-                controller: myController,
-              ),
-            ),
-          ],
-        )),
-        btnCancelText: "Vérifier",
-        btnCancelOnPress: () {
-          verifyCaptcha(myController.text);
-          myController.clear();
-        },
-      ).show();
+              button1: 'Annuler',
+              button2: 'Valider',
+              titre: 'Verrouillage Parental',
+              description: 'Code erroné.\nEntrez le code affiché ci-dessous :',
+              textColor: Palette.red,
+            );
+          });
     }
   }
 
@@ -227,9 +217,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Paramètres"),
-        elevation: 1,
+      appBar: const CustomAppBar(
+        title: "Paramètres",
+        color: Palette.pink,
+        automaticallyImplyLeading: true,
       ),
       body: ListView(
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
@@ -633,6 +624,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   onTap: () {
                     Navigator.pop(context);
+                    Navigator.pop(context);
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -662,82 +654,61 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   onTap: () {
-                    AwesomeDialog(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      dismissOnTouchOutside: false,
+                    showDialog(
                       context: context,
-                      headerAnimationLoop: false,
-                      dialogType: DialogType.info,
-                      animType: AnimType.rightSlide,
-                      title: 'Cette action est irréversible',
-                      desc:
-                          'Êtes-vous certain de vouloir supprimer ce compte ?',
-                      btnOk: Button(
-                        callback: () {
-                          Navigator.pop(context);
-                        },
-                        content: const Center(
-                            child: Text(
-                          "Annuler",
-                          style: TextStyle(color: Palette.white),
-                        )),
-                        width: 100,
-                        heigth: 50,
-                      ),
-                      btnCancel: Button(
-                        callback: () {
-                          Navigator.pop(context);
-                          AwesomeDialog(
-                            padding: const EdgeInsets.only(left: 15, right: 15),
-                            context: context,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.noHeader,
-                            animType: AnimType.rightSlide,
-                            body: Center(
-                                child: Column(
-                              children: [
-                                const Text(
-                                  'Verrouillage Parental',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                      'Entrez le code affiché ci-dessous :'),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(captchaImagePath),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    decoration: const InputDecoration(
-                                        hintText: 'Entrez le code ici'),
-                                    controller: myController,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertPopup(
+                          onButton1Pressed: () {
+                            Navigator.pop(context);
+                          },
+                          onButton2Pressed: () {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertPopup(
+                                  onButton1Pressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  onButton2Pressed: () {
+                                    verifyCaptcha(myController.text);
+                                    myController.clear();
+                                  },
+                                  content: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset(captchaImagePath),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextField(
+                                          decoration: const InputDecoration(
+                                              hintText: 'Entrez le code ici'),
+                                          controller: myController,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            )),
-                            btnCancelText: "Vérifier",
-                            btnCancelOnPress: () {
-                              verifyCaptcha(myController.text);
-                              myController.clear();
-                            },
-                          ).show();
-                        },
-                        content: const Center(
-                            child: Text(
-                          "Supprimer",
-                          style: TextStyle(color: Palette.white),
-                        )),
-                        width: 100,
-                        heigth: 50,
-                        color: Palette.red,
-                      ),
-                    ).show();
+                                  button1: 'Annuler',
+                                  button2: 'Valider',
+                                  titre: 'Verrouillage Parental',
+                                  description:
+                                      'Entrez le code affiché ci-dessous :',
+                                );
+                              },
+                            );
+                          },
+                          button1: 'Annuler',
+                          button2: 'Supprimer',
+                          titre: 'Cette action est irréversible',
+                          description:
+                              'Êtes-vous certain(e) de vouloir supprimer ce compte ?',
+                        );
+                      },
+                    );
                   },
                 ),
               ],
