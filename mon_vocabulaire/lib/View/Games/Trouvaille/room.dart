@@ -34,14 +34,14 @@ class _RoomState extends State<Room> {
   int duration = 60;
   bool isGameFinish = false;
   late ConfettiController _controllerConfetti;
-  late var randomSchool;
+  late var randomRoom;
   List<String> Room = [
-    'Une télévision',
+    'Un télévision',
     'Un garcon',
     'Une maman',
     'Une fille',
     'Un vase',
-    'Un bebe'
+    'un bebe'
   ];
   Map<String, String> ElementsAudios = {
     'Une télévision': "75.mp3",
@@ -51,19 +51,19 @@ class _RoomState extends State<Room> {
     "Une maman": "63.mp3",
     "Un bebe": "55.mp3",
   };
-  String randomSchoolFunc() {
+  String randomRoomFunc() {
     Room.shuffle();
 
     if (Room.isNotEmpty) {
-      randomSchool = Room[0];
-      print(randomSchool);
+      randomRoom = Room[0];
+      print(randomRoom);
       Room.removeAt(0);
     } else {
       print("Fin du jeu");
       endGame();
     }
 
-    return randomSchool;
+    return randomRoom;
   }
 
   void startTimer() {
@@ -170,7 +170,7 @@ class _RoomState extends State<Room> {
   @override
   void initState() {
     super.initState();
-    randomSchoolFunc();
+    randomRoomFunc();
     AudioBK.pauseBK();
 
     _controllerConfetti =
@@ -253,7 +253,7 @@ class _RoomState extends State<Room> {
                               child: IconButton(
                                 onPressed: () {
                                   Voice.play(
-                                      'audios/voices/${ElementsAudios['$randomSchool']}',
+                                      'audios/voices/${ElementsAudios['$randomRoom']}',
                                       1);
                                 },
                                 icon: Icon(
@@ -264,7 +264,7 @@ class _RoomState extends State<Room> {
                               ),
                             ),
                             Text(
-                              "$randomSchool",
+                              "$randomRoom",
                               style: const TextStyle(
                                   color: Color(0xFF0E57AC), fontSize: 25),
                             ),
@@ -297,12 +297,12 @@ class _RoomState extends State<Room> {
                     var element = "Un vase";
                     print("vase");
                     print("$width");
-                    if (element == randomSchool) {
+                    if (element == randomRoom) {
                       _isVasClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Un vase']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomRoomFunc();
                     } else {
                       print("You lose");
                     }
@@ -322,13 +322,13 @@ class _RoomState extends State<Room> {
                     var element = "Une télévision";
                     print("tele");
                     print("$width");
-                    if (element == randomSchool) {
+                    if (element == randomRoom) {
                       _isTelClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Une télévision']}",
                           1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomRoomFunc();
                     } else {
                       print("You lose");
                     }
@@ -349,12 +349,12 @@ class _RoomState extends State<Room> {
                     var element = "Un bebe";
                     print("$height");
                     print("bébé");
-                    if (element == randomSchool) {
+                    if (element == randomRoom) {
                       _isBebClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Un bebe']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomRoomFunc();
                     } else {
                       print("You lose");
                     }
@@ -375,12 +375,12 @@ class _RoomState extends State<Room> {
                     var element = "Une maman";
                     print("$height");
                     print("maman");
-                    if (element == randomSchool) {
+                    if (element == randomRoom) {
                       _isMomClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Une maman']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomRoomFunc();
                     } else {
                       print("You lose");
                     }
@@ -401,12 +401,12 @@ class _RoomState extends State<Room> {
                     var element = "Un garcon";
                     print("$height");
                     print("garcon");
-                    if (element == randomSchool) {
+                    if (element == randomRoom) {
                       _isBoyClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Un garcon']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomRoomFunc();
                     } else {
                       print("You lose");
                     }
@@ -427,12 +427,12 @@ class _RoomState extends State<Room> {
                     var element = "Une fille";
                     print("$height");
                     print("fille");
-                    if (element == randomSchool) {
+                    if (element == randomRoom) {
                       _isGirClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Une fille']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomRoomFunc();
                     } else {
                       print("You lose");
                     }

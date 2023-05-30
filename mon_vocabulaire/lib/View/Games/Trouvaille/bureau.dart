@@ -36,8 +36,8 @@ class _BureauState extends State<Bureau> {
   int duration = 60;
   bool isGameFinish = false;
   late ConfettiController _controllerConfetti;
-  late var randomSchool;
-  List<String> School = [
+  late var randomDesk;
+  List<String> Desk = [
     'Une gomme',
     'Une colle',
     'Une trousse',
@@ -55,19 +55,19 @@ class _BureauState extends State<Bureau> {
     'Un cartable': "20.mp3",
     'Une brosse': "18.mp3"
   };
-  String randomSchoolFunc() {
-    School.shuffle();
+  String randomDeskFunc() {
+    Desk.shuffle();
 
-    if (School.isNotEmpty) {
-      randomSchool = School[0];
-      print(randomSchool);
-      School.removeAt(0);
+    if (Desk.isNotEmpty) {
+      randomDesk = Desk[0];
+      print(randomDesk);
+      Desk.removeAt(0);
     } else {
       print("Fin du jeu");
       endGame();
     }
 
-    return randomSchool;
+    return randomDesk;
   }
 
   void startTimer() {
@@ -174,7 +174,7 @@ class _BureauState extends State<Bureau> {
   @override
   void initState() {
     super.initState();
-    randomSchoolFunc();
+    randomDeskFunc();
     AudioBK.pauseBK();
 
     _controllerConfetti =
@@ -257,7 +257,7 @@ class _BureauState extends State<Bureau> {
                               child: IconButton(
                                 onPressed: () {
                                   Voice.play(
-                                      'audios/voices/${ElementsAudios['$randomSchool']}',
+                                      'audios/voices/${ElementsAudios['$randomDesk']}',
                                       1);
                                 },
                                 icon: Icon(
@@ -268,7 +268,7 @@ class _BureauState extends State<Bureau> {
                               ),
                             ),
                             Text(
-                              "$randomSchool",
+                              "$randomDesk",
                               style: const TextStyle(
                                   color: Color(0xFF0E57AC), fontSize: 25),
                             ),
@@ -298,12 +298,12 @@ class _BureauState extends State<Bureau> {
               child: GestureDetector(
                   onTap: () {
                     var element = "Un cartable";
-                    if (element == randomSchool) {
+                    if (element == randomDesk) {
                       _isCaClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Un cartable']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomDeskFunc();
                     } else {
                       print("You lose");
                     }
@@ -321,12 +321,12 @@ class _BureauState extends State<Bureau> {
               child: GestureDetector(
                   onTap: () {
                     var element = "Une brosse";
-                    if (element == randomSchool) {
+                    if (element == randomDesk) {
                       _isBrClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Une brosse']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomDeskFunc();
                     } else {
                       print("You lose");
                     }
@@ -344,12 +344,12 @@ class _BureauState extends State<Bureau> {
               child: GestureDetector(
                   onTap: () {
                     var element = "Un livre";
-                    if (element == randomSchool) {
+                    if (element == randomDesk) {
                       _isLiClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Un livre']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomDeskFunc();
                     } else {
                       print("You lose");
                     }
@@ -367,12 +367,12 @@ class _BureauState extends State<Bureau> {
               child: GestureDetector(
                   onTap: () {
                     var element = "Une trousse";
-                    if (element == randomSchool) {
+                    if (element == randomDesk) {
                       _isTrClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Une trousse']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomDeskFunc();
                     } else {
                       print("You lose");
                     }
@@ -390,12 +390,12 @@ class _BureauState extends State<Bureau> {
               child: GestureDetector(
                   onTap: () {
                     var element = "Une règle";
-                    if (element == randomSchool) {
+                    if (element == randomDesk) {
                       _isReClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Une règle']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomDeskFunc();
                     } else {
                       print("You lose");
                     }
@@ -413,12 +413,12 @@ class _BureauState extends State<Bureau> {
               child: GestureDetector(
                   onTap: () {
                     var element = "Une colle";
-                    if (element == randomSchool) {
+                    if (element == randomDesk) {
                       _isCoClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Une colle']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomDeskFunc();
                     } else {
                       print("You lose");
                     }
@@ -436,12 +436,12 @@ class _BureauState extends State<Bureau> {
               child: GestureDetector(
                   onTap: () {
                     var element = "Une gomme";
-                    if (element == randomSchool) {
+                    if (element == randomDesk) {
                       _isGoClicked = true;
                       Voice.play(
                           "audios/voices/${ElementsAudios['Une gomme']}", 1);
                       print("You win");
-                      randomSchoolFunc();
+                      randomDeskFunc();
                     } else {
                       print("You lose");
                     }
