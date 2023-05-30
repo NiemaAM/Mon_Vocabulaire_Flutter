@@ -6,6 +6,7 @@ import 'package:mon_vocabulaire/View/Games/tic_tac_toe.dart';
 import '../../Model/user.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/game_bloc.dart';
+import 'ninja_bubble.dart';
 
 class Games extends StatefulWidget {
   final User user;
@@ -62,8 +63,7 @@ class _GamesState extends State<Games> {
             image: "assets/images/games/bubbles.png",
             price: '50',
             text: "NinjaBubbles",
-            page: FlipCardGame(),
-            enabled: false,
+            page: NinjaBubble(),
           ),
           GameBloc(
             color: Color.fromARGB(255, 30, 173, 173),
