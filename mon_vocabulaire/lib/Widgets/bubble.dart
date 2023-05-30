@@ -49,54 +49,50 @@ class _BubbleState extends State<Bubble> {
             Sfx.play("audios/sfx/plip.mp3", 1);
             Navigator.of(context).push(SizedSlide(page: widget.callback));
           },
-          content: SizedBox(
-            height: 140,
-            width: 150,
-            child: Stack(
-              children: [
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: CircularPercentIndicator(
-                    animation: true,
-                    radius: width < 500 ? size : 90,
-                    lineWidth: 10,
-                    percent: widget.stage / 100,
-                    progressColor: widget.color,
-                    backgroundColor: Palette.lightGrey,
-                  ),
+          content: Stack(
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: CircularPercentIndicator(
+                  animation: true,
+                  radius: width < 500 ? size : 90,
+                  lineWidth: 10,
+                  percent: widget.stage / 100,
+                  progressColor: widget.color,
+                  backgroundColor: Palette.lightGrey,
                 ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(18),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        // ignore: unnecessary_const
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(50),
-                        ),
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      // ignore: unnecessary_const
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50),
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(width > 500 ? 15 : 5),
-                        child: Image.asset(
-                          widget.image,
-                        ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(width > 500 ? 15 : 5),
+                      child: Image.asset(
+                        widget.image,
                       ),
                     ),
                   ),
                 ),
-                Star(
-                  nbStar: widget.nbStars,
-                  typebubble: widget.type,
-                )
-              ],
-            ),
+              ),
+              Star(
+                nbStar: widget.nbStars,
+                typebubble: widget.type,
+              )
+            ],
           ),
           heigth: width < 500 ? width / 2.7 : 205,
           width: width < 500 ? width / 2.7 : 205,
@@ -116,7 +112,7 @@ class _BubbleState extends State<Bubble> {
                 )
               ],
             ),
-            width: 100,
+            width: width > 500 ? 150 : 100,
             child: Align(
               alignment: Alignment.center,
               child: Text(
@@ -124,14 +120,14 @@ class _BubbleState extends State<Bubble> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: width > 500 ? 18 : 14,
                     color: widget.hasShadow
                         ? Colors.black
                         : Theme.of(context).colorScheme.onSurface),
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

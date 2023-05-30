@@ -2,15 +2,17 @@
 
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mon_vocabulaire/Themes/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
 import 'package:mon_vocabulaire/View/Account/accounts.dart';
+import 'package:mon_vocabulaire/View/Account/first_screen.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Widgets/Popups/alert_popup.dart';
+import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Services/audio_background.dart';
@@ -130,7 +132,63 @@ class _SettingsPageState extends State<SettingsPage> {
     generateCaptchaImage();
 
     if (captchaVerified) {
-    } else {}
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertPopup(
+              onButton1Pressed: () {
+                Navigator.pop(context);
+              },
+              onButton2Pressed: () {
+                Navigator.pop(context);
+              },
+              buttonOnly: true,
+              button1: 'OK',
+              button2: '',
+              titre: 'Verrouillage Parental',
+              description: 'Compte supprimé',
+            );
+          });
+    } else {
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertPopup(
+              onButton1Pressed: () {
+                Navigator.pop(context);
+              },
+              onButton2Pressed: () {
+                verifyCaptcha(myController.text);
+                myController.clear();
+              },
+              content: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(captchaImagePath),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      decoration:
+                          const InputDecoration(hintText: 'Entrez le code ici'),
+                      controller: myController,
+                    ),
+                  ),
+                ],
+              ),
+              button1: 'Annuler',
+              button2: 'Valider',
+              titre: 'Verrouillage Parental',
+              description: 'Code erroné.\nEntrez le code affiché ci-dessous :',
+              textColor: Palette.red,
+            );
+          });
+    }
   }
 
   @override
@@ -155,9 +213,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Paramètres"),
-        elevation: 1,
+      appBar: const CustomAppBar(
+        title: "Paramètres",
+        color: Palette.pink,
+        automaticallyImplyLeading: true,
       ),
       body: ListView(
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
@@ -561,10 +620,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   onTap: () {
                     Navigator.pop(context);
+                    Navigator.pop(context);
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Accounts(),
+                        builder: (context) => const FirstSceen(),
                       ),
                     );
                   },
@@ -589,7 +649,63 @@ class _SettingsPageState extends State<SettingsPage> {
                       color: Colors.red,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertPopup(
+                          onButton1Pressed: () {
+                            Navigator.pop(context);
+                          },
+                          onButton2Pressed: () {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertPopup(
+                                  onButton1Pressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  onButton2Pressed: () {
+                                    verifyCaptcha(myController.text);
+                                    myController.clear();
+                                  },
+                                  content: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset(captchaImagePath),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextField(
+                                          decoration: const InputDecoration(
+                                              hintText: 'Entrez le code ici'),
+                                          controller: myController,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  button1: 'Annuler',
+                                  button2: 'Valider',
+                                  titre: 'Verrouillage Parental',
+                                  description:
+                                      'Entrez le code affiché ci-dessous :',
+                                );
+                              },
+                            );
+                          },
+                          button1: 'Annuler',
+                          button2: 'Supprimer',
+                          titre: 'Cette action est irréversible',
+                          description:
+                              'Êtes-vous certain(e) de vouloir supprimer ce compte ?',
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),

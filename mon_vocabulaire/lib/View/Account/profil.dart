@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import '../../Widgets/Palette.dart';
@@ -18,8 +19,11 @@ class _ProfilState extends State<Profil> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: const Text("Mon Profil"), elevation: 1, actions: [
-        IconButton(
+      appBar: CustomAppBar(
+        title: "Moi",
+        color: Palette.lightBlue,
+        automaticallyImplyLeading: true,
+        icon: IconButton(
           onPressed: () {
             Navigator.of(context).push(
               SlideRight(
@@ -32,7 +36,7 @@ class _ProfilState extends State<Profil> {
           icon: const Icon(Icons.settings),
           tooltip: "Paramètres",
         ),
-      ]),
+      ),
       body: ListView(
         children: [
           Padding(

@@ -14,7 +14,7 @@ class BubbleMessage extends StatelessWidget {
 
     return SizedBox(
       width: width - 20,
-      height: width > 500 ? 150 : width / 2,
+      height: width > 500 ? 150 : width / 2.5,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

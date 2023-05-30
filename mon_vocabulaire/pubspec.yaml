@@ -46,9 +46,8 @@ dependencies:
   confetti: ^0.7.0
   animator: ^3.2.0
   flip_card: ^0.7.0
-  flutter_animated_button: ^2.0.3
   image: ^4.0.17
-  carousel_slider: ^4.2.1
+  google_fonts: ^4.0.4
 
 dev_dependencies:
   flutter_test:

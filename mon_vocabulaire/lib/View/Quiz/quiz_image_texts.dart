@@ -1,17 +1,18 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
-
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/quiz_prposition.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
+import 'package:mon_vocabulaire/Widgets/Popups/quiz_popup.dart';
 import '../../Model/quiz_model.dart';
 import '../../Services/audio_background.dart';
 import '../../Services/sfx.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/button.dart';
-import '../../Widgets/quiz_app_bar.dart';
+import '../../Widgets/Appbars/quiz_app_bar.dart';
 
 class QuizImageTexts extends StatefulWidget {
   final int subTheme;
@@ -118,7 +119,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
     }
   }
 
-  int duration = 30;
+  int duration = 55;
   int time = 0;
   void startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -134,6 +135,12 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
         }
         if (index == size || chances == 0 || quizEnded) {
           duration = 0;
+        }
+        if (duration <= 0 && !didResponse && !quizEnded) {
+          chances--;
+          Sfx.play("audios/sfx/zew.mp3", 1);
+          heartVisible();
+          endQuiz();
         }
       });
     });
@@ -199,18 +206,121 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
   }
 
   void endQuiz() {
+    if (chances == 0) {
+      setState(() {
+        quizEnded = true;
+      });
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return QuizPopup(
+            chances: chances,
+            timer: time.toDouble(),
+            onButton1Pressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            onButton2Pressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuizImageTexts(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+            onButton3Pressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LessonPage(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
+    }
     if (index == size && chances != 0) {
       setState(() {
         quizEnded = true;
       });
-      Sfx.play("audios/sfx/win.mp3", 1);
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return QuizPopup(
+            chances: chances,
+            timer: time.toDouble(),
+            onButton1Pressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            onButton2Pressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuizImageTexts(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+            onButton3Pressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LessonPage(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
       _controllerConfetti.play();
-    } else if (chances == 0) {
-      setState(() {
-        quizEnded = true;
-      });
-      Sfx.play("audios/sfx/lose.mp3", 1);
     }
+  }
+
+  bool _visible = false;
+  void heartVisible() {
+    Timer(const Duration(microseconds: 500), () {
+      setState(() {
+        _visible = true;
+      });
+      Timer(const Duration(seconds: 1), () {
+        setState(() {
+          _visible = false;
+        });
+      });
+    });
+  }
+
+  Widget looseHeart() {
+    return AnimatedOpacity(
+        // If the widget is visible, animate to 0.0 (invisible).
+        // If the widget is hidden, animate to 1.0 (fully visible).
+        opacity: _visible ? 1.0 : 0.0,
+        duration: const Duration(seconds: 1),
+        // The green box must be a child of the AnimatedOpacity widget.
+        child: const Icon(
+          Icons.heart_broken_rounded,
+          color: Palette.red,
+          size: 150,
+        ));
   }
 
   @override
@@ -244,6 +354,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
           automaticallyImplyLeading: false,
           titleSpacing: 0,
           title: QuizAppBar(
+            totalDuration: 55,
             chances: chances,
             duration: duration,
             user: widget.user,
@@ -280,12 +391,18 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                         Stack(children: [
                           Align(
                             alignment: Alignment.topRight,
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.close,
-                                  color: Palette.red,
-                                )),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: const Icon(
+                                    Icons.close_rounded,
+                                    color: Palette.red,
+                                    size: 40,
+                                  )),
+                            ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(
@@ -339,7 +456,6 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                           children: [
                             Center(
                               child: Button(
-                                enabled: !quizEnded,
                                 content: Center(
                                   child: Text(key,
                                       style: const TextStyle(
@@ -363,6 +479,17 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                       response = key;
                                     });
                                     if (key == correct) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Palette.lightGreen,
+                                        content: Text(
+                                          'Bonne reponse',
+                                          style: TextStyle(
+                                              color: Palette.white,
+                                              fontSize: 18),
+                                        ),
+                                      ));
                                       Sfx.play("audios/sfx/ding.mp3", 1);
                                       Timer(const Duration(seconds: 1), () {
                                         nextQuestion();
@@ -373,8 +500,20 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                         endQuiz();
                                       });
                                     } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Palette.red,
+                                        content: Text(
+                                          'Mauvaise reponse',
+                                          style: TextStyle(
+                                              color: Palette.white,
+                                              fontSize: 18),
+                                        ),
+                                      ));
                                       Sfx.play("audios/sfx/zew.mp3", 1);
-                                      Timer(const Duration(seconds: 1), () {
+                                      heartVisible();
+                                      Timer(const Duration(seconds: 2), () {
                                         nextQuestion();
                                         setState(() {
                                           chances -= 1;
@@ -384,6 +523,8 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                         endQuiz();
                                       });
                                     }
+                                  } else {
+                                    endQuiz();
                                   }
                                 },
                                 heigth: 100,
@@ -413,6 +554,13 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
               Palette.orange,
               Palette.purple
             ], // manually specify the colors to be used
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 130),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: looseHeart(),
+            ),
           ),
         ],
       ),

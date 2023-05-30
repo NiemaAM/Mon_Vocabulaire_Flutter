@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/lesson_model.dart';
+import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Quiz/quiz_text_images.dart';
+import 'package:mon_vocabulaire/Widgets/Popups/done_popup.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../Model/quiz_model.dart';
@@ -193,12 +195,18 @@ class _LessonPage extends State<LessonPage> {
                 child: Stack(alignment: Alignment.topCenter, children: [
                   Align(
                     alignment: Alignment.topRight,
-                    child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.close,
-                          color: Palette.red,
-                        )),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            color: Palette.red,
+                            size: 40,
+                          )),
+                    ),
                   ),
                   Stack(
                     children: [
@@ -262,12 +270,13 @@ class _LessonPage extends State<LessonPage> {
                         child: Button(
                           content: Icon(
                             Icons.chevron_right_rounded,
-                            color: index != size ? Palette.white : Palette.grey,
+                            color:
+                                index != size ? Palette.white : Palette.white,
                             size: 40,
                           ),
                           color: index != size
                               ? Theme.of(context).secondaryHeaderColor
-                              : Palette.lightGrey,
+                              : Theme.of(context).secondaryHeaderColor,
                           callback: () {
                             if (index < size) {
                               Sfx.play("audios/sfx/plip.mp3", 1);
@@ -275,7 +284,29 @@ class _LessonPage extends State<LessonPage> {
                                 index += 1;
                               });
                             } else {
-                              Sfx.play("audios/sfx/done.mp3", 1);
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return DonePopup(
+                                    onButton1Pressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    onButton2Pressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.of(context).pushReplacement(
+                                        SlideRight(
+                                          page: QuizTextImages(
+                                            subTheme: widget.subTheme,
+                                            user: widget.user,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              );
                             }
                           },
                           heigth: 60,

@@ -1,0 +1,710 @@
+import 'dart:async';
+import 'dart:math';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:mon_vocabulaire/Services/audio_background.dart';
+import 'package:mon_vocabulaire/Services/voice.dart';
+import 'package:mon_vocabulaire/Widgets/palette.dart';
+import '../../../Model/user.dart';
+import '../../../Widgets/Popups/game_popup.dart';
+import '../../../Widgets/button.dart';
+import 'package:mon_vocabulaire/Services/sfx.dart';
+import 'package:image/image.dart' as image;
+import 'package:flutter/rendering.dart';
+
+class Puzzle extends StatefulWidget {
+  final User user;
+
+  Puzzle({super.key, required this.user});
+  @override
+  _PuzzleState createState() => _PuzzleState();
+}
+
+class _PuzzleState extends State<Puzzle> {
+  GlobalKey<_PuzzleWidgetState> globalKey = GlobalKey();
+  String image = "assets/images/logo.png";
+  String voice = "audios/voices/1.mp3";
+  Timer? _timer;
+  int _duration = 0;
+  bool viewVisible = true;
+
+  void getIamge() {
+    int randomNumber = Random().nextInt(233) + 1;
+    setState(() {
+      image = "assets/images/pics/$randomNumber.png";
+      voice = "audios/voices/$randomNumber.mp3";
+    });
+  }
+
+  void startTimer() async {
+    const oneSec = Duration(seconds: 1);
+    _timer?.cancel(); // Cancel any existing timer
+
+    _timer = Timer.periodic(oneSec, (Timer timer) async {
+      await Future.delayed(Duration(milliseconds: 10));
+      setState(() {
+        _duration++;
+      });
+    });
+  }
+
+  void restartTimer() {
+    setState(() {
+      _duration = 0;
+    });
+    startTimer();
+  }
+
+  void stopTimer() {
+    if (_timer != null) {
+      _timer!.cancel();
+      _timer = null;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AudioBK.pauseBK();
+    getIamge();
+    hideWidget();
+  }
+
+  void showWidget() {
+    setState(() {
+      viewVisible = true;
+    });
+  }
+
+  void hideWidget() {
+    setState(() {
+      viewVisible = false;
+    });
+  }
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   AudioBK.playBK();
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    AudioBK.pauseBK();
+    final minutes = (_duration ~/ 60).toString().padLeft(2, '0');
+    final seconds = (_duration % 60).toString().padLeft(2, '0');
+    final timerText = '$minutes:$seconds';
+    return Scaffold(
+        backgroundColor: Palette.white,
+        body: Stack(children: [
+          Center(
+              child: ListView(children: <Widget>[
+            Container(
+              height: 95,
+              decoration: const BoxDecoration(
+                  color: Palette.lightBlue,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30))),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        const Expanded(
+                          flex: 2,
+                          child: SizedBox(),
+                        ),
+                        Button(
+                          callback: () {
+                            Navigator.pop(context);
+                          },
+                          content: const Center(
+                              child: Icon(
+                            Icons.home_rounded,
+                            size: 35,
+                            color: Palette.darkGrey,
+                          )),
+                          width: 55,
+                          heigth: 55,
+                          radius: 20,
+                          color: Palette.white,
+                        ),
+                        const Expanded(flex: 6, child: SizedBox()),
+                        Text(
+                          timerText,
+                          style: GoogleFonts.acme(
+                            textStyle: const TextStyle(
+                              color: Palette.white,
+                              fontSize: 30,
+                            ),
+                          ),
+                        ),
+                        const Expanded(
+                          flex: 6,
+                          child: SizedBox(),
+                        ),
+                        Container(
+                          width: 130,
+                          height: 55,
+                          decoration: const BoxDecoration(
+                              color: Palette.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "${widget.user.coins}  ",
+                                  style: const TextStyle(
+                                      color: Palette.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Image.asset(
+                                  'assets/images/themes/coin.png',
+                                  scale: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const Expanded(
+                          child: SizedBox(),
+                        ),
+                      ],
+                    ),
+                  ]),
+            ),
+            SafeArea(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const Expanded(
+                        flex: 2,
+                        child: SizedBox(),
+                      ),
+                      const Expanded(flex: 6, child: SizedBox()),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Visibility(
+                          maintainAnimation: true,
+                          maintainState: true,
+                          visible: viewVisible,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.lightBlue,
+                                width: 2.0,
+                                style: BorderStyle.solid,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.lightBlue,
+                            ),
+                            child: Container(
+                              width: 80,
+                              height: 80,
+                              margin: EdgeInsets.all(5),
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Image.asset(
+                                  image,
+                                  width: 40,
+                                  height: 40,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Expanded(
+                        flex: 2,
+                        child: SizedBox(),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Visibility(
+                            maintainAnimation: true,
+                            maintainState: true,
+                            visible: viewVisible,
+                            child: Button(
+                              color: Palette.pink,
+                              content: const Icon(
+                                Icons.volume_up,
+                                color: Palette.white,
+                                size: 30,
+                              ),
+                              callback: () {
+                                Voice.play(voice, 1);
+                              },
+                              width: 60,
+                              heigth: 60,
+                            ),
+                          )),
+                      const Expanded(
+                        flex: 6,
+                        child: SizedBox(),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(40, 14, 40, 40),
+                    child: Container(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return SizedBox(
+                            width: constraints.biggest.width,
+                            child: PuzzleWidget(
+                              key: globalKey,
+                              size: constraints.biggest,
+                              imageBackGround: Image.asset(image),
+                              sizePuzzle: 3,
+                              startTimerCallback: startTimer,
+                              restartCallback: restartTimer,
+                              stopCallback: stopTimer,
+                              showCallback: showWidget,
+                              user: widget.user,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]))
+        ]));
+  }
+}
+
+class PuzzleWidget extends StatefulWidget {
+  Size size;
+  Function()? startTimerCallback;
+  Function()? restartCallback;
+  Function()? stopCallback;
+  Function()? showCallback;
+  double innerPadding;
+  final User user;
+
+  Image imageBackGround;
+  int sizePuzzle;
+  PuzzleWidget({
+    super.key,
+    required this.size,
+    this.innerPadding = 5,
+    required this.user,
+    required this.imageBackGround,
+    required this.sizePuzzle,
+    this.startTimerCallback,
+    this.restartCallback,
+    this.stopCallback,
+    this.showCallback,
+  });
+
+  @override
+  _PuzzleWidgetState createState() => _PuzzleWidgetState();
+}
+
+class _PuzzleWidgetState extends State<PuzzleWidget> {
+  final GlobalKey _globalKey = GlobalKey();
+  late Size size;
+  List<PuzzleObject>? puzzleObjects;
+  image.Image? fullimage;
+  bool isFirstTime = true;
+  bool success = false;
+  bool startSlide = false;
+  List<int>? process;
+  bool finishSwap = false;
+  bool isEnd = false;
+  bool initialized = false;
+  bool timerzero = false;
+  bool viewVisible = true;
+
+  @override
+  Widget build(BuildContext context) {
+    size = Size(widget.size.width - widget.innerPadding * 2,
+        widget.size.width - widget.innerPadding);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: Colors.lightBlue,
+                  width: 3.0,
+                  style: BorderStyle.solid),
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.lightBlue,
+            ),
+            width: widget.size.width,
+            height: widget.size.width,
+            padding: EdgeInsets.all(widget.innerPadding),
+            child: Stack(children: [
+              if (puzzleObjects == null) ...[
+                RepaintBoundary(
+                  key: _globalKey,
+                  child: Container(
+                    height: double.maxFinite,
+                    padding: EdgeInsets.all(15),
+                    child: widget.imageBackGround,
+                  ),
+                )
+              ],
+              if (puzzleObjects != null)
+                ...puzzleObjects!
+                    .where((puzzleObject) => puzzleObject.empty)
+                    .map(
+                  (puzzleObject) {
+                    return Positioned(
+                      left: puzzleObject.posCurrent.dx,
+                      top: puzzleObject.posCurrent.dy,
+                      child: SizedBox(
+                        width: puzzleObject.size.width,
+                        height: puzzleObject.size.height,
+                        child: Container(
+                          alignment: Alignment.center,
+                          margin: const EdgeInsets.all(2),
+                          color: Colors.white24,
+                          child: Stack(
+                            children: [
+                              if (puzzleObject.image != null) ...[
+                                Opacity(
+                                  opacity: success ? 1 : 0.3,
+                                  child: puzzleObject.image,
+                                )
+                              ]
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ).toList(),
+              if (puzzleObjects != null)
+                ...puzzleObjects!
+                    .where((puzzleObject) => !puzzleObject.empty)
+                    .map(
+                  (puzzleObject) {
+                    return AnimatedPositioned(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.ease,
+                        left: puzzleObject.posCurrent.dx,
+                        top: puzzleObject.posCurrent.dy,
+                        child: GestureDetector(
+                          onTap: () =>
+                              changePosition(puzzleObject.indexCurrent!),
+                          child: SizedBox(
+                            width: puzzleObject.size.width,
+                            height: puzzleObject.size.height,
+                            child: Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.all(2),
+                              color: Colors.white,
+                              child: Stack(
+                                children: [
+                                  if (puzzleObject.image != null) ...[
+                                    puzzleObject.image
+                                  ],
+                                  Center(
+                                    child: Opacity(
+                                      opacity: success ? 0 : 0.5,
+                                      child: Text(
+                                        "${puzzleObject.indexDefault}",
+                                        style: GoogleFonts.acme(
+                                          textStyle: const TextStyle(
+                                            fontSize: 35,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ));
+                  },
+                ).toList()
+            ])),
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Button(
+            content: Row(
+              children: [
+                Expanded(flex: 5, child: SizedBox()),
+                Center(
+                    child: Text(
+                  initialized ? "Recommencer" : "Commencer",
+                  style: const TextStyle(
+                      color: Palette.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                )),
+                const Expanded(flex: 2, child: SizedBox()),
+                initialized
+                    ? const Icon(
+                        Icons.restart_alt_outlined,
+                        color: Palette.white,
+                        size: 25,
+                      )
+                    : const Icon(
+                        Icons.play_arrow_rounded,
+                        color: Palette.white,
+                        size: 25,
+                      ),
+                Expanded(flex: 2, child: SizedBox())
+              ],
+            ),
+            color: Palette.pink,
+            callback: () {
+              if (initialized) {
+                Future.delayed(const Duration(milliseconds: 5), () {
+                  generatePuzzle();
+                });
+
+                generatePuzzle();
+                widget.restartCallback?.call();
+              } else {
+                generatePuzzle();
+                widget.startTimerCallback?.call();
+                initialized = true;
+                widget.showCallback?.call();
+              }
+            },
+            width: 200,
+            heigth: 65,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _getImageFromWidget() async {
+    RenderRepaintBoundary boundary =
+        _globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
+
+    size = boundary.size;
+    var img = await boundary.toImage();
+    var byteData = await img.toByteData(format: ImageByteFormat.png);
+    var pngBytes = byteData?.buffer.asUint8List();
+
+    return image.decodeImage(pngBytes!);
+  }
+
+  void generatePuzzle() async {
+    fullimage ??= await _getImageFromWidget();
+
+    Size sizeBox =
+        Size(size.width / widget.sizePuzzle, size.width / widget.sizePuzzle);
+    puzzleObjects =
+        List.generate(widget.sizePuzzle * widget.sizePuzzle, (index) {
+      Offset offsetTemp = Offset(
+        index % widget.sizePuzzle * (sizeBox.width),
+        index ~/ widget.sizePuzzle * (sizeBox.height),
+      );
+
+      image.Image? tempCrop;
+      if (fullimage != null) {
+        tempCrop = image.copyCrop(
+          fullimage!,
+          x: offsetTemp.dx.round(),
+          y: offsetTemp.dy.round(),
+          width: (sizeBox.width).round(),
+          height: sizeBox.height.round(),
+        );
+      }
+
+      return PuzzleObject(
+        posCurrent: offsetTemp,
+        posDefault: offsetTemp,
+        indexCurrent: index,
+        indexDefault: index + 1,
+        size: sizeBox,
+        image: tempCrop == null
+            ? null as Image
+            : Image.memory(
+                image.encodePng(tempCrop),
+                fit: BoxFit.contain,
+              ),
+      );
+    });
+
+    puzzleObjects!.last.empty = true;
+
+    bool swap = true;
+    setState(() {});
+
+    for (var i = 0; i < widget.sizePuzzle * 20; i++) {
+      for (var j = 0; j < widget.sizePuzzle / 2; j++) {
+        PuzzleObject puzzleObjectEmpty = getEmptyObject();
+
+        int emptyIndex = puzzleObjectEmpty.indexCurrent!;
+
+        int randKey;
+        if (swap) {
+          int row = emptyIndex ~/ widget.sizePuzzle;
+          randKey =
+              row * widget.sizePuzzle + Random().nextInt(widget.sizePuzzle);
+        } else {
+          int col = emptyIndex % widget.sizePuzzle;
+          randKey =
+              widget.sizePuzzle * Random().nextInt(widget.sizePuzzle) + col;
+        }
+        changePosition(randKey);
+        swap = !swap;
+      }
+    }
+    Future.delayed(const Duration(milliseconds: 5000), () {
+      if (checkPuzzleComplete()) {
+        showEndDialog();
+        widget.stopCallback?.call();
+      }
+    });
+  }
+
+  bool checkPuzzleComplete() {
+    bool complete = true;
+    for (var i = 0; i < puzzleObjects!.length; i++) {
+      if (puzzleObjects![i].indexCurrent != i) {
+        complete = false;
+        break;
+      }
+    }
+    return complete;
+  }
+
+  void showEndDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return GamePopup(
+          onButton1Pressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          onButton2Pressed: () {
+            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Puzzle(
+                  user: widget.user,
+                ),
+              ),
+            );
+          },
+          win: checkPuzzleComplete(),
+        );
+      },
+    );
+  }
+
+  PuzzleObject getEmptyObject() {
+    return puzzleObjects!.firstWhere((element) => element.empty);
+  }
+
+  changePosition(int indexCurrent) {
+    PuzzleObject puzzleObjectEmpty = getEmptyObject();
+    int emptyIndex = puzzleObjectEmpty.indexCurrent!;
+    int minIndex = min(indexCurrent, emptyIndex);
+    int maxIndex = max(indexCurrent, emptyIndex);
+    List<PuzzleObject> rangeMoves = [];
+    if (indexCurrent % widget.sizePuzzle == emptyIndex % widget.sizePuzzle) {
+      rangeMoves = puzzleObjects!
+          .where((element) =>
+              element.indexCurrent! % widget.sizePuzzle ==
+              indexCurrent % widget.sizePuzzle)
+          .toList();
+    } else if (indexCurrent ~/ widget.sizePuzzle ==
+        emptyIndex ~/ widget.sizePuzzle) {
+      rangeMoves = puzzleObjects!;
+    } else {
+      rangeMoves = [];
+    }
+
+    rangeMoves = rangeMoves
+        .where((puzzle) =>
+            puzzle.indexCurrent! >= minIndex &&
+            puzzle.indexCurrent! <= maxIndex &&
+            puzzle.indexCurrent != emptyIndex)
+        .toList();
+    if (emptyIndex < indexCurrent) {
+      rangeMoves.sort((a, b) => a.indexCurrent! < b.indexCurrent! ? 1 : 0);
+    } else {
+      rangeMoves.sort((a, b) => a.indexCurrent! < b.indexCurrent! ? 0 : 1);
+    }
+    if (rangeMoves.isNotEmpty) {
+      int? tempIndex = rangeMoves[0].indexCurrent;
+      Offset tempPos = rangeMoves[0].posCurrent;
+      for (var i = 0; i < rangeMoves.length - 1; i++) {
+        rangeMoves[i].indexCurrent = rangeMoves[i + 1].indexCurrent;
+        rangeMoves[i].posCurrent = rangeMoves[i + 1].posCurrent;
+      }
+      rangeMoves.last.indexCurrent = puzzleObjectEmpty.indexCurrent;
+      rangeMoves.last.posCurrent = puzzleObjectEmpty.posCurrent;
+
+      puzzleObjectEmpty.indexCurrent = tempIndex;
+      puzzleObjectEmpty.posCurrent = tempPos;
+      if (puzzleObjects![0].indexDefault ==
+              puzzleObjects![0].indexCurrent! + 1 &&
+          puzzleObjects![1].indexDefault ==
+              puzzleObjects![1].indexCurrent! + 1 &&
+          puzzleObjects![2].indexDefault ==
+              puzzleObjects![2].indexCurrent! + 1 &&
+          puzzleObjects![3].indexDefault ==
+              puzzleObjects![3].indexCurrent! + 1 &&
+          puzzleObjects![4].indexDefault ==
+              puzzleObjects![4].indexCurrent! + 1 &&
+          puzzleObjects![5].indexDefault ==
+              puzzleObjects![5].indexCurrent! + 1 &&
+          puzzleObjects![6].indexDefault ==
+              puzzleObjects![6].indexCurrent! + 1 &&
+          puzzleObjects![7].indexDefault ==
+              puzzleObjects![7].indexCurrent! + 1 &&
+          puzzleObjects![8].indexDefault ==
+              puzzleObjects![8].indexCurrent! + 1 &&
+          !finishSwap) {
+        success = true;
+      } else {
+        success = false;
+        if (success == true) {
+          Sfx.play("audios/sfx/win.mp3", 1);
+        }
+      }
+      startSlide = true;
+      setState(() {});
+      Future.delayed(const Duration(milliseconds: 5000), () {
+        if (checkPuzzleComplete()) {
+          showEndDialog();
+          widget.stopCallback?.call();
+        }
+      });
+    }
+  }
+}
+
+class PuzzleObject {
+  Offset posDefault;
+  Offset posCurrent;
+  int? indexDefault;
+  int? indexCurrent;
+  bool empty;
+  Size size;
+  Image image;
+
+  PuzzleObject({
+    this.empty = false,
+    required this.image,
+    this.indexCurrent,
+    this.indexDefault,
+    required this.posCurrent,
+    required this.posDefault,
+    required this.size,
+  });
+}

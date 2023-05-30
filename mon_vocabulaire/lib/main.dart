@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mon_vocabulaire/View/Games/slidepuzzle.dart';
+import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/View/Home/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Themes/theme_provider.dart';
-import 'View/Games/puzzle.dart';
+import 'View/Games/hh.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    User user;
     return ChangeNotifierProvider(
       create: (_) => ThemeProvider()..loadTheme(),
       child: Consumer<ThemeProvider>(
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
             theme: MyThemes.lightTheme,
             darkTheme: MyThemes.darkTheme,
             themeMode: themeProvider.themeMode,
-            home: Puzzle(),
+            home: SplashScreen(),
           );
         },
       ),
