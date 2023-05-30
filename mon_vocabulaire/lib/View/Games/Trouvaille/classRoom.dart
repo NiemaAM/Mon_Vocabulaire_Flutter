@@ -150,7 +150,12 @@ class _ClassRoomState extends State<ClassRoom> {
       btnCancelIcon: Icons.home,
       btnCancelText: " ",
       btnCancelOnPress: () {
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Ferme(),
+          ),
+        );
       },
       btnOkIcon: Icons.restart_alt_rounded,
       btnOkText: " ",
@@ -330,7 +335,7 @@ class _ClassRoomState extends State<ClassRoom> {
                     }
                   },
                   child: Image.asset(
-                    'assets/images/games/maitresse.png',
+                    'assets/images/games/trouvaille/maitresse.png',
                     height: 150,
                     width: 150,
                   )),
@@ -378,7 +383,7 @@ class _ClassRoomState extends State<ClassRoom> {
                     }
                   },
                   child: Image.asset(
-                    'assets/images/games/window.png',
+                    'assets/images/games/trouvaille/window.png',
                     height: 80,
                     width: 80,
                   )),

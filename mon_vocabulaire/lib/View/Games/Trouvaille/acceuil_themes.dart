@@ -58,7 +58,7 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
           stage: widget.user.words_per_subtheme[11]! +
               widget.user.words_per_subtheme[12]!,
           text: 'Cuisine et aliments',
-          callback: ClassRoom(),
+          callback: Ferme(),
           color: Palette.cuisine,
           type: "theme",
         ),
@@ -80,7 +80,7 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
           stage: widget.user.words_per_subtheme[3]! +
               widget.user.words_per_subtheme[4]!,
           text: 'Mon corps et mes habits',
-          callback: ClassRoom(),
+          callback: Ferme(),
           color: Palette.corps,
           type: "theme",
         ),
@@ -91,7 +91,7 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
           stage: widget.user.words_per_subtheme[7]! +
               widget.user.words_per_subtheme[8]!,
           text: 'Sports et loisirs',
-          callback: ClassRoom(),
+          callback: Ferme(),
           color: Palette.sports,
           type: "theme",
         ),

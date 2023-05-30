@@ -286,7 +286,7 @@ class _ForetState extends State<Foret> {
                     bottom: height > 800 ? height - 900 : height - 750,
                     right: width > 550 ? width - 300 : width - 220,
                     child: Image.asset(
-                      'assets/images/games/snake.png',
+                      'assets/images/games/trouvaille/snake.png',
                       height: 70,
                       width: 70,
                     ),
@@ -296,7 +296,7 @@ class _ForetState extends State<Foret> {
                     top: height > 800 ? height - 800 : height - 750,
                     right: width > 550 ? width - 250 : width - 200,
                     child: Image.asset(
-                      'assets/images/games/owel.png',
+                      'assets/images/games/trouvaille/owel.png',
                       height: 90,
                       width: 90,
                     ),
