@@ -55,12 +55,13 @@ class _NinjaBubbleState extends State<NinjaBubble>
   List<FallingImage> _fallingImages = [];
 
   late double _screenWidth;
-  late double _screenHeight;
+
   bool selected = false;
   bool _isScreenBlocked = false;
   int duration = 180;
 
-  List<String> _bubbleImages = List.generate(241, (index) => '${index + 1}.png');
+  List<String> _bubbleImages =
+      List.generate(241, (index) => '${index + 1}.png');
 
   @override
   void initState() {
@@ -90,7 +91,6 @@ class _NinjaBubbleState extends State<NinjaBubble>
     super.didChangeDependencies();
 
     _screenWidth = MediaQuery.of(context).size.width;
-    _screenHeight = MediaQuery.of(context).size.height;
 
     _createBubbles();
     Timer.periodic(Duration(seconds: 5), (timer) {
@@ -190,12 +190,11 @@ class _NinjaBubbleState extends State<NinjaBubble>
                             image: bubble.image),
                       );
                       if (bubble.image.startsWith('241')) {
-                        _isScreenBlocked = true ; 
+                        _isScreenBlocked = true;
                         if (_isScreenBlocked) {
-                          _controller.stop(); 
+                          _controller.stop();
                         } else {
-                          _controller
-                              .repeat(); 
+                          _controller.repeat();
                         }
                       }
                     });
