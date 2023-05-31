@@ -8,6 +8,7 @@ import 'package:mon_vocabulaire/Services/audio_background.dart';
 import '../../Services/sfx.dart';
 import '../../Services/voice.dart';
 import '../../Widgets/Palette.dart';
+import '../../Widgets/Popups/game_popup.dart';
 
 //Bubble Class
 class Bubble {
@@ -59,6 +60,7 @@ class _NinjaBubbleState extends State<NinjaBubble>
   bool selected = false;
   bool _isScreenBlocked = false;
   int duration = 180;
+  bool pop = true;
 
   List<String> _bubbleImages =
       List.generate(241, (index) => '${index + 1}.png');
@@ -167,37 +169,40 @@ class _NinjaBubbleState extends State<NinjaBubble>
                 angle: Random().nextDouble() * 2 * pi,
                 child: GestureDetector(
                   onTap: () {
-                    String number = bubble.image.split('.').first;
-                    if (bubble.image.startsWith("241")) {
-                      Sfx.play("audios/sfx/bubble-pop.mp3", 2);
-                      Voice.play("audios/sfx/boom.mp3", 1);
-                      endGame();
-                      selected = true;
-                    } else {
-                      Sfx.play("audios/sfx/bubble-pop.mp3", 1);
-                      Voice.play("audios/voices/$number.mp3", 1);
-                    }
-                    setState(() {
-                      // Remove bubble
-                      _bubbles.remove(bubble);
-                      // Add falling image
-                      _fallingImages.add(
-                        FallingImage(
-                            x: bubble.x,
-                            y: bubble.y,
-                            size: bubble.size,
-                            speed: bubble.speed,
-                            image: bubble.image),
-                      );
-                      if (bubble.image.startsWith('241')) {
-                        _isScreenBlocked = true;
-                        if (_isScreenBlocked) {
-                          _controller.stop();
-                        } else {
-                          _controller.repeat();
-                        }
+                    if (pop) {
+                      String number = bubble.image.split('.').first;
+                      if (bubble.image.startsWith("241")) {
+                        Sfx.play("audios/sfx/bubble-pop.mp3", 2);
+                        Voice.play("audios/sfx/boom.mp3", 1);
+                        endGame();
+                        selected = true;
+                        pop = false;
+                      } else {
+                        Sfx.play("audios/sfx/bubble-pop.mp3", 1);
+                        Voice.play("audios/voices/$number.mp3", 1);
                       }
-                    });
+                      setState(() {
+                        // Remove bubble
+                        _bubbles.remove(bubble);
+                        // Add falling image
+                        _fallingImages.add(
+                          FallingImage(
+                              x: bubble.x,
+                              y: bubble.y,
+                              size: bubble.size,
+                              speed: bubble.speed,
+                              image: bubble.image),
+                        );
+                        if (bubble.image.startsWith('241')) {
+                          _isScreenBlocked = true;
+                          if (_isScreenBlocked) {
+                            _controller.stop();
+                          } else {
+                            _controller.repeat();
+                          }
+                        }
+                      });
+                    }
                   },
                   child: Container(
                     width: bubble.size,
@@ -243,67 +248,29 @@ class _NinjaBubbleState extends State<NinjaBubble>
 
   Future<void> endGame() async {
     await Future.delayed(const Duration(seconds: 4));
-    Sfx.play("audios/sfx/lose.mp3", 1);
-    AwesomeDialog(
+    showDialog(
       context: context,
-      headerAnimationLoop: false,
-      customHeader: Container(
-        height: 100,
-        width: 100,
-        decoration: const BoxDecoration(
-            color: Palette.red,
-            borderRadius: BorderRadius.all(Radius.circular(50))),
-        child: const Icon(
-          Icons.timer,
-          color: Palette.white,
-          size: 80,
-        ),
-      ),
-      dialogType: DialogType.success,
-      animType: AnimType.bottomSlide,
-      body: Column(children: [
-        const Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            "Oh non, tu as touché la bombe !",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-              color: Palette.pink,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(bottom: 10),
-          child: Text(
-            "Tu y étais presque, essaye encore une fois",
-            style: TextStyle(
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Image.asset(
-          "assets/images/mascotte/bomb_explotion.gif",
-          scale: 4,
-        ),
-      ]),
-      btnCancelIcon: Icons.home,
-      btnCancelText: " ",
-      btnCancelOnPress: () {
-        Navigator.pop(context);
-      },
-      btnOkIcon: Icons.restart_alt_rounded,
-      btnOkText: " ",
-      btnOkOnPress: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const NinjaBubble(),
-          ),
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return GamePopup(
+          onButton1Pressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          onButton2Pressed: () {
+            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NinjaBubble(),
+              ),
+            );
+          },
+          win: false,
+          textLose: "Tu as touché la bombe",
+          loseImg: "assets/images/mascotte/bomb_explotion.gif",
         );
       },
-    ).show();
+    );
   }
 }

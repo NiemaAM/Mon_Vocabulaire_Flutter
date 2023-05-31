@@ -259,14 +259,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.9"
-  flutter_sequence_animation:
-    dependency: "direct main"
-    description:
-      name: flutter_sequence_animation
-      sha256: "48f28a8395e410f5b4a47a86fe77974ee8fbab3db935d22933dbb3af27447d01"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -285,6 +277,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      sha256: "6b6f10f0ce3c42f6552d1c70d2c28d764cf22bb487f50f66cca31dcd5194f4d6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.4"
   graphs:
     dependency: transitive
     description:

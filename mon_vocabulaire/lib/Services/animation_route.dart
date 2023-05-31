@@ -38,6 +38,25 @@ class SlideButtom extends PageRouteBuilder {
             });
 }
 
+class SlideTop extends PageRouteBuilder {
+  final page;
+  SlideTop({this.page})
+      : super(
+            pageBuilder: (context, animation, animationtwo) => page,
+            transitionsBuilder: (context, animation, animationtwo, child) {
+              var begin = const Offset(0, -1);
+              var end = Offset.zero;
+              var tween = Tween(begin: begin, end: end);
+              var curvesanimation = CurvedAnimation(
+                  parent: animation, curve: Curves.linearToEaseOut);
+              // var offsetAnimation = animation.drive(tween);
+              return SlideTransition(
+                position: tween.animate(curvesanimation),
+                child: child,
+              );
+            });
+}
+
 class SlideCenter extends PageRouteBuilder {
   final page;
   SlideCenter({this.page})

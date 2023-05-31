@@ -33,7 +33,7 @@ class _LevelBlocState extends State<LevelBloc> {
         child: Button(
             width: width - 20,
             heigth: width / 4,
-            radius: 10,
+            radius: 20,
             enabled: !widget.locked,
             color: widget.locked ? Palette.white : Palette.pink,
             callback: () {},
@@ -79,7 +79,7 @@ class _LevelBlocState extends State<LevelBloc> {
                           progressColor: Palette.lightGreen,
                           backgroundColor: widget.locked
                               ? const Color.fromARGB(68, 232, 232, 232)
-                              : Palette.lightGrey,
+                              : const Color.fromARGB(255, 193, 25, 81),
                           center: Text(
                             widget.locked
                                 ? "0 sur 240 mots"
