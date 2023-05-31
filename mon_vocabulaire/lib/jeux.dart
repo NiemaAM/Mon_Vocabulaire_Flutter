@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Widgets/appbargame.dart';
-
-import 'package:mon_vocabulaire/Widgets/palette.dart';
-
+import 'Widgets/Palette.dart';
 import 'Widgets/containergame.dart';
 
 class Jeux extends StatefulWidget {

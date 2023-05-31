@@ -2,6 +2,8 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 
+import 'Palette.dart';
+
 class CardWidget extends StatefulWidget {
   final String frontImage;
   final String backImage;
@@ -65,16 +67,14 @@ class _CardWidgetState extends State<CardWidget> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                //Colors.white,
-                // Color.fromARGB(255, 174, 221, 237),
-                Color.fromARGB(255, 150, 224, 248),
-                Color.fromARGB(255, 124, 213, 255),
-                Color.fromARGB(255, 52, 184, 245),
+                Color.fromARGB(255, 159, 220, 255),
+                Color.fromARGB(255, 92, 194, 253),
+                Palette.lightBlue,
               ],
             ),
             boxShadow: const [
               BoxShadow(
-                color: Color.fromARGB(135, 52, 184, 245),
+                color: Palette.indigo,
                 blurRadius: 3,
                 spreadRadius: 0.8,
                 offset: Offset(0, 1),

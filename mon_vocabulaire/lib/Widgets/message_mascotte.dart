@@ -5,7 +5,6 @@ import 'package:mon_vocabulaire/Widgets/triangle.dart';
 import 'package:animator/animator.dart';
 
 class BubbleMessage extends StatelessWidget {
-  // final String message;
   final Widget widget;
   const BubbleMessage({Key? key, required this.widget}) : super(key: key);
 
@@ -15,7 +14,7 @@ class BubbleMessage extends StatelessWidget {
 
     return SizedBox(
       width: width - 20,
-      height: 100,
+      height: width > 500 ? 150 : width / 2,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
