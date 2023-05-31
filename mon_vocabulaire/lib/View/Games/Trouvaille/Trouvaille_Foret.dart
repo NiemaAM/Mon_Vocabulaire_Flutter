@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/acceuil_themes.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/ferme.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Bureau.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../../Widgets/message_mascotte.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
@@ -14,19 +13,22 @@ import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
 
-class Foret_ extends StatefulWidget {
-  const Foret_({super.key});
+class Foret extends StatefulWidget {
+  const Foret({super.key});
 
   @override
-  State<Foret_> createState() => _ForetState();
+  State<Foret> createState() => _ForetState();
 }
 
-class _ForetState extends State<Foret_> {
+class _ForetState extends State<Foret> {
+  bool _isEleClicked = false;
+  bool _isGiClicked = false;
+  bool _isLiClicked = false;
   int countdown = 10;
   late Timer _timer;
   int duration = 60;
   bool isGameFinish = false;
-  int fermeObject = 0;
+    int fermeObject = 0;
 
   late ConfettiController _controllerConfetti;
   late var randomAnimal;
@@ -45,8 +47,7 @@ class _ForetState extends State<Foret_> {
 
     return randomAnimal;
   }
-
-  void startTimer() {
+void startTimer() {
     {
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         setState(() {
@@ -58,10 +59,7 @@ class _ForetState extends State<Foret_> {
             duration--;
             if (duration == 0) {
               timer.cancel();
-            }
-          }
-          if(duration == 0){
-          AwesomeDialog(
+              AwesomeDialog(
               context: context,
               headerAnimationLoop: false,
               customHeader: Container(
@@ -117,12 +115,13 @@ class _ForetState extends State<Foret_> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const Foret_(),
+                    builder: (context) => const Foret(),
                   ),
                 );
               },
             ).show();
           
+            }
           }
         });
       });
@@ -193,7 +192,7 @@ class _ForetState extends State<Foret_> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const Foret_(),
+            builder: (context) => const Foret(),
           ),
         );
       },
@@ -203,7 +202,7 @@ class _ForetState extends State<Foret_> {
   @override
   void initState() {
     super.initState();
-
+    randomAnimalFunc();
     AudioBK.pauseBK();
 
     _controllerConfetti =
@@ -294,7 +293,7 @@ class _ForetState extends State<Foret_> {
                               ),
                             ),
                             Text(
-                              "Un éléphant",
+                              "$randomAnimal",
                               style: const TextStyle(
                                   color: Color(0xFF0E57AC), fontSize: 25),
                             ),
@@ -312,81 +311,97 @@ class _ForetState extends State<Foret_> {
                 height: height > 800 ? height * 0.65 : height * 0.6,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(
-                        'assets/images/games/backgrounds/foret1.jpg'),
-                    fit: BoxFit.fill,
+                    image:
+                        AssetImage('assets/images/games/backgrounds/foret.jpg'),
+                    fit: BoxFit.fitHeight,
                   ),
                 ),
                 child: Stack(children: [
-                  //monkey
                   Positioned(
-                    top: height > 800 ? height - 620 : height - 550,
+                    top: height > 800 ? height - 610 : height - 550,
                     right: width > 550 ? width - 500 : width - 300,
-                    child: IconButton(
-                        iconSize: 70,
-                        onPressed: () {
-                          print(width);
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
-                              endGame();
-                            }
-                          });
-                        },
-                        icon:
-                            new Image.asset('assets/images/games/monkey.png')),
+                    child: Image.asset(
+                      'assets/images/games/monkey.png',
+                      height: 70,
+                      width: 70,
+                    ),
                   ),
 
                   //snake
                   Positioned(
                     bottom: height > 800 ? height - 900 : height - 750,
                     right: width > 550 ? width - 300 : width - 220,
-                    child: IconButton(
-                        iconSize: 60,
-                        onPressed: () {
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
-                              endGame();
-                            }
-                          });
-                        },
-                        icon: new Image.asset('assets/images/games/snake.png')),
+                    child: Image.asset(
+                      'assets/images/games/snake.png',
+                      height: 70,
+                      width: 70,
+                    ),
                   ),
                   //owel
                   Positioned(
                     top: height > 800 ? height - 800 : height - 750,
                     right: width > 550 ? width - 250 : width - 200,
-                    child: IconButton(
-                        iconSize: 100,
-                        onPressed: () {
-                          print(height);
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
-                              endGame();
-                            }
-                          });
-                        },
-                        icon: new Image.asset('assets/images/games/owel.png')),
+                    child: Image.asset(
+                      'assets/images/games/owel.png',
+                      height: 90,
+                      width: 90,
+                    ),
                   ),
                   //LION
                   Positioned(
                     top: height > 800 ? height - 700 : height - 600,
                     right: width > 550 ? width - 600 : width - 400,
                     bottom: 1,
-                    child: IconButton(
-                        iconSize: 200,
-                        onPressed: () {
-                          print(height);
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
+                    child: GestureDetector(
+                        onTap: () {
+                          var animal = "Un lion";
+                          if (animal == randomAnimal) {
+                            _isLiClicked = true;
+                            print("You win");
+                             fermeObject++;
+                            setState(() {
+                            if(fermeObject == 3){
                               endGame();
                             }
                           });
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
                         },
-                        icon: new Image.asset('assets/images/pics/143.png')),
+                        child: Image.asset(
+                          'assets/images/pics/143.png',
+                          height: 200,
+                          width: 200,
+                        )),
+                  ),
+                  //ELEPHANT
+                  Positioned(
+                    top: height > 800 ? height - 915 : height - 780,
+                    right: width > 550 ? width - 350 : width - 250,
+                    bottom: -180,
+                    child: GestureDetector(
+                        onTap: () {
+                          var animal = "Un éléphant";
+                          if (animal == randomAnimal) {
+                            _isEleClicked = true;
+                            print("You win");
+                             fermeObject++;
+                          setState(() {
+                            if(fermeObject == 3){
+                              endGame();
+                            }
+                          });
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
+                        },
+                        child: Image.asset(
+                          'assets/images/pics/138.png',
+                          height: 300,
+                          width: 300,
+                        )),
                   ),
 
                   //GIRAFF
@@ -394,44 +409,60 @@ class _ForetState extends State<Foret_> {
                     top: height > 800 ? height - 800 : height - 690,
                     right: width > 500 ? width - 250 : width - 200,
                     bottom: 1,
-                    child: IconButton(
-                        iconSize: 250,
-                        onPressed: () {
-                          fermeObject++;
+                    child: GestureDetector(
+                        onTap: () {
+                          var animal = "Une giraffe";
+                          if (animal == randomAnimal) {
+                            _isGiClicked = true;
+                            print("You win");
+                            fermeObject++;
                           setState(() {
-                            if(fermeObject == 6){
+                            if(fermeObject == 3){
                               endGame();
                             }
                           });
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
                         },
-                        icon: new Image.asset(
+                        child: Image.asset(
                           'assets/images/pics/140.png',
-                        )),
-                  ),
-                  //ELEPHANT
-                  Positioned(
-                    top: height > 800 ? height - 850 : height - 780,
-                    right: width > 550 ? width - 350 : width - 250,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 240,
-                        onPressed: () {
-                          print(width);
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
-                              endGame();
-                            }
-                          });
-                        },
-                        icon: new Image.asset(
-                          'assets/images/pics/138.png',
+                          height: 300,
+                          width: 300,
                         )),
                   ),
                 ]),
               ),
             ],
           ),
+
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset(
+                  'assets/images/pics/138.png',
+                  height: 75,
+                  width: 75,
+                  color: _isEleClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/140.png',
+                  height: 75,
+                  width: 75,
+                  color: _isGiClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/143.png',
+                  height: 75,
+                  width: 75,
+                  color: _isLiClicked ? null : Colors.black,
+                ),
+              ],
+            ),
+          )
 
           //monkey
         ],

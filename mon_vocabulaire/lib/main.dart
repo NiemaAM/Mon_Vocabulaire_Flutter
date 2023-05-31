@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Foret.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/ferme.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvailleCuizine.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/cuisine.dart';
 import 'View/Quiz/drag_and_drop.dart';
 import 'package:flutter/services.dart';
-
-import 'package:mon_vocabulaire/View/Games/Trouvaille/foret.dart';
-
 import 'package:mon_vocabulaire/View/Home/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Themes/theme_provider.dart';
+import 'View/Games/Trouvaille/trouvaillecour.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +34,7 @@ class MyApp extends StatelessWidget {
             theme: MyThemes.lightTheme,
             darkTheme: MyThemes.darkTheme,
             themeMode: themeProvider.themeMode,
-            home: const cuizine(),
+            home: const cuisine(),
           );
         },
       ),

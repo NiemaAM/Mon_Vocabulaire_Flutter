@@ -50,7 +50,7 @@ class _TrouvailleSubThemesState extends State<TrouvailleSubThemes> {
               Bubble2(
                 image: "assets/images/themes/maison.png",
                 text: 'Maison et famille',
-                callback: Foret(),
+                callback: Foret_(),
                 color: Palette.maison,
                 type: "theme",
               ),

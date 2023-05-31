@@ -14,36 +14,39 @@ import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
 
-class Foret_ extends StatefulWidget {
-  const Foret_({super.key});
+class cuisine extends StatefulWidget {
+  const cuisine({super.key});
 
   @override
-  State<Foret_> createState() => _ForetState();
+  State<cuisine> createState() => _cuisineState();
 }
 
-class _ForetState extends State<Foret_> {
+class _cuisineState extends State<cuisine> {
   int countdown = 10;
   late Timer _timer;
   int duration = 60;
   bool isGameFinish = false;
   int fermeObject = 0;
-
+  bool _isfoeClicked = false;
+  bool _isveClicked = false;
+  bool _ispaClicked = false;  
+  bool _iscaClicked = false;
   late ConfettiController _controllerConfetti;
-  late var randomAnimal;
-  List<String> animals = ['Un lion', 'Un éléphant', 'Une giraffe'];
-  String randomAnimalFunc() {
-    animals.shuffle();
+  late var randomCuisine;
+  List<String> cuisine_ = ['une Pastèque', 'un vert d\'eau', 'un four', 'une casserole'];
+  String randomcuisineFunc() {
+    cuisine_.shuffle();
 
-    if (animals.isNotEmpty) {
-      randomAnimal = animals[0];
-      print(randomAnimal);
-      animals.removeAt(0);
+    if (cuisine_.isNotEmpty) {
+      randomCuisine = cuisine_[0];
+      print(randomCuisine);
+      cuisine_.removeAt(0);
     } else {
       print("Fin du jeu");
       endGame();
     }
 
-    return randomAnimal;
+    return randomCuisine;
   }
 
   void startTimer() {
@@ -117,7 +120,7 @@ class _ForetState extends State<Foret_> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const Foret_(),
+                    builder: (context) => const cuisine(),
                   ),
                 );
               },
@@ -170,7 +173,7 @@ class _ForetState extends State<Foret_> {
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: Text(
-             "Bravo, tu as trouvé tous les animaux !",
+             "Bravo, tu as trouvé tous les mots !",
             style: const TextStyle(
               fontSize: 16,
             ),
@@ -193,7 +196,7 @@ class _ForetState extends State<Foret_> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const Foret_(),
+            builder: (context) => const cuisine(),
           ),
         );
       },
@@ -203,9 +206,8 @@ class _ForetState extends State<Foret_> {
   @override
   void initState() {
     super.initState();
-
     AudioBK.pauseBK();
-
+randomcuisineFunc();
     _controllerConfetti =
         ConfettiController(duration: const Duration(seconds: 1));
 
@@ -275,7 +277,7 @@ class _ForetState extends State<Foret_> {
                 child: BubbleMessage(
                   widget: countdown > 0
                       ? Text(
-                          "Trouvez l'animal dans : $countdown",
+                          "Trouvez les mots dans : $countdown",
                           style: const TextStyle(
                               color: Color(0xFF0E57AC), fontSize: 15),
                         )
@@ -294,9 +296,9 @@ class _ForetState extends State<Foret_> {
                               ),
                             ),
                             Text(
-                              "Un éléphant",
+                              '$randomCuisine',
                               style: const TextStyle(
-                                  color: Color(0xFF0E57AC), fontSize: 25),
+                                  color: Color(0xFF0E57AC), fontSize: 20),
                             ),
                           ],
                         ),
@@ -313,127 +315,132 @@ class _ForetState extends State<Foret_> {
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(
-                        'assets/images/games/backgrounds/foret1.jpg'),
-                    fit: BoxFit.fill,
+                        'assets/images/games/backgrounds/cuizine.jpg'),
+                    fit: BoxFit.fitHeight,
                   ),
                 ),
                 child: Stack(children: [
                   //monkey
+                  
+
                   Positioned(
-                    top: height > 800 ? height - 620 : height - 550,
-                    right: width > 550 ? width - 500 : width - 300,
-                    child: IconButton(
-                        iconSize: 70,
-                        onPressed: () {
-                          print(width);
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
-                              endGame();
-                            }
-                          });
-                        },
-                        icon:
-                            new Image.asset('assets/images/games/monkey.png')),
+                    bottom: width > 550 ? height * 0.13 : height * 0.11,
+                    left: width > 550 ? width * 0.32 : width * 0.22 ,
+                    child: GestureDetector(
+                        onTap: () {
+                        String name ="un four";
+                         if(name == randomCuisine){
+                        _isfoeClicked=true;
+                        randomcuisineFunc();
+                        print("win");
+                         }else{
+                          print("lose");
+                         }                          },
+                          child: Image.asset(
+                            'assets/images/pics/83.png',
+                            height: 140,
+                            width: 160,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                   ),
 
-                  //snake
                   Positioned(
-                    bottom: height > 800 ? height - 900 : height - 750,
-                    right: width > 550 ? width - 300 : width - 220,
-                    child: IconButton(
-                        iconSize: 60,
-                        onPressed: () {
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
-                              endGame();
-                            }
-                          });
-                        },
-                        icon: new Image.asset('assets/images/games/snake.png')),
-                  ),
-                  //owel
-                  Positioned(
-                    top: height > 800 ? height - 800 : height - 750,
-                    right: width > 550 ? width - 250 : width - 200,
-                    child: IconButton(
-                        iconSize: 100,
-                        onPressed: () {
-                          print(height);
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
-                              endGame();
-                            }
-                          });
-                        },
-                        icon: new Image.asset('assets/images/games/owel.png')),
-                  ),
-                  //LION
-                  Positioned(
-                    top: height > 800 ? height - 700 : height - 600,
-                    right: width > 550 ? width - 600 : width - 400,
-                    bottom: 1,
-                    child: IconButton(
-                        iconSize: 200,
-                        onPressed: () {
-                          print(height);
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
-                              endGame();
-                            }
-                          });
-                        },
-                        icon: new Image.asset('assets/images/pics/143.png')),
+                    bottom: height > 800 ? height * 0.3 : height * 0.27,
+                    left: width > 550 ? width * 0.57 : width * 0.62 ,
+                    child: GestureDetector(
+                        onTap: () {
+                        String name = "un vert d'eau";
+                         if(name == randomCuisine){
+                        _isveClicked=true;
+                        randomcuisineFunc();
+                         }                        },
+                          child: Image.asset(
+                            'assets/images/pics/89.png',
+                            height: 40,
+                            width: width > 550 ? 60 : 50,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                   ),
 
-                  //GIRAFF
                   Positioned(
-                    top: height > 800 ? height - 800 : height - 690,
-                    right: width > 500 ? width - 250 : width - 200,
-                    bottom: 1,
-                    child: IconButton(
-                        iconSize: 250,
-                        onPressed: () {
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
-                              endGame();
-                            }
-                          });
+                    bottom: height > 550 ? height * 0.26 : height * 0.21,
+                    left: width > 550 ? width * 0.7 : width * 0.75 ,
+                    child: GestureDetector(
+                        onTap: () {
+                         String name = "une Pastèque";
+                         if(name == randomCuisine){
+                         _ispaClicked=true;
+                          randomcuisineFunc();
+                         }
                         },
-                        icon: new Image.asset(
-                          'assets/images/pics/140.png',
-                        )),
+                          child: Image.asset(
+                            'assets/images/pics/106.png',
+                            height: 50,
+                            width: width > 550 ? 90 : 50,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                   ),
-                  //ELEPHANT
-                  Positioned(
-                    top: height > 800 ? height - 850 : height - 780,
-                    right: width > 550 ? width - 350 : width - 250,
-                    bottom: -180,
-                    child: IconButton(
-                        iconSize: 240,
-                        onPressed: () {
-                          print(width);
-                          fermeObject++;
-                          setState(() {
-                            if(fermeObject == 6){
-                              endGame();
-                            }
-                          });
+
+                   Positioned(
+                    bottom: height > 800 ? height * 0.26 : height * 0.42,
+                    left: width > 550 ? width * 0.7 : width * 0.75 ,
+                    child: GestureDetector(
+                        onTap: () {
+                         String name = "une casserole";
+                         if(name == randomCuisine){
+                         _iscaClicked=true;
+                          randomcuisineFunc();
+                         }
                         },
-                        icon: new Image.asset(
-                          'assets/images/pics/138.png',
-                        )),
+                          child: Image.asset(
+                            'assets/images/pics/86.png',
+                            height: 50,
+                            width: width > 550 ? 90 : 50,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                   ),
+                  
                 ]),
               ),
             ],
           ),
 
-          //monkey
+        Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset(
+                  'assets/images/pics/83.png',
+                  height: 75,
+                  width: 75,
+                  color: _isfoeClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/89.png',
+                  height: 75,
+                  width: 75,
+                  color: _isveClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/106.png',
+                  height: 75,
+                  width: 75,
+                  color: _ispaClicked ? null : Colors.black,
+                ),
+                 Image.asset(
+                  'assets/images/pics/86.png',
+                  height: 75,
+                  width: 75,
+                  color: _iscaClicked ? null : Colors.black,
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );
