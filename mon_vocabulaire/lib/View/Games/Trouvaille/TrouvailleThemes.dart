@@ -23,9 +23,9 @@ class TrouvailleThemes extends StatefulWidget {
 }
 
 class _TrouvailleThemesState extends State<TrouvailleThemes> {
+  bool israndom = true;
   @override
   Widget build(BuildContext context) {
-    bool israndom = true;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: Palette.lightBlue,
