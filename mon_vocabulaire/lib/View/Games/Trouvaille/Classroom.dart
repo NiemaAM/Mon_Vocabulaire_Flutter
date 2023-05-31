@@ -5,7 +5,6 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Foret.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../../Services/audio_background.dart';
@@ -13,46 +12,43 @@ import '../../../Services/sfx.dart';
 import '../../../Services/voice.dart';
 import '../../../Widgets/Palette.dart';
 import '../../../Widgets/message_mascotte.dart';
+import 'Trouvaille_Ferme.dart';
 
-class Bureau extends StatefulWidget {
-  const Bureau({super.key});
+class ClassRoom extends StatefulWidget {
+  const ClassRoom({super.key});
 
   @override
-  State<Bureau> createState() => _BureauState();
+  State<ClassRoom> createState() => _ClassRoomState();
 }
 
-class _BureauState extends State<Bureau> {
-  bool _isCoClicked = false;
-  bool _isGoClicked = false;
-  bool _isLiClicked = false;
-  bool _isReClicked = false;
-  bool _isTrClicked = false;
-  bool _isBrClicked = false;
-  bool _isCaClicked = false;
+class _ClassRoomState extends State<ClassRoom> {
+  bool _isBoaClicked = false;
+  bool _isTeaClicked = false;
+  bool _isWinClicked = false;
+  bool _isDesClicked = false;
+  bool _isCloClicked = false;
+  // bool _isBrClicked = false;
+  // bool _isCaClicked = false;
 
-  int countdown = 10;
+  int countdown = 5;
   late Timer _timer;
   int duration = 60;
   bool isGameFinish = false;
   late ConfettiController _controllerConfetti;
   late var randomSchool;
   List<String> School = [
-    'Une gomme',
-    'Une colle',
-    'Une trousse',
-    'Une règle',
-    'Un livre',
-    'Un cartable',
-    'Une brosse'
+    'Un bureau',
+    'Une fenêtre',
+    'Une horloge',
+    'Une maîtresse',
+    'Un tableau'
   ];
   Map<String, String> ElementsAudios = {
-    'Une gomme': "25.mp3",
-    'Une colle': "23.mp3",
-    'Une trousse': "32.mp3",
-    'Une règle': "30.mp3",
-    'Un livre': "27.mp3",
-    'Un cartable': "20.mp3",
-    'Une brosse': "18.mp3"
+    'Un bureau': "4.mp3",
+    'Une fenêtre': "9.mp3",
+    'Une horloge': "10.mp3",
+    'Une maîtresse': "37.mp3",
+    'Un tableau': "15.mp3",
   };
   String randomSchoolFunc() {
     School.shuffle();
@@ -158,7 +154,7 @@ class _BureauState extends State<Bureau> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const Foret(),
+            builder: (context) => const Ferme(),
           ),
         );
       },
@@ -254,7 +250,7 @@ class _BureauState extends State<Bureau> {
                                       'audios/voices/${ElementsAudios['$randomSchool']}',
                                       1);
                                 },
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.volume_up,
                                   color: Color(0xFF0E57AC),
                                   size: 35,
@@ -280,45 +276,73 @@ class _BureauState extends State<Bureau> {
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image:
-                      AssetImage('assets/images/games/backgrounds/class.jpg'),
-                  fit: BoxFit.fitHeight,
+                      AssetImage('assets/images/games/backgrounds/Classe.png'),
+                  fit: BoxFit.fill,
                 ),
               ),
             ),
-            //Cartable
-            Positioned(
-              bottom: height * 0.001,
-              left: width * 0.35,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Un cartable";
-                    if (element == randomSchool) {
-                      _isCaClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Un cartable']}", 1);
-                      print("You win");
-                      randomSchoolFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/20.png',
-                    height: 65,
-                    width: 65,
-                  )),
-            ),
-            //Brosse
+            //Tableau
             Positioned(
               bottom: height * 0.25,
+              left: width * 0.05,
+              child: GestureDetector(
+                  onTap: () {
+                    var element = "Un tableau";
+                    print("tableau");
+                    if (element == randomSchool) {
+                      _isBoaClicked = true;
+                      Voice.play(
+                          "audios/voices/${ElementsAudios['Un tableau']}", 1);
+                      print("You win");
+                      randomSchoolFunc();
+                    } else {
+                      print("You lose");
+                    }
+                  },
+                  child: Image.asset(
+                    'assets/images/pics/15.png',
+                    height: 180,
+                    width: 180,
+                  )),
+            ),
+            //Maitresse
+            Positioned(
+              bottom: height * 0.22,
+              left: width * 0.30,
+              child: GestureDetector(
+                  onTap: () {
+                    var element = "Une maîtresse";
+                    print("maitresse");
+
+                    if (element == randomSchool) {
+                      _isTeaClicked = true;
+                      Voice.play(
+                          "audios/voices/${ElementsAudios['Une maîtresse']}",
+                          1);
+                      print("You win");
+                      randomSchoolFunc();
+                    } else {
+                      print("You lose");
+                    }
+                  },
+                  child: Image.asset(
+                    'assets/images/games/maitresse.png',
+                    height: 150,
+                    width: 150,
+                  )),
+            ),
+            //Bureau
+            Positioned(
+              bottom: height * 0.02,
               left: width * 0.32,
               child: GestureDetector(
                   onTap: () {
-                    var element = "Une brosse";
+                    var element = "Un bureau";
+                    print("bureau");
                     if (element == randomSchool) {
-                      _isBrClicked = true;
+                      _isDesClicked = true;
                       Voice.play(
-                          "audios/voices/${ElementsAudios['Une brosse']}", 1);
+                          "audios/voices/${ElementsAudios['Un bureau']}", 1);
                       print("You win");
                       randomSchoolFunc();
                     } else {
@@ -326,22 +350,23 @@ class _BureauState extends State<Bureau> {
                     }
                   },
                   child: Image.asset(
-                    'assets/images/pics/18.png',
-                    height: 50,
-                    width: 50,
+                    'assets/images/pics/4.png',
+                    height: 150,
+                    width: 150,
                   )),
             ),
-            //Livre
+            //Fenêtre
             Positioned(
-              bottom: height * 0.14,
-              left: width * 0.32,
+              bottom: height * 0.45,
+              right: width * 0.02,
               child: GestureDetector(
                   onTap: () {
-                    var element = "Un livre";
+                    var element = "Une fenêtre";
+                    print("Fenêtre");
                     if (element == randomSchool) {
-                      _isLiClicked = true;
+                      _isWinClicked = true;
                       Voice.play(
-                          "audios/voices/${ElementsAudios['Un livre']}", 1);
+                          "audios/voices/${ElementsAudios['Une fenêtre']}", 1);
                       print("You win");
                       randomSchoolFunc();
                     } else {
@@ -349,45 +374,23 @@ class _BureauState extends State<Bureau> {
                     }
                   },
                   child: Image.asset(
-                    'assets/images/pics/27.png',
-                    height: 50,
-                    width: 50,
+                    'assets/images/games/window.png',
+                    height: 80,
+                    width: 80,
                   )),
             ),
-            //Trousse
+            //Horloge
             Positioned(
-              bottom: height * 0.18,
-              right: width * 0.65,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Une trousse";
-                    if (element == randomSchool) {
-                      _isTrClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Une trousse']}", 1);
-                      print("You win");
-                      randomSchoolFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/32.png',
-                    height: 50,
-                    width: 50,
-                  )),
-            ),
-            //Règle
-            Positioned(
-              bottom: height * 0.15,
+              bottom: height * 0.52,
               right: width > 500 ? width * 0.38 : width * 0.42,
               child: GestureDetector(
                   onTap: () {
-                    var element = "Une règle";
+                    var element = "Une horloge";
+                    print("horloge");
                     if (element == randomSchool) {
-                      _isReClicked = true;
+                      _isCloClicked = true;
                       Voice.play(
-                          "audios/voices/${ElementsAudios['Une règle']}", 1);
+                          "audios/voices/${ElementsAudios['Une horloge']}", 1);
                       print("You win");
                       randomSchoolFunc();
                     } else {
@@ -395,106 +398,48 @@ class _BureauState extends State<Bureau> {
                     }
                   },
                   child: Image.asset(
-                    'assets/images/pics/30.png',
-                    height: 35,
-                    width: 35,
-                  )),
-            ),
-            //colle
-            Positioned(
-              bottom: height * 0.18,
-              right: width > 500 ? width * 0.38 : width * 0.42,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Une colle";
-                    if (element == randomSchool) {
-                      _isCoClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Une colle']}", 1);
-                      print("You win");
-                      randomSchoolFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/23.png',
-                    height: 35,
-                    width: 35,
-                  )),
-            ),
-            //Gomme
-            Positioned(
-              bottom: height * 0.16,
-              right: width > 500 ? width * 0.1 : width * 0.02,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Une gomme";
-                    if (element == randomSchool) {
-                      _isGoClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Une gomme']}", 1);
-                      print("You win");
-                      randomSchoolFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/25.png',
-                    height: 30,
-                    width: 30,
+                    'assets/images/pics/10.png',
+                    height: 40,
+                    width: 40,
                   )),
             ),
           ]),
 
           //élements à trouver
           Padding(
-            padding: const EdgeInsets.only(top: 30),
+            padding: const EdgeInsets.only(top: 60),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Image.asset(
-                  'assets/images/pics/20.png',
-                  height: 50,
-                  width: 50,
-                  color: _isCaClicked ? null : Colors.black,
+                  'assets/images/pics/10.png',
+                  height: 30,
+                  width: 30,
+                  color: _isCloClicked ? null : Colors.black,
                 ),
                 Image.asset(
-                  'assets/images/pics/18.png',
+                  'assets/images/games/maitresse.png',
                   height: 50,
                   width: 50,
-                  color: _isBrClicked ? null : Colors.black,
+                  color: _isTeaClicked ? null : Colors.black,
                 ),
                 Image.asset(
-                  'assets/images/pics/27.png',
+                  'assets/images/pics/15.png',
                   height: 50,
                   width: 50,
-                  color: _isLiClicked ? null : Colors.black,
+                  color: _isBoaClicked ? null : Colors.black,
                 ),
                 Image.asset(
-                  'assets/images/pics/32.png',
+                  'assets/images/pics/4.png',
                   height: 50,
                   width: 50,
-                  color: _isTrClicked ? null : Colors.black,
+                  color: _isDesClicked ? null : Colors.black,
                 ),
                 Image.asset(
-                  'assets/images/pics/30.png',
-                  height: 50,
-                  width: 50,
-                  color: _isReClicked ? null : Colors.black,
-                ),
-                Image.asset(
-                  'assets/images/pics/23.png',
-                  height: 50,
-                  width: 50,
-                  color: _isCoClicked ? null : Colors.black,
-                ),
-                Image.asset(
-                  'assets/images/pics/25.png',
-                  height: 50,
-                  width: 50,
-                  color: _isGoClicked ? null : Colors.black,
+                  'assets/images/games/window.png',
+                  height: 30,
+                  width: 30,
+                  color: _isWinClicked ? null : Colors.black,
                 ),
               ],
             ),

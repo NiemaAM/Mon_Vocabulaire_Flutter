@@ -142,7 +142,7 @@ class _ForetState extends State<Foret> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const TrouvailleBureau(),
+            builder: (context) => const Bureau(),
           ),
         );
       },
