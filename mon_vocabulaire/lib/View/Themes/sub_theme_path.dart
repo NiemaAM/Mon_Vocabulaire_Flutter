@@ -1,11 +1,14 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
 import 'package:mon_vocabulaire/View/Quiz/quiz_text_images.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
+import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import '../../Services/sfx.dart';
 import '../Quiz/drag_and_drop.dart';
@@ -64,8 +67,8 @@ class _LessonPathState extends State<LessonPath> {
       });
     } else if (widget.subTheme == 7 || widget.subTheme == 8) {
       setState(() {
-        images[0] = "assets/images/themes/animaux.png";
-        images[1] = "assets/images/themes/mammiferes.png";
+        images[0] = "assets/images/themes/ferme.png";
+        images[1] = "assets/images/themes/foret.png";
         titles[0] = "Ferme";
         titles[1] = "Forêt";
         background = "forest";
@@ -107,31 +110,174 @@ class _LessonPathState extends State<LessonPath> {
     Sfx.play("audios/sfx/pop.mp3", 1);
   }
 
+  final PageController _pageController = PageController();
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    List<Widget> elements = [
+      // Element 1
+      Column(
+        children: [
+          Button(
+            callback: () {
+              Sfx.play("audios/sfx/plip.mp3", 1);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuizTextImages(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+            content: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Image.asset(
+                  "assets/images/themes/song.png",
+                ),
+              ),
+            ),
+            width: width > 500 ? width / 2 : width / 1.5,
+            heigth: width > 500 ? width / 2 : width / 1.5,
+            color: Palette.white,
+            radius: 500,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Container(
+              width: width / 1.8,
+              height: 60,
+              decoration: const BoxDecoration(
+                  color: Palette.pink,
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
+              child: const Center(
+                child: Text(
+                  "ÉCOUTER",
+                  style: TextStyle(
+                      color: Palette.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+
+      // Element 2
+      Column(
+        children: [
+          Button(
+            callback: () {
+              Sfx.play("audios/sfx/plip.mp3", 1);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuizImageTexts(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+            content: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Image.asset(
+                  "assets/images/themes/images.png",
+                ),
+              ),
+            ),
+            width: width > 500 ? width / 2 : width / 1.5,
+            heigth: width > 500 ? width / 2 : width / 1.5,
+            color: Palette.white,
+            radius: 500,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Container(
+              width: width / 1.8,
+              height: 60,
+              decoration: const BoxDecoration(
+                  color: Palette.pink,
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
+              child: const Center(
+                child: Text(
+                  "LIRE",
+                  style: TextStyle(
+                      color: Palette.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+
+      // Element 3
+      Column(
+        children: [
+          Button(
+            callback: () {
+              Sfx.play("audios/sfx/plip.mp3", 1);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DragAndDrop(
+                    subTheme: widget.subTheme,
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+            content: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Image.asset(
+                  "assets/images/themes/drag_and_drop.png",
+                ),
+              ),
+            ),
+            width: width > 500 ? width / 2 : width / 1.5,
+            heigth: width > 500 ? width / 2 : width / 1.5,
+            color: Palette.white,
+            radius: 500,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Container(
+              width: width / 1.8,
+              height: 60,
+              decoration: const BoxDecoration(
+                  color: Palette.pink,
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
+              child: const Center(
+                child: Text(
+                  "ÉCRIRE",
+                  style: TextStyle(
+                      color: Palette.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    ];
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: color,
-        elevation: 2,
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.transparent,
-              child: Image.asset(
-                widget.image,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(
-                widget.title,
-              ),
-            ),
-          ],
-        ),
+      appBar: CustomAppBar(
+        title: widget.title.toUpperCase(),
+        color: color,
+        automaticallyImplyLeading: true,
+        image: widget.image,
       ),
       body: Stack(
         children: [
@@ -140,336 +286,180 @@ class _LessonPathState extends State<LessonPath> {
               fit: BoxFit.cover,
               color: Palette.white.withOpacity(0.65),
               colorBlendMode: BlendMode.modulate),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-            child: Stack(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: width > 500 ? 40 : 10),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Stack(
-                      children: [
-                        Button(
-                            callback: () {
-                              Sfx.play("audios/sfx/plip.mp3", 1);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LessonPage(
-                                    subTheme: widget.subTheme,
-                                    user: widget.user,
-                                  ),
-                                ),
-                              );
-                            },
-                            content: Image.asset(
-                              "assets/images/themes/lesson.png",
-                              scale: width > 500 ? 4 : 5,
-                            ),
-                            heigth: width > 500 ? 200 : 150,
-                            width: width > 500 ? 200 : 150,
-                            radius: 200,
-                            color: color),
-                        Positioned(
-                          left: 10,
-                          top: 10,
-                          child: Container(
-                            height: 30,
-                            width: 30,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(80)),
-                              color: color,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: darken(color, .2),
-                                  blurRadius: 3,
-                                  spreadRadius: 0.5,
-                                  offset: const Offset(2.0, 2),
-                                )
-                              ],
-                            ),
-                            child: const Center(
-                                child: Text(
-                              "1",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            )),
-                          ),
-                        )
-                      ],
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: Button(
+                callback: () {
+                  Sfx.play("audios/sfx/plip.mp3", 1);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LessonPage(
+                        subTheme: widget.subTheme,
+                        user: widget.user,
+                      ),
                     ),
-                  ),
-                ),
-                Positioned(
-                    top: height / 6,
-                    right: width > 500 ? 40 : 10,
-                    child: Stack(
+                  );
+                },
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Image.asset(
+                        "assets/images/themes/lesson.png",
+                        width: width / 2.8,
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Button(
-                            callback: () {
-                              Sfx.play("audios/sfx/plip.mp3", 1);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => QuizTextImages(
-                                    subTheme: widget.subTheme,
-                                    user: widget.user,
-                                  ),
-                                ),
-                              );
-                            },
-                            content: Opacity(
-                              opacity: 0.8,
-                              child: Image.asset(
-                                "assets/images/themes/song.png",
-                                scale: width > 500 ? 4 : 5,
-                              ),
-                            ),
-                            heigth: width > 500 ? 200 : 150,
-                            width: width > 500 ? 200 : 150,
-                            radius: 200,
-                            color: Palette.white),
-                        Positioned(
-                          left: 10,
-                          top: 10,
-                          child: Container(
-                            height: 30,
-                            width: 30,
-                            decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(80)),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 3,
-                                  spreadRadius: 0.5,
-                                  offset: Offset(2.0, 2),
-                                )
-                              ],
-                            ),
-                            child: const Center(
-                                child: Text(
-                              "2",
-                              style: TextStyle(
-                                fontSize: 18,
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 5),
+                          child: Text(
+                            "MA LEÇON",
+                            style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                              ),
-                            )),
+                                fontSize: 23,
+                                color: Palette.black),
                           ),
-                        )
+                        ),
+                        Button(
+                          callback: () {
+                            Sfx.play("audios/sfx/plip.mp3", 1);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LessonPage(
+                                  subTheme: widget.subTheme,
+                                  user: widget.user,
+                                ),
+                              ),
+                            );
+                          },
+                          content: const Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "LIRE",
+                                  style: TextStyle(
+                                      color: Palette.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Icon(
+                                  Icons.play_arrow_rounded,
+                                  color: Palette.white,
+                                )
+                              ],
+                            ),
+                          ),
+                          color: Palette.pink,
+                          width: 130,
+                        ),
                       ],
-                    )),
-                Positioned(
-                  top: height / 3.2,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: width > 500 ? 40 : 10),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Stack(
-                        children: [
-                          Button(
-                            callback: () {
-                              Sfx.play("audios/sfx/plip.mp3", 1);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => QuizImageTexts(
-                                    subTheme: widget.subTheme,
-                                    user: widget.user,
-                                  ),
-                                ),
-                              );
-                            },
-                            content: Opacity(
-                              opacity: 0.8,
-                              child: Image.asset(
-                                "assets/images/themes/images.png",
-                                scale: width > 500 ? 4 : 5,
-                              ),
-                            ),
-                            heigth: width > 500 ? 200 : 150,
-                            width: width > 500 ? 200 : 150,
-                            radius: 200,
-                            color: Palette.white,
-                          ),
-                          Positioned(
-                            left: 10,
-                            top: 10,
-                            child: Container(
-                              height: 30,
-                              width: 30,
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(80)),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    blurRadius: 3,
-                                    spreadRadius: 0.5,
-                                    offset: Offset(2.0, 2),
-                                  )
-                                ],
-                              ),
-                              child: const Center(
-                                  child: Text(
-                                "3",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )),
-                            ),
-                          )
-                        ],
-                      ),
                     ),
-                  ),
+                    const SizedBox(
+                      width: 25,
+                    )
+                  ],
                 ),
-                Positioned(
-                  top: height / 2.15,
-                  right: width > 500 ? 40 : 10,
-                  child: Stack(
-                    children: [
-                      Button(
-                        callback: () {
-                          Sfx.play("audios/sfx/plip.mp3", 1);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DragAndDrop(
-                                subTheme: widget.subTheme,
-                                user: widget.user,
-                              ),
-                            ),
-                          );
-                        },
-                        content: Opacity(
-                          opacity: 0.8,
-                          child: Image.asset(
-                            "assets/images/themes/drag_and_drop.png",
-                            scale: width > 500 ? 5 : 6,
-                          ),
-                        ),
-                        heigth: width > 500 ? 200 : 150,
-                        width: width > 500 ? 200 : 150,
-                        radius: 200,
-                        color: Palette.white,
-                      ),
-                      Positioned(
-                        left: 10,
-                        top: 10,
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(80)),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 3,
-                                spreadRadius: 0.5,
-                                offset: Offset(2.0, 2),
-                              )
-                            ],
-                          ),
-                          child: const Center(
-                              child: Text(
-                            "4",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Positioned(
-                  left: width > 500 ? 40 : 10,
-                  top: height / 1.6,
-                  child: Stack(
-                    children: [
-                      Button(
-                        callback: () {
-                          Sfx.play("audios/sfx/plip.mp3", 1);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DragAndDrop(
-                                user: widget.user,
-                                subTheme: widget.subTheme,
-                              ),
-                            ),
-                          );
-                        },
-                        content: Opacity(
-                          opacity: 0.8,
-                          child: Image.asset(
-                            "assets/images/themes/lock.png",
-                            scale: width > 500 ? 6 : 7,
-                          ),
-                        ),
-                        heigth: width > 500 ? 200 : 150,
-                        width: width > 500 ? 200 : 150,
-                        radius: 200,
-                        color: Palette.white,
-                        enabled: false,
-                      ),
-                      Positioned(
-                        left: 10,
-                        top: 10,
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(80)),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 3,
-                                spreadRadius: 0.5,
-                                offset: Offset(2.0, 2),
-                              )
-                            ],
-                          ),
-                          child: const Center(
-                              child: Text(
-                            "5",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
+                width: width > 500 ? width - 150 : width - 40,
+                heigth: 200,
+                color: Palette.white,
+                radius: 20,
+              ),
             ),
           ),
+          Center(
+            child: Padding(
+              padding:
+                  EdgeInsets.only(top: width > 500 ? height / 3.5 : height / 3),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: height / 2.2,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: elements.length,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        double scale =
+                            max(0.85, 1 - (index - _currentIndex).abs() * 0.15);
+                        double opacity =
+                            max(0.5, 1 - (index - _currentIndex).abs() * 0.5);
+
+                        // Adjust the padding based on the current index
+                        EdgeInsets padding = EdgeInsets.only(
+                          left: index == _currentIndex ? 0 : 5,
+                          right: index == _currentIndex ? 0 : 5,
+                        );
+
+                        // Adjust the alignment based on the current index
+                        Alignment alignment = index == _currentIndex
+                            ? Alignment.center
+                            : index > _currentIndex
+                                ? Alignment.centerLeft
+                                : Alignment.centerRight;
+
+                        return Padding(
+                          padding: padding,
+                          child: Align(
+                            alignment: alignment,
+                            child: Transform.scale(
+                              scale: scale,
+                              child: Opacity(
+                                opacity: opacity,
+                                child: elements[index],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(elements.length, (index) {
+                      return Container(
+                        width: 40,
+                        height: 40,
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _currentIndex == index
+                              ? Palette.pink
+                              : Palette.white,
+                        ),
+                        child: Center(
+                          child: Text(
+                            _currentIndex == index
+                                ? "${_currentIndex + 1}"
+                                : "${index + 1}",
+                            style: TextStyle(
+                              color: _currentIndex == index
+                                  ? Palette.white
+                                  : Palette.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 23,
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
-      ),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      floatingActionButton: Button(
-        callback: () {},
-        content: const Icon(
-          Icons.play_arrow,
-          color: Palette.white,
-          size: 40,
-        ),
-        width: 70,
-        heigth: 70,
-        color: Colors.pink,
       ),
     );
   }

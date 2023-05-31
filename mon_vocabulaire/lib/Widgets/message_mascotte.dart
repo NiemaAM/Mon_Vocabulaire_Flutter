@@ -5,8 +5,9 @@ import 'package:mon_vocabulaire/Widgets/triangle.dart';
 import 'package:animator/animator.dart';
 
 class BubbleMessage extends StatelessWidget {
-  final String message;
-  const BubbleMessage({Key? key, required this.message}) : super(key: key);
+  // final String message;
+  final Widget widget;
+  const BubbleMessage({Key? key, required this.widget}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,34 +15,30 @@ class BubbleMessage extends StatelessWidget {
 
     return SizedBox(
       width: width - 20,
-      height: width > 500 ? 150 : width / 2,
+      height: 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Flexible(
             child: Container(
-              width: width - 100,
-              padding: const EdgeInsets.all(15),
-              margin: const EdgeInsets.only(
-                bottom: 5,
-              ),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(19)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(134, 80, 80, 80),
-                    blurRadius: 5.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(0.0, 6.0),
-                  )
-                ],
-              ),
-              child: Text(
-                message,
-                style: const TextStyle(color: Color(0xFF0E57AC), fontSize: 15),
-              ),
-            ),
+                width: width - 100,
+                padding: const EdgeInsets.all(15),
+                margin: const EdgeInsets.only(
+                  bottom: 5,
+                ),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(19)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(134, 80, 80, 80),
+                      blurRadius: 5.0,
+                      spreadRadius: 1.0,
+                      offset: Offset(0.0, 6.0),
+                    )
+                  ],
+                ),
+                child: widget),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8),

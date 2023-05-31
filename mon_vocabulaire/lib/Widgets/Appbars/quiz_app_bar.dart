@@ -6,6 +6,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 class QuizAppBar extends StatefulWidget {
   final int chances;
   final int duration;
+  final int totalDuration;
   final User user;
   final int question;
   final int size;
@@ -15,7 +16,8 @@ class QuizAppBar extends StatefulWidget {
       this.duration = 0,
       required this.user,
       required this.question,
-      required this.size});
+      required this.size,
+      required this.totalDuration});
 
   @override
   State<QuizAppBar> createState() => _QuizAppBarState();
@@ -29,7 +31,7 @@ class _QuizAppBarState extends State<QuizAppBar> {
         Align(
           alignment: Alignment.topCenter,
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.only(bottom: 15, top: 25),
             child: Text(
               "${widget.question} sur ${widget.size} questions",
               style: TextStyle(
@@ -40,13 +42,13 @@ class _QuizAppBarState extends State<QuizAppBar> {
         Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(bottom: 5),
               child: LinearPercentIndicator(
                 padding: const EdgeInsets.all(0),
                 animation: true,
-                lineHeight: 14.0,
+                lineHeight: 18,
                 animationDuration: 0,
-                percent: widget.duration / 30,
+                percent: widget.duration / widget.totalDuration,
                 barRadius: const Radius.circular(100),
                 progressColor: widget.duration >= 20
                     ? Palette.lightGreen
@@ -67,11 +69,11 @@ class _QuizAppBarState extends State<QuizAppBar> {
                               right: 5), // add right margin of 10 pixels
                           child: widget.chances >= 1
                               ? const Icon(
-                                  Icons.favorite,
+                                  Icons.favorite_rounded,
                                   color: Palette.red,
                                 )
                               : const Icon(
-                                  Icons.favorite,
+                                  Icons.favorite_rounded,
                                   color: Palette.grey,
                                 )),
                       Container(
@@ -79,11 +81,11 @@ class _QuizAppBarState extends State<QuizAppBar> {
                               right: 5), // add right margin of 10 pixels
                           child: widget.chances >= 2
                               ? const Icon(
-                                  Icons.favorite,
+                                  Icons.favorite_rounded,
                                   color: Palette.red,
                                 )
                               : const Icon(
-                                  Icons.favorite,
+                                  Icons.favorite_rounded,
                                   color: Palette.grey,
                                 )),
                       Container(
@@ -91,11 +93,11 @@ class _QuizAppBarState extends State<QuizAppBar> {
                               right: 5), // add right margin of 10 pixels
                           child: widget.chances == 3
                               ? const Icon(
-                                  Icons.favorite,
+                                  Icons.favorite_rounded,
                                   color: Palette.red,
                                 )
                               : const Icon(
-                                  Icons.favorite,
+                                  Icons.favorite_rounded,
                                   color: Palette.grey,
                                 )),
                     ],

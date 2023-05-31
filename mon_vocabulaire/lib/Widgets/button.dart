@@ -17,6 +17,8 @@ class Button extends StatefulWidget {
   final Widget content;
   final Color borders;
   final bool isBorder;
+  final double? topRadius;
+  final double? bottomRadius;
   const Button(
       {super.key,
       this.width = 200,
@@ -27,7 +29,9 @@ class Button extends StatefulWidget {
       this.enabled = true,
       required this.content,
       this.borders = Colors.white,
-      this.isBorder = false});
+      this.isBorder = false,
+      this.topRadius,
+      this.bottomRadius});
 
   @override
   State<Button> createState() => _ButtonState();
@@ -84,8 +88,19 @@ class _ButtonState extends State<Button> {
                 decoration: BoxDecoration(
                   color: darken(widget.color, .2),
                   // ignore: unnecessary_const
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(widget.radius),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(widget.topRadius == null
+                        ? widget.radius
+                        : widget.topRadius!),
+                    topRight: Radius.circular(widget.topRadius == null
+                        ? widget.radius
+                        : widget.topRadius!),
+                    bottomLeft: Radius.circular(widget.bottomRadius == null
+                        ? widget.radius
+                        : widget.bottomRadius!),
+                    bottomRight: Radius.circular(widget.bottomRadius == null
+                        ? widget.radius
+                        : widget.bottomRadius!),
                   ),
                 ),
               ),
@@ -99,8 +114,19 @@ class _ButtonState extends State<Button> {
                 width: widget.width,
                 decoration: BoxDecoration(
                     color: widget.color,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(widget.radius),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(widget.topRadius == null
+                          ? widget.radius
+                          : widget.topRadius!),
+                      topRight: Radius.circular(widget.topRadius == null
+                          ? widget.radius
+                          : widget.topRadius!),
+                      bottomLeft: Radius.circular(widget.bottomRadius == null
+                          ? widget.radius
+                          : widget.bottomRadius!),
+                      bottomRight: Radius.circular(widget.bottomRadius == null
+                          ? widget.radius
+                          : widget.bottomRadius!),
                     ),
                     border: widget.isBorder
                         ? Border.all(color: widget.borders, width: 3)
