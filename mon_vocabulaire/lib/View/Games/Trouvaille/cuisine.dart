@@ -33,7 +33,14 @@ class _cuisineState extends State<cuisine> {
   bool _iscaClicked = false;
   late ConfettiController _controllerConfetti;
   late var randomCuisine;
-  List<String> cuisine_ = ['une Pastèque', 'un vert d\'eau', 'un four', 'une casserole'];
+   Map<String, String> ElementsAudios = {
+    'Une pastèque': "106.mp3",
+    'Un verre': "89.mp3",
+    'Un four': "83.mp3",
+    'Un tajine': "113.mp3"
+  };
+
+  List<String> cuisine_ = ['Une pastèque', 'Un verre', 'Un four', 'Un tajine'];
   String randomcuisineFunc() {
     cuisine_.shuffle();
 
@@ -287,7 +294,11 @@ randomcuisineFunc();
                               padding:
                                   const EdgeInsets.only(left: 8, right: 10),
                               child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Voice.play(
+                                      'audios/voices/${ElementsAudios['$randomCuisine']}',
+                                      1);
+                                },
                                 icon: Icon(
                                   Icons.volume_up,
                                   color: Color(0xFF0E57AC),
@@ -328,14 +339,14 @@ randomcuisineFunc();
                     left: width > 550 ? width * 0.32 : width * 0.22 ,
                     child: GestureDetector(
                         onTap: () {
-                        String name ="un four";
+                        String name ="Un four";
                          if(name == randomCuisine){
                         _isfoeClicked=true;
                         randomcuisineFunc();
-                        print("win");
-                         }else{
-                          print("lose");
-                         }                          },
+                        Voice.play(
+                          "audios/voices/${ElementsAudios['Un four']}", 1);
+                         }                        
+                       },
                           child: Image.asset(
                             'assets/images/pics/83.png',
                             height: 140,
@@ -350,15 +361,17 @@ randomcuisineFunc();
                     left: width > 550 ? width * 0.57 : width * 0.62 ,
                     child: GestureDetector(
                         onTap: () {
-                        String name = "un vert d'eau";
+                        String name = "Un verre";
                          if(name == randomCuisine){
                         _isveClicked=true;
                         randomcuisineFunc();
+                        Voice.play(
+                          "audios/voices/${ElementsAudios['Un verre']}", 1);
                          }                        },
                           child: Image.asset(
                             'assets/images/pics/89.png',
-                            height: 40,
-                            width: width > 550 ? 60 : 50,
+                            height: 60,
+                            width:  60 ,
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -369,36 +382,40 @@ randomcuisineFunc();
                     left: width > 550 ? width * 0.7 : width * 0.75 ,
                     child: GestureDetector(
                         onTap: () {
-                         String name = "une Pastèque";
+                         String name = "Une pastèque";
                          if(name == randomCuisine){
                          _ispaClicked=true;
                           randomcuisineFunc();
+                          Voice.play(
+                          "audios/voices/${ElementsAudios['Une pastèque']}", 1);
                          }
                         },
                           child: Image.asset(
                             'assets/images/pics/106.png',
                             height: 50,
-                            width: width > 550 ? 90 : 50,
+                            width:  90 ,
                             fit: BoxFit.fill,
                           ),
                         ),
                   ),
 
                    Positioned(
-                    bottom: height > 800 ? height * 0.26 : height * 0.42,
-                    left: width > 550 ? width * 0.7 : width * 0.75 ,
+                    bottom: height > 800 ? height * 0.46 : height * 0.42,
+                    left: width > 550 ? width * 0.66 : width * 0.75 ,
                     child: GestureDetector(
                         onTap: () {
-                         String name = "une casserole";
+                         String name = "Un tajine";
                          if(name == randomCuisine){
                          _iscaClicked=true;
                           randomcuisineFunc();
+                          Voice.play(
+                          "audios/voices/${ElementsAudios['Un tajine']}", 1);
                          }
                         },
                           child: Image.asset(
-                            'assets/images/pics/86.png',
+                            'assets/images/pics/113.png',
                             height: 50,
-                            width: width > 550 ? 90 : 50,
+                            width: width > 550 ? 80 : 40,
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -433,7 +450,7 @@ randomcuisineFunc();
                   color: _ispaClicked ? null : Colors.black,
                 ),
                  Image.asset(
-                  'assets/images/pics/86.png',
+                  'assets/images/pics/113.png',
                   height: 75,
                   width: 75,
                   color: _iscaClicked ? null : Colors.black,
