@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
+import 'package:mon_vocabulaire/Widgets/Popups/puzzlePopup.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import '../../../Model/user.dart';
 import '../../../Widgets/Popups/game_popup.dart';
@@ -432,7 +433,7 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
                 ).toList()
             ])),
         Padding(
-          padding: const EdgeInsets.only(top: 4),
+          padding: const EdgeInsets.only(top: 15),
           child: Button(
             content: Row(
               children: [
@@ -463,9 +464,7 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
             color: Palette.pink,
             callback: () {
               if (initialized) {
-                Future.delayed(const Duration(milliseconds: 5), () {
-                  generatePuzzle();
-                });
+                generatePuzzle();
 
                 generatePuzzle();
                 widget.restartCallback?.call();
@@ -559,12 +558,10 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
         swap = !swap;
       }
     }
-    Future.delayed(const Duration(milliseconds: 5000), () {
-      if (checkPuzzleComplete()) {
-        showEndDialog();
-        widget.stopCallback?.call();
-      }
-    });
+    if (checkPuzzleComplete()) {
+      showEndDialog();
+      widget.stopCallback?.call();
+    }
   }
 
   bool checkPuzzleComplete() {
@@ -578,12 +575,20 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
     return complete;
   }
 
+  bool dialogShown = false;
+
   void showEndDialog() {
+    if (dialogShown) {
+      return;
+    }
+
+    dialogShown = true;
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return GamePopup(
+        return PuzzlePopup(
           onButton1Pressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
@@ -599,7 +604,6 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
               ),
             );
           },
-          win: checkPuzzleComplete(),
         );
       },
     );

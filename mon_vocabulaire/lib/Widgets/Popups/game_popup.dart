@@ -17,7 +17,7 @@ class GamePopup extends StatelessWidget {
     super.key,
     required this.onButton1Pressed,
     required this.onButton2Pressed,
-    required this.win,
+    this.win = true,
     this.oneButton = false,
     this.tie = false,
     // this.timer,
