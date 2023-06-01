@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Bureau_Classe.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/Bureau.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../../Model/user.dart';
 import '../../../Widgets/Appbars/game_app_bar.dart';
@@ -29,18 +29,25 @@ class _ForetState extends State<Foret> {
   bool _isGiClicked = false;
   bool _isLiClicked = false;
   bool _canTap = false;
-  int countdown = 10;
+  bool _isHirClicked = false;
+  int countdown = 5;
   late Timer _timer;
   int duration = 60;
   bool isGameFinish = false;
   late String selectedAnimal;
   late ConfettiController _controllerConfetti;
   late var randomAnimal;
-  List<String> animals = ['Un lion', 'Un éléphant', 'Une giraffe'];
+  List<String> animals = [
+    'Un lion',
+    'Un éléphant',
+    'Une giraffe',
+    'Une hyrondelle'
+  ];
   Map<String, String> animalsAudios = {
     'Un lion': "143.mp3",
     'Un éléphant': "138.mp3",
-    'Une giraffe': "140.mp3"
+    'Une giraffe': "140.mp3",
+    'Une hyrondelle': "123.mp3"
   };
   String randomAnimalFunc() {
     animals.shuffle();
@@ -224,11 +231,12 @@ class _ForetState extends State<Foret> {
                       ),
                     ),
                     child: Stack(children: [
+                      //singe
                       Positioned(
                         top: height > 800 ? height - 610 : height - 550,
-                        right: width > 550 ? width - 500 : width - 300,
+                        right: width > 550 ? width - 500 : width * 0.2,
                         child: Image.asset(
-                          'assets/images/games/monkey.png',
+                          'assets/images/games/trouvaille/monkey.png',
                           height: 70,
                           width: 70,
                         ),
@@ -239,25 +247,49 @@ class _ForetState extends State<Foret> {
                         bottom: height > 800 ? height - 900 : height - 750,
                         right: width > 550 ? width - 300 : width - 220,
                         child: Image.asset(
-                          'assets/images/games/snake.png',
+                          'assets/images/games/trouvaille/snake.png',
                           height: 70,
                           width: 70,
                         ),
                       ),
                       //owel
                       Positioned(
-                        top: height > 800 ? height - 800 : height - 750,
-                        right: width > 550 ? width - 250 : width - 200,
+                        top: height > 800 ? height * 0.1 : height * 0.1,
+                        right: width > 550 ? width * 0.3 : width * 0.3,
                         child: Image.asset(
-                          'assets/images/games/owel.png',
-                          height: 90,
-                          width: 90,
+                          'assets/images/games/trouvaille/owel.png',
+                          height: 100,
+                          width: 100,
+                        ),
+                      ),
+
+                      //oiseau
+                      Positioned(
+                        top: height > 800 ? height * 0.1 : height * 0.5,
+                        right: width > 550 ? width * 0.5 : width * 0.76,
+                        child: GestureDetector(
+                          onTap: () {
+                            selectedAnimal = "Une hyrondelle";
+                            print("hirondelle");
+                            if (selectedAnimal == randomAnimal && _canTap) {
+                              _isHirClicked = true;
+                              Voice.play(
+                                  "audios/voices/${animalsAudios['Une hyrondelle']}",
+                                  1);
+                              randomAnimalFunc();
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/pics/123.png',
+                            height: 70,
+                            width: 70,
+                          ),
                         ),
                       ),
                       //LION
                       Positioned(
                         top: height > 800 ? height - 700 : height - 600,
-                        right: width > 550 ? width - 600 : width - 400,
+                        right: width > 550 ? width - 600 : width * 0.04,
                         bottom: 1,
                         child: GestureDetector(
                             onTap: () {
@@ -279,7 +311,7 @@ class _ForetState extends State<Foret> {
                       //ELEPHANT
                       Positioned(
                         top: height > 800 ? height - 915 : height - 780,
-                        right: width > 550 ? width - 350 : width - 250,
+                        right: width > 550 ? width * 0.3 : width * 0.35,
                         bottom: -180,
                         child: GestureDetector(
                             onTap: () {
@@ -343,6 +375,12 @@ class _ForetState extends State<Foret> {
                       height: 75,
                       width: 75,
                       color: _isGiClicked ? null : Colors.black,
+                    ),
+                    Image.asset(
+                      'assets/images/pics/123.png',
+                      height: 75,
+                      width: 75,
+                      color: _isHirClicked ? null : Colors.black,
                     ),
                     Image.asset(
                       'assets/images/pics/143.png',

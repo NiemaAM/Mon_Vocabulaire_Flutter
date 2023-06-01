@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Table_Classe.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Cuisine.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/classRoom.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/Cuisine.dart';
 import 'package:mon_vocabulaire/View/Themes/sub_themes.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
@@ -11,12 +11,12 @@ import '../../../Services/animation_route.dart';
 import '../../../Services/sfx.dart';
 import '../../../Widgets/Appbars/game_app_bar.dart';
 import '../../../Widgets/BubbleThemes_Trouvaille.dart';
-import 'Trouvaille_Bureau_Classe.dart';
-import 'Trouvaille_Ferme.dart';
+import 'Bureau.dart';
+import 'Ferme.dart';
 import 'Foret.dart';
-import 'Trouvaille_Habits.dart';
-import 'Trouvaille_SalleDeBain.dart';
-import 'Trouvaille_Salon.dart';
+import 'Habits.dart';
+import 'salleDeBain.dart';
+import 'salon.dart';
 
 class TrouvailleThemes extends StatefulWidget {
   final User user;

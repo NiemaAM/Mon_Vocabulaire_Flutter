@@ -5,18 +5,21 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/acceuil_themes.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/ferme.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/Foret.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../../../Model/user.dart';
 import '../../../Services/audio_background.dart';
 import '../../../Services/sfx.dart';
 import '../../../Services/voice.dart';
+import '../../../Widgets/Appbars/game_app_bar.dart';
 import '../../../Widgets/Palette.dart';
+import '../../../Widgets/Popups/game_popup.dart';
 import '../../../Widgets/message_mascotte.dart';
 
 class Bureau extends StatefulWidget {
-  const Bureau({super.key});
+  final User user;
+  const Bureau({super.key, required this.user});
 
   @override
   State<Bureau> createState() => _BureauState();
@@ -30,14 +33,14 @@ class _BureauState extends State<Bureau> {
   bool _isTrClicked = false;
   bool _isBrClicked = false;
   bool _isCaClicked = false;
-
+  bool _canTap = false;
   int countdown = 10;
   late Timer _timer;
   int duration = 60;
   bool isGameFinish = false;
   late ConfettiController _controllerConfetti;
-  late var randomDesk;
-  List<String> Desk = [
+  late var randomSchool;
+  List<String> School = [
     'Une gomme',
     'Une colle',
     'Une trousse',
@@ -55,19 +58,19 @@ class _BureauState extends State<Bureau> {
     'Un cartable': "20.mp3",
     'Une brosse': "18.mp3"
   };
-  String randomDeskFunc() {
-    Desk.shuffle();
+  String randomSchoolFunc() {
+    School.shuffle();
 
-    if (Desk.isNotEmpty) {
-      randomDesk = Desk[0];
-      print(randomDesk);
-      Desk.removeAt(0);
+    if (School.isNotEmpty) {
+      randomSchool = School[0];
+      print(randomSchool);
+      School.removeAt(0);
     } else {
       print("Fin du jeu");
       endGame();
     }
 
-    return randomDesk;
+    return randomSchool;
   }
 
   void startTimer() {
@@ -80,8 +83,35 @@ class _BureauState extends State<Bureau> {
           }
           if (countdown < 0) {
             duration--;
+            _canTap = true;
             if (duration == 0) {
               timer.cancel();
+              if (School.isNotEmpty) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return GamePopup(
+                      onButton1Pressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      onButton2Pressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Bureau(user: widget.user),
+                          ),
+                        );
+                      },
+                      oneButton: true,
+                      win: false,
+                      tie: false,
+                    );
+                  },
+                );
+              }
             }
           }
         });
@@ -92,89 +122,35 @@ class _BureauState extends State<Bureau> {
   void endGame() {
     if (duration > 0) {
       _controllerConfetti.play();
-      Sfx.play("audios/sfx/win.mp3", 1);
-    } else {
-      Sfx.play("audios/sfx/lose.mp3", 1);
     }
-
-    AwesomeDialog(
+    showDialog(
       context: context,
-      headerAnimationLoop: false,
-      customHeader: Container(
-        height: 100,
-        width: 100,
-        decoration: BoxDecoration(
-            color: duration > 0 ? Palette.yellow : Palette.red,
-            borderRadius: const BorderRadius.all(Radius.circular(50))),
-        child: Icon(
-          duration > 0 ? Icons.star_rounded : Icons.timer,
-          color: Palette.white,
-          size: 80,
-        ),
-      ),
-      dialogType: DialogType.success,
-      animType: AnimType.bottomSlide,
-      body: Column(children: [
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Text(
-            duration > 0
-                ? "Très bon travail !"
-                : "Oh non, le temps est écoulé !",
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-              color: Palette.pink,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Text(
-            duration > 0
-                ? "Bravo, tu as trouvé tous les élements de la classe !"
-                : "Tu y étais presque, essaye encore une fois",
-            style: const TextStyle(
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Image.asset(
-          duration > 0
-              ? "assets/images/mascotte/win.gif"
-              : "assets/images/mascotte/lose.gif",
-          scale: 4,
-        ),
-      ]),
-      btnCancelIcon: Icons.home,
-      btnCancelText: " ",
-      btnCancelOnPress: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Ferme(),
-          ),
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return GamePopup(
+          onButton1Pressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          onButton2Pressed: () {
+            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Bureau(user: widget.user),
+              ),
+            );
+          },
+          win: duration > 0 ? true : false,
         );
       },
-      btnOkIcon: Icons.restart_alt_rounded,
-      btnOkText: " ",
-      btnOkOnPress: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Ferme(),
-          ),
-        );
-      },
-    ).show();
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    randomDeskFunc();
+    randomSchoolFunc();
     AudioBK.pauseBK();
 
     _controllerConfetti =
@@ -203,61 +179,32 @@ class _BureauState extends State<Bureau> {
     AudioBK.pauseBK();
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Palette.white,
-        elevation: 1,
-        iconTheme: const IconThemeData(color: Palette.black),
-        title: Row(
-          children: [
-            Image.asset(
-              "assets/images/games/search.png",
-              width: 40,
-            ),
-            const Text(
-              "  Trouvaille",
-              style: TextStyle(color: Palette.black),
-            ),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          //Mot à trouver mascotte
-          SafeArea(
-            child: Stack(children: [
-              LinearPercentIndicator(
-                padding: const EdgeInsets.all(0),
-                animation: true,
-                lineHeight: 10,
-                animationDuration: 0,
-                percent: duration / 60,
-                barRadius: const Radius.circular(0),
-                progressColor: duration >= 30
-                    ? Palette.lightGreen
-                    : duration <= 15
-                        ? Palette.red
-                        : Palette.orange,
-                backgroundColor: Theme.of(context).shadowColor,
-              ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: BubbleMessage(
-                  widget: countdown > 0
-                      ? Text(
-                          "Trouvez l'element dans : $countdown",
-                          style: const TextStyle(
-                              color: Color(0xFF0E57AC), fontSize: 15),
-                        )
-                      : Row(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 8, right: 10),
-                              child: IconButton(
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CustomAppBarGames(
+            user: widget.user,
+            background: true,
+          ),
+          body: Column(
+            children: [
+              //Mot à trouver mascotte
+              Stack(children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: BubbleMessage(
+                    widget: countdown > 0
+                        ? Text(
+                            "Trouvez l'element dans : $countdown",
+                            style: const TextStyle(
+                                color: Color(0xFF0E57AC), fontSize: 15),
+                          )
+                        : Row(
+                            children: [
+                              IconButton(
                                 onPressed: () {
                                   Voice.play(
-                                      'audios/voices/${ElementsAudios['$randomDesk']}',
+                                      'audios/voices/${ElementsAudios['$randomSchool']}',
                                       1);
                                 },
                                 icon: Icon(
@@ -266,247 +213,250 @@ class _BureauState extends State<Bureau> {
                                   size: 35,
                                 ),
                               ),
-                            ),
-                            Text(
-                              "$randomDesk",
-                              style: const TextStyle(
-                                  color: Color(0xFF0E57AC), fontSize: 25),
-                            ),
-                          ],
-                        ),
-                  // widget:
-                ),
-              ),
-            ]),
-          ),
-          Stack(children: [
-            Container(
-              height: height * 0.6,
-              width: width * 0.7,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image:
-                      AssetImage('assets/images/games/backgrounds/class.jpg'),
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-            ),
-            //Cartable
-            Positioned(
-              bottom: height * 0.001,
-              left: width * 0.35,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Un cartable";
-                    if (element == randomDesk) {
-                      _isCaClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Un cartable']}", 1);
-                      print("You win");
-                      randomDeskFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/20.png',
-                    height: 65,
-                    width: 65,
-                  )),
-            ),
-            //Brosse
-            Positioned(
-              bottom: height * 0.25,
-              left: width * 0.32,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Une brosse";
-                    if (element == randomDesk) {
-                      _isBrClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Une brosse']}", 1);
-                      print("You win");
-                      randomDeskFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/18.png',
-                    height: 50,
-                    width: 50,
-                  )),
-            ),
-            //Livre
-            Positioned(
-              bottom: height * 0.14,
-              left: width * 0.32,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Un livre";
-                    if (element == randomDesk) {
-                      _isLiClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Un livre']}", 1);
-                      print("You win");
-                      randomDeskFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/27.png',
-                    height: 50,
-                    width: 50,
-                  )),
-            ),
-            //Trousse
-            Positioned(
-              bottom: height * 0.18,
-              right: width * 0.55,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Une trousse";
-                    if (element == randomDesk) {
-                      _isTrClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Une trousse']}", 1);
-                      print("You win");
-                      randomDeskFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/32.png',
-                    height: 50,
-                    width: 50,
-                  )),
-            ),
-            //Règle
-            Positioned(
-              bottom: height * 0.15,
-              right: width > 500 ? width * 0.38 : width * 0.42,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Une règle";
-                    if (element == randomDesk) {
-                      _isReClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Une règle']}", 1);
-                      print("You win");
-                      randomDeskFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/30.png',
-                    height: 35,
-                    width: 35,
-                  )),
-            ),
-            //colle
-            Positioned(
-              bottom: height * 0.18,
-              right: width > 500 ? width * 0.38 : width * 0.42,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Une colle";
-                    if (element == randomDesk) {
-                      _isCoClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Une colle']}", 1);
-                      print("You win");
-                      randomDeskFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/23.png',
-                    height: 35,
-                    width: 35,
-                  )),
-            ),
-            //Gomme
-            Positioned(
-              bottom: height * 0.16,
-              right: width > 500 ? width * 0.1 : width * 0.02,
-              child: GestureDetector(
-                  onTap: () {
-                    var element = "Une gomme";
-                    if (element == randomDesk) {
-                      _isGoClicked = true;
-                      Voice.play(
-                          "audios/voices/${ElementsAudios['Une gomme']}", 1);
-                      print("You win");
-                      randomDeskFunc();
-                    } else {
-                      print("You lose");
-                    }
-                  },
-                  child: Image.asset(
-                    'assets/images/pics/25.png',
-                    height: 30,
-                    width: 30,
-                  )),
-            ),
-          ]),
+                              Text(
+                                "$randomSchool",
+                                style: const TextStyle(
+                                    color: Color(0xFF0E57AC), fontSize: 25),
+                              ),
+                            ],
+                          ),
 
-          //élements à trouver
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Image.asset(
-                  'assets/images/pics/20.png',
-                  height: 50,
-                  width: 50,
-                  color: _isCaClicked ? null : Colors.black,
+                    // widget:
+                  ),
                 ),
-                Image.asset(
-                  'assets/images/pics/18.png',
-                  height: 50,
-                  width: 50,
-                  color: _isBrClicked ? null : Colors.black,
+              ]),
+              Stack(children: [
+                Container(
+                  height: height * 0.6,
+                  width: width * 0.9,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                          'assets/images/games/backgrounds/class.jpg'),
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
                 ),
-                Image.asset(
-                  'assets/images/pics/27.png',
-                  height: 50,
-                  width: 50,
-                  color: _isLiClicked ? null : Colors.black,
+                //Cartable
+                Positioned(
+                  bottom: height * 0.001,
+                  left: width * 0.35,
+                  child: GestureDetector(
+                      onTap: () {
+                        var element = "Un cartable";
+                        if (element == randomSchool && _canTap) {
+                          _isCaClicked = true;
+                          Voice.play(
+                              "audios/voices/${ElementsAudios['Un cartable']}",
+                              1);
+                          randomSchoolFunc();
+                        }
+                      },
+                      child: Image.asset(
+                        'assets/images/pics/20.png',
+                        height: 65,
+                        width: 65,
+                      )),
                 ),
-                Image.asset(
-                  'assets/images/pics/32.png',
-                  height: 50,
-                  width: 50,
-                  color: _isTrClicked ? null : Colors.black,
+                //Brosse
+                Positioned(
+                  bottom: height * 0.25,
+                  left: width * 0.32,
+                  child: GestureDetector(
+                      onTap: () {
+                        var element = "Une brosse";
+                        if (element == randomSchool && _canTap) {
+                          _isBrClicked = true;
+                          Voice.play(
+                              "audios/voices/${ElementsAudios['Une brosse']}",
+                              1);
+                          randomSchoolFunc();
+                        }
+                      },
+                      child: Image.asset(
+                        'assets/images/pics/18.png',
+                        height: 50,
+                        width: 50,
+                      )),
                 ),
-                Image.asset(
-                  'assets/images/pics/30.png',
-                  height: 50,
-                  width: 50,
-                  color: _isReClicked ? null : Colors.black,
+                //Livre
+                Positioned(
+                  bottom: height * 0.15,
+                  left: width > 500 ? width * 0.35 : width * 0.38,
+                  child: GestureDetector(
+                      onTap: () {
+                        var element = "Un livre";
+                        if (element == randomSchool && _canTap) {
+                          _isLiClicked = true;
+                          Voice.play(
+                              "audios/voices/${ElementsAudios['Un livre']}", 1);
+                          randomSchoolFunc();
+                        }
+                      },
+                      child: Image.asset(
+                        'assets/images/pics/27.png',
+                        height: 50,
+                        width: 50,
+                      )),
                 ),
-                Image.asset(
-                  'assets/images/pics/23.png',
-                  height: 50,
-                  width: 50,
-                  color: _isCoClicked ? null : Colors.black,
+                //Trousse
+                Positioned(
+                  bottom: height * 0.18,
+                  right: width > 500 ? width * 0.65 : width * 0.75,
+                  child: GestureDetector(
+                      onTap: () {
+                        var element = "Une trousse";
+                        if (element == randomSchool && _canTap) {
+                          _isTrClicked = true;
+                          Voice.play(
+                              "audios/voices/${ElementsAudios['Une trousse']}",
+                              1);
+                          randomSchoolFunc();
+                        }
+                      },
+                      child: Image.asset(
+                        'assets/images/pics/32.png',
+                        height: 50,
+                        width: 50,
+                      )),
                 ),
-                Image.asset(
-                  'assets/images/pics/25.png',
-                  height: 50,
-                  width: 50,
-                  color: _isGoClicked ? null : Colors.black,
+                //Règle
+                Positioned(
+                  bottom: height * 0.17,
+                  right: width > 500 ? width * 0.48 : width * 0.3,
+                  child: GestureDetector(
+                      onTap: () {
+                        var element = "Une règle";
+                        if (element == randomSchool && _canTap) {
+                          _isReClicked = true;
+                          Voice.play(
+                              "audios/voices/${ElementsAudios['Une règle']}",
+                              1);
+                          randomSchoolFunc();
+                        }
+                      },
+                      child: Image.asset(
+                        'assets/images/pics/30.png',
+                        height: 35,
+                        width: 35,
+                      )),
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+                //colle
+                Positioned(
+                  bottom: height * 0.18,
+                  right: width > 500 ? width * 0.3 : width * 0.52,
+                  child: GestureDetector(
+                      onTap: () {
+                        var element = "Une colle";
+                        if (element == randomSchool && _canTap) {
+                          _isCoClicked = true;
+                          Voice.play(
+                              "audios/voices/${ElementsAudios['Une colle']}",
+                              1);
+                          randomSchoolFunc();
+                        }
+                      },
+                      child: Image.asset(
+                        'assets/images/pics/23.png',
+                        height: 35,
+                        width: 35,
+                      )),
+                ),
+                //Gomme
+                Positioned(
+                  bottom: height * 0.16,
+                  right: width > 500 ? width * 0.1 : width * 0.02,
+                  child: GestureDetector(
+                      onTap: () {
+                        var element = "Une gomme";
+                        if (element == randomSchool && _canTap) {
+                          _isGoClicked = true;
+                          Voice.play(
+                              "audios/voices/${ElementsAudios['Une gomme']}",
+                              1);
+                          randomSchoolFunc();
+                        }
+                      },
+                      child: Image.asset(
+                        'assets/images/pics/25.png',
+                        height: 30,
+                        width: 30,
+                      )),
+                ),
+              ]),
+
+              //élements à trouver
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image.asset(
+                      'assets/images/pics/20.png',
+                      height: 50,
+                      width: 50,
+                      color: _isCaClicked ? null : Colors.black,
+                    ),
+                    Image.asset(
+                      'assets/images/pics/18.png',
+                      height: 50,
+                      width: 50,
+                      color: _isBrClicked ? null : Colors.black,
+                    ),
+                    Image.asset(
+                      'assets/images/pics/27.png',
+                      height: 50,
+                      width: 50,
+                      color: _isLiClicked ? null : Colors.black,
+                    ),
+                    Image.asset(
+                      'assets/images/pics/32.png',
+                      height: 50,
+                      width: 50,
+                      color: _isTrClicked ? null : Colors.black,
+                    ),
+                    Image.asset(
+                      'assets/images/pics/30.png',
+                      height: 50,
+                      width: 50,
+                      color: _isReClicked ? null : Colors.black,
+                    ),
+                    Image.asset(
+                      'assets/images/pics/23.png',
+                      height: 50,
+                      width: 50,
+                      color: _isCoClicked ? null : Colors.black,
+                    ),
+                    Image.asset(
+                      'assets/images/pics/25.png',
+                      height: 50,
+                      width: 50,
+                      color: _isGoClicked ? null : Colors.black,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 23),
+          child: LinearPercentIndicator(
+            padding: const EdgeInsets.all(0),
+            animation: true,
+            lineHeight: 10,
+            animationDuration: 0,
+            percent: duration / 60,
+            barRadius: const Radius.circular(0),
+            progressColor: duration >= 30
+                ? Palette.lightGreen
+                : duration <= 15
+                    ? Palette.red
+                    : Palette.orange,
+            backgroundColor: Theme.of(context).shadowColor,
+          ),
+        ),
+      ],
     );
   }
 }

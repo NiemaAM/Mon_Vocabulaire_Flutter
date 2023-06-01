@@ -16,7 +16,7 @@ import '../../../Widgets/Palette.dart';
 import '../../../Widgets/Popups/game_popup.dart';
 import '../../../Widgets/message_mascotte.dart';
 import 'TrouvailleThemes.dart';
-import 'Trouvaille_SalleDeBain.dart';
+import 'salleDeBain.dart';
 
 class Salon extends StatefulWidget {
   final User user;
@@ -46,7 +46,7 @@ class _SalonState extends State<Salon> {
     'Une maman',
     'Une fille',
     'Un vase',
-    'un bébé'
+    'Un bébé'
   ];
   Map<String, String> ElementsAudios = {
     'Une télévision': "75.mp3",
@@ -240,7 +240,7 @@ class _SalonState extends State<Salon> {
                 //vase
                 Positioned(
                   bottom: height * 0.23,
-                  left: width * 0.42,
+                  left: width < 550 ? width * 0.46 : width * 0.43,
                   child: GestureDetector(
                       onTap: () {
                         var element = "Un vase";
@@ -258,14 +258,14 @@ class _SalonState extends State<Salon> {
                       },
                       child: Image.asset(
                         'assets/images/pics/76.png',
-                        height: 50,
-                        width: 50,
+                        height: height < 900 ? 50 : 65,
+                        width: width < 550 ? 50 : 65,
                       )),
                 ),
                 //Television
                 Positioned(
-                  bottom: height * 0.055,
-                  left: width * 0.442,
+                  bottom: height < 900 ? height * 0.06 : height * 0.054,
+                  left: width < 550 ? width * 0.5 : width * 0.46,
                   child: GestureDetector(
                       onTap: () {
                         var element = "Une télévision";
@@ -281,8 +281,8 @@ class _SalonState extends State<Salon> {
                       },
                       child: Image.asset(
                         'assets/images/pics/75.png',
-                        height: 95,
-                        width: 95,
+                        height: height < 900 ? 95 : 130,
+                        width: width < 550 ? 95 : 130,
                       )),
                 ),
 
@@ -304,15 +304,15 @@ class _SalonState extends State<Salon> {
                       },
                       child: Image.asset(
                         'assets/images/pics/55.png',
-                        height: 50,
-                        width: 50,
+                        height: height < 900 ? 50 : 80,
+                        width: width < 550 ? 50 : 70,
                       )),
                 ),
 
                 //maman
                 Positioned(
-                  bottom: height * 0.000,
-                  left: width * 0.1,
+                  bottom: height < 900 ? height * 0.0001 : height * 0.01,
+                  left: width < 550 ? width * 0.02 : width * 0.05,
                   child: GestureDetector(
                       onTap: () {
                         var element = "Une maman";
@@ -328,15 +328,15 @@ class _SalonState extends State<Salon> {
                       },
                       child: Image.asset(
                         'assets/images/games/maman.png',
-                        height: 150,
-                        width: 150,
+                        height: height < 900 ? 150 : 200,
+                        width: width < 550 ? 150 : 200,
                       )),
                 ),
 
                 //garcon
                 Positioned(
-                  bottom: height * 0.325,
-                  left: width * 0.12,
+                  bottom: height < 900 ? height * 0.33 : height * 0.33,
+                  left: width < 550 ? width * 0.05 : width * 0.12,
                   child: GestureDetector(
                       onTap: () {
                         var element = "Un garcon";
@@ -352,8 +352,8 @@ class _SalonState extends State<Salon> {
                       },
                       child: Image.asset(
                         'assets/images/games/garcon.png',
-                        height: 145,
-                        width: 145,
+                        height: height < 900 ? 145 : 180,
+                        width: width < 550 ? 145 : 180,
                       )),
                 ),
 
@@ -376,8 +376,8 @@ class _SalonState extends State<Salon> {
                       },
                       child: Image.asset(
                         'assets/images/games/fille.png',
-                        height: 60,
-                        width: 60,
+                        height: height < 900 ? 60 : 75,
+                        width: width < 550 ? 60 : 75,
                       )),
                 ),
               ]),
@@ -390,38 +390,38 @@ class _SalonState extends State<Salon> {
                   children: [
                     Image.asset(
                       'assets/images/pics/76.png',
-                      height: 40,
-                      width: 40,
+                      height: height < 900 ? 40 : 50,
+                      width: width < 550 ? 40 : 50,
                       color: _isVasClicked ? null : Colors.black,
                     ),
                     Image.asset(
-                      'assets/images/games/garcon.png',
-                      height: 56,
-                      width: 56,
+                      'assets/images/games/trouvaille/garcon.png',
+                      height: height < 900 ? 56 : 90,
+                      width: width < 550 ? 56 : 90,
                       color: _isBoyClicked ? null : Colors.black,
                     ),
                     Image.asset(
-                      'assets/images/games/fille.png',
-                      height: 45,
-                      width: 45,
+                      'assets/images/games/trouvaille/fille.png',
+                      height: height < 900 ? 45 : 65,
+                      width: width < 550 ? 45 : 65,
                       color: _isGirClicked ? null : Colors.black,
                     ),
                     Image.asset(
                       'assets/images/pics/75.png',
-                      height: 40,
-                      width: 40,
+                      height: height < 900 ? 40 : 60,
+                      width: width < 550 ? 40 : 60,
                       color: _isTelClicked ? null : Colors.black,
                     ),
                     Image.asset(
-                      'assets/images/games/maman.png',
-                      height: 50,
-                      width: 50,
+                      'assets/images/games/trouvaille/maman.png',
+                      height: height < 900 ? 50 : 80,
+                      width: width < 550 ? 50 : 80,
                       color: _isMomClicked ? null : Colors.black,
                     ),
                     Image.asset(
                       'assets/images/pics/55.png',
-                      height: 40,
-                      width: 40,
+                      height: height < 900 ? 40 : 80,
+                      width: width < 550 ? 40 : 80,
                       color: _isBebClicked ? null : Colors.black,
                     )
                   ],
