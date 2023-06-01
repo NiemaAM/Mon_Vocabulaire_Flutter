@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Games/TicTacToe/choose_xo.dart';
+import 'package:mon_vocabulaire/View/Games/cuisine.dart';
 import 'package:mon_vocabulaire/View/Games/flip_card.dart';
 import 'package:mon_vocabulaire/View/Games/puzzle.dart';
 import 'package:mon_vocabulaire/View/Games/trouvaille.dart';
@@ -56,7 +57,7 @@ class _GamesState extends State<Games> {
               GameBloc(
                 image: "assets/images/games/search.png",
                 price: '100',
-                page: DressingRoom(
+                page: cuisine(
                   user: widget.user,
                 ),
               ),
