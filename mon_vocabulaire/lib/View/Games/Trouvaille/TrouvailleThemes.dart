@@ -69,7 +69,7 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
               },
               color: Palette.ecole,
             ),
-            //Still no page
+
             BubbleTrouvaille(
               image: "assets/images/themes/maison.png",
               text: 'Maison et famille',
@@ -98,7 +98,7 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
               },
               color: Palette.maison,
             ),
-            //Still no page
+
             BubbleTrouvaille(
               image: "assets/images/themes/cuisine_et_aliments.png",
               text: 'Cuisine et aliments',
@@ -139,7 +139,7 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
               },
               color: Palette.animaux,
             ),
-            //still no page
+
             BubbleTrouvaille(
               image: "assets/images/themes/mes_habits.png",
               text: 'Mon corps et mes habits',
