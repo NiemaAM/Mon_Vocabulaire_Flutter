@@ -156,16 +156,16 @@ class _FlipCardGameState extends State<FlipCardGame>
           body: Stack(
             children: [
               Align(
-                alignment: Alignment.topCenter,
-                child: BubbleMessage(
+                  alignment: Alignment.topCenter,
+                  child: BubbleMessage(
                     widget: countdown > 0
                         ? countdown == 1
                             ? Text(
                                 "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown seconde.")
                             : Text(
                                 "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown secondes.")
-                        : const Text("C'est parti !")),
-              ),
+                        : Text("C'est parti !"),
+                  )),
               Padding(
                 padding: EdgeInsets.only(
                     top: width > 500 ? 130 : height / 6,

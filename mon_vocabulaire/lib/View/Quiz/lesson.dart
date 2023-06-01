@@ -148,7 +148,7 @@ class _LessonPage extends State<LessonPage> {
           automaticallyImplyLeading: false,
           title: Center(
             child: LinearPercentIndicator(
-              width: width - 57,
+              width: width - 35,
               animation: false,
               lineHeight: 25.0,
               animationDuration: 1,

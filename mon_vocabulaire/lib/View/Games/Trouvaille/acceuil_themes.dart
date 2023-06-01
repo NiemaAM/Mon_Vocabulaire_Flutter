@@ -47,7 +47,9 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
           stage: widget.user.words_per_subtheme[9]! +
               widget.user.words_per_subtheme[10]!,
           text: 'Maison et famille',
-          callback: Foret(),
+          callback: Foret(
+            user: widget.user,
+          ),
           color: Palette.maison,
           type: "theme",
         ),

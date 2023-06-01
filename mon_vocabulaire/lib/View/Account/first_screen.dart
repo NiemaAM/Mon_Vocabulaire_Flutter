@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:mon_vocabulaire/View/Account/accouts.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
