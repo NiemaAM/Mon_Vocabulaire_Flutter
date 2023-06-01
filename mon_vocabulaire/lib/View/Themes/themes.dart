@@ -41,7 +41,7 @@ class _ThemesState extends State<Themes> {
           type: "theme",
         ),
         Bubble(
-          image: "assets/images/themes/maison.png",
+          image: "assets/images/themes/maison_et_famille.png",
           nbStars: widget.user.stars_per_subtheme[9]! +
               widget.user.stars_per_subtheme[10]!,
           stage: widget.user.words_per_subtheme[9]! +
@@ -101,7 +101,7 @@ class _ThemesState extends State<Themes> {
           type: "theme",
         ),
         Bubble(
-          image: "assets/images/themes/sports.png",
+          image: "assets/images/themes/sports_et_loisirs.png",
           nbStars: widget.user.stars_per_subtheme[7]! +
               widget.user.stars_per_subtheme[8]!,
           stage: widget.user.words_per_subtheme[7]! +

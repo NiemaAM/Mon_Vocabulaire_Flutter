@@ -274,36 +274,10 @@ class _FermeState extends State<Ferme> {
                   ),
                 ),
                 child: Stack(children: [
-                  //mouton
-                  Positioned(
-                      bottom: height > 800 ? height - 1200 : height * 0.001,
-                      right: width > 550 ? width - 350 : width * 0.10,
-                      child: GestureDetector(
-                        onTap: () {
-                          selectedAnimal = "Un mouton";
-                          print("mouton");
-                          if (selectedAnimal == randomAnimal) {
-                            _isCheClicked = true;
-                            Voice.play(
-                                "audios/voices/${animalsAudios['Un mouton']}",
-                                1);
-                            print("You win");
-                            randomAnimalFunc();
-                          } else {
-                            print("You lose");
-                          }
-                        },
-                        child: Image.asset(
-                          'assets/images/pics/144.png',
-                          width: 90,
-                        ),
-                      )),
-
                   //vache
                   Positioned(
-                    top: height > 800 ? height - 1050 : height * -0.3,
-                    left: width > 550 ? width - 360 : width * 0.15,
-                    bottom: -180,
+                    top: height > 900 ? height * 0.25 : height * 0.22,
+                    left: width > 550 ? width * 0.2 : width * 0.15,
                     child: GestureDetector(
                         onTap: () {
                           selectedAnimal = "Une vache";
@@ -339,9 +313,8 @@ class _FermeState extends State<Ferme> {
 
                   //coq
                   Positioned(
-                      top: height > 800 ? height - 800 : height - 650,
                       right: width > 550 ? width - 340 : width - 220,
-                      bottom: -180,
+                      bottom: height > 900 ? height * 0.1 : height * 0.08,
                       child: Image.asset(
                         'assets/images/pics/121.png',
                         height: 70,
@@ -349,9 +322,8 @@ class _FermeState extends State<Ferme> {
                       )),
                   //poule
                   Positioned(
-                      top: height > 800 ? height - 750 : height - 600,
                       right: width > 550 ? width - 300 : width - 180,
-                      bottom: -180,
+                      bottom: height > 800 ? height * 0.08 : height * 0.05,
                       child: GestureDetector(
                         onTap: () {
                           selectedAnimal = "Une poule";
@@ -374,11 +346,35 @@ class _FermeState extends State<Ferme> {
                         ),
                       )),
 
+                  //mouton
+                  Positioned(
+                      bottom: height > 800 ? height * 0.05 : height * 0.001,
+                      right: width > 550 ? width * 0.1 : width * 0.1,
+                      child: GestureDetector(
+                        onTap: () {
+                          selectedAnimal = "Un mouton";
+                          print("mouton");
+                          if (selectedAnimal == randomAnimal) {
+                            _isCheClicked = true;
+                            Voice.play(
+                                "audios/voices/${animalsAudios['Un mouton']}",
+                                1);
+                            print("You win");
+                            randomAnimalFunc();
+                          } else {
+                            print("You lose");
+                          }
+                        },
+                        child: Image.asset(
+                          'assets/images/pics/144.png',
+                          width: 90,
+                        ),
+                      )),
+
                   //cheval
                   Positioned(
-                      top: height > 800 ? height - 1000 : height * -0.1,
+                      top: height > 800 ? height * 0.23 : height * 0.2,
                       right: width > 550 ? width - 500 : width * 0.15,
-                      bottom: 1,
                       child: GestureDetector(
                         onTap: () {
                           selectedAnimal = "Un cheval";

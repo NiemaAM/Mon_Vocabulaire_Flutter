@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Games/TicTacToe/choose_xo.dart';
 import 'package:mon_vocabulaire/View/Games/flip_card.dart';
 import 'package:mon_vocabulaire/View/Games/puzzle.dart';
+import 'package:mon_vocabulaire/View/Games/trouvaille.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 import '../../Model/user.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
@@ -54,10 +55,9 @@ class _GamesState extends State<Games> {
               GameBloc(
                 image: "assets/images/games/search.png",
                 price: '100',
-                page: FlipCardGame(
+                page: SalleDeBain(
                   user: widget.user,
                 ),
-                enabled: false,
               ),
               GameBloc(
                 image: "assets/images/games/bubbles.png",

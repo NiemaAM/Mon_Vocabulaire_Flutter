@@ -47,6 +47,7 @@ dependencies:
   flip_card: ^0.7.0
   image: ^4.0.17
   google_fonts: ^4.0.4
+  sqflite: ^2.2.8+4
 
 dev_dependencies:
   flutter_test:

@@ -67,8 +67,8 @@ class _LessonPathState extends State<LessonPath> {
       });
     } else if (widget.subTheme == 7 || widget.subTheme == 8) {
       setState(() {
-        images[0] = "assets/images/themes/animaux.png";
-        images[1] = "assets/images/themes/mammiferes.png";
+        images[0] = "assets/images/themes/ferme.png";
+        images[1] = "assets/images/themes/foret.png";
         titles[0] = "Ferme";
         titles[1] = "Forêt";
         background = "forest";
@@ -93,6 +93,15 @@ class _LessonPathState extends State<LessonPath> {
         color = Palette.sports;
       });
     }
+  }
+
+  Color darken(Color color, [double amount = .1]) {
+    assert(amount >= 0 && amount <= 1);
+
+    final hsl = HSLColor.fromColor(color);
+    final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+
+    return hslDark.toColor();
   }
 
   @override
@@ -333,7 +342,7 @@ class _LessonPathState extends State<LessonPath> {
                           content: Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text(
                                   "LIRE",
                                   style: TextStyle(
