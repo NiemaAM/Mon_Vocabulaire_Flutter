@@ -3,6 +3,7 @@ import 'package:mon_vocabulaire/View/Games/TicTacToe/choose_xo.dart';
 import 'package:mon_vocabulaire/View/Games/flip_card.dart';
 import 'package:mon_vocabulaire/View/Games/puzzle.dart';
 import 'package:mon_vocabulaire/View/Games/trouvaille.dart';
+import 'package:mon_vocabulaire/View/Games/trouvaille_CorpsEtHabits.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 import '../../Model/user.dart';
 import '../../Widgets/Palette.dart';
@@ -55,7 +56,7 @@ class _GamesState extends State<Games> {
               GameBloc(
                 image: "assets/images/games/search.png",
                 price: '100',
-                page: SalleDeBain(
+                page: DressingRoom(
                   user: widget.user,
                 ),
               ),
