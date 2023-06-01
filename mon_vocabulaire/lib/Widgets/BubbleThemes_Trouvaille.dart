@@ -102,7 +102,7 @@ class _BubbleTrouvailleState extends State<BubbleTrouvaille> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: 18,
                     color: widget.hasShadow
                         ? Colors.black
                         : Theme.of(context).colorScheme.onSurface),

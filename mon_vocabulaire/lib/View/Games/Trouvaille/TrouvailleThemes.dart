@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/classRoom.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Table_Classe.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Cuisine.dart';
 import 'package:mon_vocabulaire/View/Themes/sub_themes.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
@@ -10,9 +11,12 @@ import '../../../Services/animation_route.dart';
 import '../../../Services/sfx.dart';
 import '../../../Widgets/Appbars/game_app_bar.dart';
 import '../../../Widgets/BubbleThemes_Trouvaille.dart';
-import 'Trouvaille_Bureau.dart';
+import 'Trouvaille_Bureau_Classe.dart';
 import 'Trouvaille_Ferme.dart';
 import 'Trouvaille_Foret.dart';
+import 'Trouvaille_Habits.dart';
+import 'Trouvaille_SalleDeBain.dart';
+import 'Trouvaille_Salon.dart';
 
 class TrouvailleThemes extends StatefulWidget {
   final User user;
@@ -36,25 +40,28 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
         body: GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
-          childAspectRatio: width > 500 ? 1 : 0.8,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          childAspectRatio: width > 500 ? 0.9 : 0.8,
+          padding: const EdgeInsets.symmetric(horizontal: 25),
           children: [
             BubbleTrouvaille(
               image: "assets/images/themes/ecole.png",
               text: 'L’école',
               callback: () {
-                print("hhh");
                 if (israndom == true) {
                   print("Cas 1");
                   Sfx.play("audios/sfx/plip.mp3", 1);
-                  Navigator.of(context).push(SizedSlide(page: Bureau()));
+                  Navigator.of(context).push(SizedSlide(
+                      page: Bureau(
+                    user: widget.user,
+                  )));
                   setState(() {
                     israndom = false;
                   });
                 } else {
                   print("Cas 2");
                   Sfx.play("audios/sfx/plip.mp3", 1);
-                  Navigator.of(context).push(SizedSlide(page: ClassRoom()));
+                  Navigator.of(context)
+                      .push(SizedSlide(page: ClassRoom(user: widget.user)));
                   setState(() {
                     israndom = true;
                   });
@@ -66,14 +73,42 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
             BubbleTrouvaille(
               image: "assets/images/themes/maison.png",
               text: 'Maison et famille',
-              callback: () {},
+              callback: () {
+                if (israndom == true) {
+                  print("Cas 1");
+                  Sfx.play("audios/sfx/plip.mp3", 1);
+                  Navigator.of(context).push(SizedSlide(
+                      page: SalleDeBain(
+                    user: widget.user,
+                  )));
+                  setState(() {
+                    israndom = false;
+                  });
+                } else {
+                  print("Cas 2");
+                  Sfx.play("audios/sfx/plip.mp3", 1);
+                  Navigator.of(context).push(SizedSlide(
+                      page: Salon(
+                    user: widget.user,
+                  )));
+                  setState(() {
+                    israndom = true;
+                  });
+                }
+              },
               color: Palette.maison,
             ),
             //Still no page
             BubbleTrouvaille(
               image: "assets/images/themes/cuisine_et_aliments.png",
               text: 'Cuisine et aliments',
-              callback: () {},
+              callback: () {
+                Sfx.play("audios/sfx/plip.mp3", 1);
+                Navigator.of(context).push(SizedSlide(
+                    page: cuisine(
+                  user: widget.user,
+                )));
+              },
               color: Palette.cuisine,
             ),
             BubbleTrouvaille(
@@ -86,14 +121,20 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
                   });
 
                   Sfx.play("audios/sfx/plip.mp3", 1);
-                  Navigator.of(context).push(SizedSlide(page: Foret()));
+                  Navigator.of(context).push(SizedSlide(
+                      page: Foret(
+                    user: widget.user,
+                  )));
                 } else {
                   setState(() {
                     israndom = true;
                   });
 
                   Sfx.play("audios/sfx/plip.mp3", 1);
-                  Navigator.of(context).push(SizedSlide(page: Ferme()));
+                  Navigator.of(context).push(SizedSlide(
+                      page: Ferme(
+                    user: widget.user,
+                  )));
                 }
               },
               color: Palette.animaux,
@@ -102,7 +143,13 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
             BubbleTrouvaille(
               image: "assets/images/themes/mes_habits.png",
               text: 'Mon corps et mes habits',
-              callback: () {},
+              callback: () {
+                Sfx.play("audios/sfx/plip.mp3", 1);
+                Navigator.of(context).push(SizedSlide(
+                    page: DressingRoom(
+                  user: widget.user,
+                )));
+              },
               color: Palette.corps,
             ),
             //Still no page
