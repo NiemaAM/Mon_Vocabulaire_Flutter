@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Sport_Loisirs.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Table_Classe.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Cuisine.dart';
 import 'package:mon_vocabulaire/View/Themes/sub_themes.dart';
@@ -156,7 +157,13 @@ class _TrouvailleThemesState extends State<TrouvailleThemes> {
             BubbleTrouvaille(
               image: "assets/images/themes/sports.png",
               text: 'Sports et loisirs',
-              callback: () {},
+              callback: () {
+                Sfx.play("audios/sfx/plip.mp3", 1);
+                Navigator.of(context).push(SizedSlide(
+                    page: sport_loisir(
+                  user: widget.user,
+                )));
+              },
               color: Palette.sports,
             ),
           ],
