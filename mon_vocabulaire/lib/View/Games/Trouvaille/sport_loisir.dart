@@ -14,15 +14,15 @@ import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
 
-class cuisine extends StatefulWidget {
-  const cuisine({super.key});
+class sport_loisir extends StatefulWidget {
+  const sport_loisir({super.key});
 
   @override
-  State<cuisine> createState() => _cuisineState();
+  State<sport_loisir> createState() => _sport_loisirState();
 }
 
-class _cuisineState extends State<cuisine> {
-  int countdown = 10;
+class _sport_loisirState extends State<sport_loisir> {
+  int countdown = 5;
   late Timer _timer;
   int duration = 60;
   bool isGameFinish = false;
@@ -34,13 +34,14 @@ class _cuisineState extends State<cuisine> {
   late ConfettiController _controllerConfetti;
   late var randomCuisine;
    Map<String, String> ElementsAudios = {
-    'Une pastèque': "106.mp3",
-    'Un verre': "89.mp3",
-    'Un four': "83.mp3",
-    'Un tajine': "113.mp3"
+    'Un balançoire': "205.mp3",
+    'Un football': "197.mp3",
+    'Un cirque': "209.mp3",
+    'Un toboggan': "223.mp3",
+    "Un ballon" : "226.mp3"
   };
 
-  List<String> cuisine_ = ['Une pastèque', 'Un verre', 'Un four', 'Un tajine'];
+  List<String> cuisine_ = ['Un toboggan', 'Un football', 'Un cirque', 'Un ballon','Une balançoire'];
   String randomcuisineFunc() {
     cuisine_.shuffle();
 
@@ -127,7 +128,7 @@ class _cuisineState extends State<cuisine> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const cuisine(),
+                    builder: (context) => const sport_loisir(),
                   ),
                 );
               },
@@ -203,7 +204,7 @@ class _cuisineState extends State<cuisine> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const cuisine(),
+            builder: (context) => const sport_loisir(),
           ),
         );
       },
@@ -326,7 +327,7 @@ randomcuisineFunc();
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(
-                        'assets/images/games/backgrounds/cuizine.jpg'),
+                        'assets/images/games/backgrounds/sport.jpg'),
                     fit: BoxFit.fitHeight,
                   ),
                 ),
@@ -335,84 +336,106 @@ randomcuisineFunc();
                   
 
                   Positioned(
-                    bottom: width > 550 ? height * 0.13 : height * 0.11,
-                    left: width > 550 ? width * 0.32 : width * 0.22 ,
+                    bottom: width > 550 ? height * 0.1 : height * 0.11,
+                    left: width > 550 ? width * 0 : width * 0.01 ,
                     child: GestureDetector(
                         onTap: () {
-                        String name ="Un four";
+                        String name ="Un cirque";
                          if(name == randomCuisine){
                         _isfoeClicked=true;
                         randomcuisineFunc();
                         Voice.play(
-                          "audios/voices/${ElementsAudios['Un four']}", 1);
+                          "audios/voices/${ElementsAudios['Un cirque']}", 1);
                          }                        
                        },
                           child: Image.asset(
-                            'assets/images/pics/83.png',
-                            height: 140,
-                            width: 160,
+                            'assets/images/pics/209.png',
+                            scale: width > 450 ? 2 : 2.5,
                             fit: BoxFit.fill,
                           ),
                         ),
                   ),
 
                   Positioned(
-                    bottom: height > 800 ? height * 0.3 : height * 0.27,
-                    left: width > 550 ? width * 0.57 : width * 0.62 ,
+                    bottom: height > 800 ? height * 0 : height * 0.27,
+                    left: width > 550 ? width * 0.35 : width * 0.62 ,
                     child: GestureDetector(
                         onTap: () {
-                        String name = "Un verre";
+                        String name = "Un football";
                          if(name == randomCuisine){
                         _isveClicked=true;
                         randomcuisineFunc();
                         Voice.play(
-                          "audios/voices/${ElementsAudios['Un verre']}", 1);
+                          "audios/voices/${ElementsAudios['Un football']}", 1);
                          }                        },
                           child: Image.asset(
-                            'assets/images/pics/89.png',
-                            scale: width > 450 ? 7 : 12,
+                            'assets/images/pics/197.png',
+                            scale: width > 450 ? 4 : 2.5,
                             fit: BoxFit.fill,
                           ),
                         ),
                   ),
 
                   Positioned(
-                    bottom: height > 550 ? height * 0.26 : height * 0.21,
-                    left: width > 550 ? width * 0.7 : width * 0.75 ,
+                    bottom: height > 550 ? height * 0 : height * 0.21,
+                    left: width > 550 ? width * 0.5 : width * 0.75 ,
                     child: GestureDetector(
                         onTap: () {
-                         String name = "Une pastèque";
+                         String name = "Un toboggan";
                          if(name == randomCuisine){
                          _ispaClicked=true;
                           randomcuisineFunc();
                           Voice.play(
-                          "audios/voices/${ElementsAudios['Une pastèque']}", 1);
+                          "audios/voices/${ElementsAudios['Un toboggan']}", 1);
                          }
                         },
                           child: Image.asset(
-                            'assets/images/pics/106.png',
-                            scale: width > 450 ? 5 : 7,
+                            'assets/images/pics/223.png',
+                            scale: width > 450 ? 1.99 : 2.5,
                             fit: BoxFit.fill,
                           ),
                         ),
                   ),
 
                    Positioned(
-                    bottom: height > 800 ? height * 0.46 : height * 0.42,
-                    left: width > 550 ? width * 0.66 : width * 0.75 ,
+                    bottom: height > 800 ? height * 0.1 : height * 0.42,
+                    left: width > 550 ? width * 0.38 : width * 0.75 ,
                     child: GestureDetector(
                         onTap: () {
-                         String name = "Un tajine";
+                         String name = "Une balançoire";
                          if(name == randomCuisine){
                          _iscaClicked=true;
                           randomcuisineFunc();
                           Voice.play(
-                          "audios/voices/${ElementsAudios['Un tajine']}", 1);
+                          "audios/voices/${ElementsAudios['Une balançoire']}", 1);
                          }
                         },
                           child: Image.asset(
-                            'assets/images/pics/113.png',
-                             scale: width > 450 ? 5 : 7,
+                            'assets/images/pics/205.png',
+                            height: width > 550 ? 200 : 50,
+                            width: width > 550 ? 170 : 40,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                  ),
+
+                   Positioned(
+                    bottom: height > 800 ? height * 0.5 : height * 0.42,
+                    left: width > 550 ? width * 0.25 : width * 0.75 ,
+                    child: GestureDetector(
+                        onTap: () {
+                         String name = "Un ballon";
+                         if(name == randomCuisine){
+                         _iscaClicked=true;
+                          randomcuisineFunc();
+                          Voice.play(
+                          "audios/voices/${ElementsAudios['Un ballon']}", 1);
+                         }
+                        },
+                          child: Image.asset(
+                            'assets/images/pics/226.png',
+                            height: width > 550 ? 70 : 40,
+                            width: width > 550 ? 70 : 40,
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -429,25 +452,31 @@ randomcuisineFunc();
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Image.asset(
-                  'assets/images/pics/83.png',
+                  'assets/images/pics/209.png',
                   height: 75,
                   width: 75,
                   color: _isfoeClicked ? null : Colors.black,
                 ),
                 Image.asset(
-                  'assets/images/pics/89.png',
+                  'assets/images/pics/197.png',
                   height: 75,
                   width: 75,
                   color: _isveClicked ? null : Colors.black,
                 ),
                 Image.asset(
-                  'assets/images/pics/106.png',
+                  'assets/images/pics/223.png',
                   height: 75,
                   width: 75,
                   color: _ispaClicked ? null : Colors.black,
                 ),
                  Image.asset(
-                  'assets/images/pics/113.png',
+                  'assets/images/pics/226.png',
+                  height: 60,
+                  width: 60,
+                  color: _iscaClicked ? null : Colors.black,
+                ),
+                Image.asset(
+                  'assets/images/pics/205.png',
                   height: 75,
                   width: 75,
                   color: _iscaClicked ? null : Colors.black,

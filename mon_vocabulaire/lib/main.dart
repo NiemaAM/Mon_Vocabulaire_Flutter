@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/Trouvaille_Foret.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/ferme.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/cuisine.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/sport_loisir.dart';
 import 'View/Quiz/drag_and_drop.dart';
 import 'package:flutter/services.dart';
 import 'package:mon_vocabulaire/View/Home/splash_screen.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
             theme: MyThemes.lightTheme,
             darkTheme: MyThemes.darkTheme,
             themeMode: themeProvider.themeMode,
-            home: const cuisine(),
+            home: const sport_loisir(),
           );
         },
       ),
