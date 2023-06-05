@@ -80,29 +80,29 @@ class _cuisineState extends State<cuisine> {
             if (duration == 0) {
               timer.cancel();
               if (cuisine_.isNotEmpty) {
-                // showDialog(
-                //   context: context,
-                //   barrierDismissible: false,
-                //   builder: (BuildContext context) {
-                //     return GamePopup(
-                //       onButton1Pressed: () {
-                //         Navigator.pop(context);
-                //         Navigator.pop(context);
-                //       },
-                //       onButton2Pressed: () {
-                //         Navigator.pop(context);
-                //         Navigator.pushReplacement(
-                //           context,
-                //           MaterialPageRoute(
-                //             builder: (context) => cuisine(user: widget.user),
-                //           ),
-                //         );
-                //       },
-                //       oneButton: false,
-                //       win: false,
-                //     );
-                //   },
-                // );
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return GamePopup(
+                      onButton1Pressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      onButton2Pressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => cuisine(user: widget.user),
+                          ),
+                        );
+                      },
+                      oneButton: false,
+                      win: false,
+                    );
+                  },
+                );
               }
             }
           }
