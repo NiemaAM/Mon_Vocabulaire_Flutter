@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/View/Account/Top5.dart';
 import 'package:mon_vocabulaire/View/Account/accounts.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 
 class FirstSceen extends StatefulWidget {
   const FirstSceen({super.key});
+
+  get user => null;
 
   @override
   State<FirstSceen> createState() => _FirstSceenState();
@@ -81,7 +85,7 @@ class _FirstSceenState extends State<FirstSceen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const Accounts(),
+                          builder: (context) => Top5(),
                         ),
                       );
                     },

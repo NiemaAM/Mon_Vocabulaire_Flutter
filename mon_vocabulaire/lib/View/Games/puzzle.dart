@@ -8,7 +8,6 @@ import 'package:mon_vocabulaire/Services/voice.dart';
 import 'package:mon_vocabulaire/Widgets/Popups/puzzlePopup.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import '../../../Model/user.dart';
-import '../../../Widgets/Popups/game_popup.dart';
 import '../../../Widgets/button.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:image/image.dart' as image;
