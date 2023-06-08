@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+//import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/View/Home/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,8 +30,8 @@ void main() async {
   runApp(const MyApp());
   DatabaseHelper();
   await DatabaseHelper().insertData_subtheme_quiz();
-  List<User> allData = await DatabaseHelper().getUsers();
-  User user = User(name: 'NOURA', image: 'image', current_level: 2, coins: 100);
+  //List<User> allData = await DatabaseHelper().getUsers();
+ // User user = User(name: 'NOURA', image: 'image', current_level: 2, coins: 100);
   //await DatabaseHelper().addUser(user);
   //print("ok");
   //print(await DatabaseHelper().getUsers());

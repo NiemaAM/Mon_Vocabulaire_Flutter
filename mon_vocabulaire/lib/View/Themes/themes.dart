@@ -3,7 +3,6 @@ import 'package:mon_vocabulaire/View/Themes/sub_themes.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
 
-import '../../Controllers/UserController.dart';
 import '../../DataBase/db.dart';
 import '../../Model/user.dart';
 
