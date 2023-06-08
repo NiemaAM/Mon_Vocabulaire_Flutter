@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mon_vocabulaire/DataBase/db.dart';
+import 'package:mon_vocabulaire/Model/user.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Account/avatars.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
@@ -204,6 +206,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     color: Palette.lightBlue,
                     width: 180,
                     callback: () {
+                      addUser(_TextController.text);
                       Navigator.pop(context);
                     },
                     content: const Center(
@@ -235,5 +238,10 @@ class _CreateAccountState extends State<CreateAccount> {
         ],
       ),
     );
+  }
+
+  void addUser(String name) {
+    User user = User(name: name, image: "assets/images/avatars/user.png", current_level: 1, coins: 0);
+    DatabaseHelper().addUser(user);
   }
 }

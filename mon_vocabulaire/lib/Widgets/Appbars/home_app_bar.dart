@@ -7,6 +7,8 @@ import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Controllers/UserController.dart';
+import '../../DataBase/db.dart';
 import '../../Model/user.dart';
 
 class CustomAppBarHome extends StatefulWidget implements PreferredSizeWidget {
@@ -24,6 +26,21 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight + 100);
 
   bool state = false;
+
+  double result = 0.0;
+
+  UserController userController = UserController();
+
+  void calculateResult() {
+    DatabaseHelper();
+    //DatabaseHelper().insertData_subtheme_quiz();
+    DatabaseHelper().getWordsPerUser(widget.user.id).then((wordsPerUser) {
+      setState(() {
+        result = wordsPerUser / 240;
+      });
+    });
+  }
+
   Future<void> volumeState() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (state) {
@@ -87,14 +104,12 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
                   animation: true,
                   lineHeight: 25.0,
                   animationDuration: 1000,
-                  percent:
-                      widget.user.words_per_level[widget.user.current_level]! /
-                          240,
+                  percent: result,
                   barRadius: const Radius.circular(100),
                   progressColor: Palette.lightGreen,
                   backgroundColor: Palette.darkBlue,
                   center: Text(
-                    "${widget.user.words_per_level[widget.user.current_level]} sur 240 mots",
+                    "${userController.getWordsPerUser(widget.user.id)} sur 240 mots",
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.white,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controllers/UserController.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Home/home.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../DataBase/db.dart';
 import '../Model/user.dart';
 import 'Palette.dart';
 import 'button.dart';
@@ -16,6 +18,20 @@ class AccountBloc extends StatefulWidget {
 }
 
 class _AccountBlocState extends State<AccountBloc> {
+  UserController userController = UserController();
+
+  double result = 0.0;
+
+  void calculateResult() {
+    DatabaseHelper();
+    //DatabaseHelper().insertData_subtheme_quiz();
+    DatabaseHelper().getWordsPerUser(widget.user.id).then((wordsPerUser) {
+      setState(() {
+        result = wordsPerUser / 240;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -63,14 +79,12 @@ class _AccountBlocState extends State<AccountBloc> {
                       animation: true,
                       lineHeight: width / 15,
                       animationDuration: 1000,
-                      percent: widget.user
-                              .words_per_level[widget.user.current_level]! /
-                          240,
+                      percent: result,
                       barRadius: const Radius.circular(100),
                       progressColor: Palette.lightGreen,
                       backgroundColor: Palette.lightGrey,
                       center: Text(
-                        "${widget.user.words_per_level[widget.user.current_level]} sur 240 mots",
+                        "${userController.getWordsPerUser(widget.user.id)} sur 240 mots",
                         style: const TextStyle(
                           fontSize: 14.0,
                           color: Colors.white,

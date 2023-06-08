@@ -3,6 +3,8 @@ import 'package:mon_vocabulaire/View/Themes/sub_themes.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
 
+import '../../Controllers/UserController.dart';
+import '../../DataBase/db.dart';
 import '../../Model/user.dart';
 
 class Themes extends StatefulWidget {
@@ -14,6 +16,16 @@ class Themes extends StatefulWidget {
 }
 
 class _ThemesState extends State<Themes> {
+  int result = 0;
+
+  int calculateResult(theme_id) {
+    DatabaseHelper();
+    //DatabaseHelper().insertData_subtheme_quiz();
+    DatabaseHelper()
+        .getStarsPerTheme(widget.user.id, theme_id);
+    return result; 
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -26,10 +38,8 @@ class _ThemesState extends State<Themes> {
       children: [
         Bubble(
           image: "assets/images/themes/ecole.png",
-          nbStars: widget.user.stars_per_subtheme[5]! +
-              widget.user.stars_per_subtheme[6]!,
-          stage: widget.user.words_per_subtheme[5]! +
-              widget.user.words_per_subtheme[6]!,
+          nbStars: calculateResult(6) + calculateResult(7),
+          stage: calculateResult(6) + calculateResult(7),
           text: 'L’école',
           callback: SubThemes(
             title: 'L’école',
@@ -41,10 +51,8 @@ class _ThemesState extends State<Themes> {
         ),
         Bubble(
           image: "assets/images/themes/maison.png",
-          nbStars: widget.user.stars_per_subtheme[9]! +
-              widget.user.stars_per_subtheme[10]!,
-          stage: widget.user.words_per_subtheme[9]! +
-              widget.user.words_per_subtheme[10]!,
+          nbStars: calculateResult(8) + calculateResult(9),
+          stage:calculateResult(8) + calculateResult(9),
           text: 'Maison et famille',
           callback: SubThemes(
             title: 'Maison et famille',
@@ -56,10 +64,8 @@ class _ThemesState extends State<Themes> {
         ),
         Bubble(
           image: "assets/images/themes/cuisine_et_aliments.png",
-          nbStars: widget.user.stars_per_subtheme[11]! +
-              widget.user.stars_per_subtheme[12]!,
-          stage: widget.user.words_per_subtheme[11]! +
-              widget.user.words_per_subtheme[12]!,
+          nbStars: calculateResult(4) + calculateResult(5) ,
+          stage: calculateResult(4) + calculateResult(5),
           text: 'Cuisine et aliments',
           callback: SubThemes(
             title: 'Cuisine et aliments',
@@ -71,10 +77,8 @@ class _ThemesState extends State<Themes> {
         ),
         Bubble(
           image: "assets/images/themes/animaux.png",
-          nbStars: widget.user.stars_per_subtheme[1]! +
-              widget.user.stars_per_subtheme[2]!,
-          stage: widget.user.words_per_subtheme[1]! +
-              widget.user.words_per_subtheme[2]!,
+          nbStars: calculateResult(2) + calculateResult(3),
+          stage: calculateResult(2) + calculateResult(3),
           text: 'Animaux',
           callback: SubThemes(
             title: 'Animaux',
@@ -86,10 +90,8 @@ class _ThemesState extends State<Themes> {
         ),
         Bubble(
           image: "assets/images/themes/mes_habits.png",
-          nbStars: widget.user.stars_per_subtheme[3]! +
-              widget.user.stars_per_subtheme[4]!,
-          stage: widget.user.words_per_subtheme[3]! +
-              widget.user.words_per_subtheme[4]!,
+          nbStars: calculateResult(10) + calculateResult(11),
+          stage: calculateResult(10) + calculateResult(11),
           text: 'Mon corps et mes habits',
           callback: SubThemes(
             title: 'Mon corps et mes habits',
@@ -101,10 +103,8 @@ class _ThemesState extends State<Themes> {
         ),
         Bubble(
           image: "assets/images/themes/sports.png",
-          nbStars: widget.user.stars_per_subtheme[7]! +
-              widget.user.stars_per_subtheme[8]!,
-          stage: widget.user.words_per_subtheme[7]! +
-              widget.user.words_per_subtheme[8]!,
+          nbStars: calculateResult(0) + calculateResult(1),
+          stage: calculateResult(0) + calculateResult(1),
           text: 'Sports et loisirs',
           callback: SubThemes(
             title: 'Sports et loisirs',

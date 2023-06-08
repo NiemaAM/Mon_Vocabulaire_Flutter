@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../Controllers/UserController.dart';
+import '../DataBase/db.dart';
 import '../Model/user.dart';
 import 'level_bloc.dart';
 
@@ -12,6 +14,15 @@ class Levels extends StatefulWidget {
 }
 
 class _LevelsState extends State<Levels> {
+  UserController userController = UserController();
+  int result = 0; 
+  int calculateResult() {
+    DatabaseHelper();
+    //DatabaseHelper().insertData_subtheme_quiz();
+    DatabaseHelper().getWordsPerUser(widget.user.id);
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,7 +30,7 @@ class _LevelsState extends State<Levels> {
         LevelBloc(
           text: "Niveau 1 - 1AEP",
           image: "assets/images/levels/level1.png",
-          words: widget.user.words_per_level[widget.user.current_level]!,
+          words: calculateResult(),
           locked: false,
           user: widget.user,
         ),
