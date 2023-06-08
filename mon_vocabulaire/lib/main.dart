@@ -12,7 +12,7 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await SharedPreferences.getInstance();
-  /*  final dbHelper = DatabaseHelper();
+  /* final dbHelper = DatabaseHelper();
   final database = await dbHelper.initDb(); */
 
 // Retrieve a subtheme from the database

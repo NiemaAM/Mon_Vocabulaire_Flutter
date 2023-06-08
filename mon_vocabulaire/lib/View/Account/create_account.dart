@@ -32,7 +32,9 @@ class _CreateAccountState extends State<CreateAccount> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-      } else {}
+      } else {
+        _image = File("assets/images/avatars/user.png");
+      }
     });
   }
 
@@ -241,7 +243,11 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   void addUser(String name) {
-    User user = User(name: name, image: "assets/images/avatars/user.png", current_level: 1, coins: 0);
+    User user = User(
+        name: name,
+        image: "assets/images/avatars/user.png",
+        current_level: 1,
+        coins: 0);
     DatabaseHelper().addUser(user);
   }
 }
