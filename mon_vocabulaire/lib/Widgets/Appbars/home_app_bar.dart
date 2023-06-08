@@ -35,9 +35,23 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
     }
   }
 
+  void getVolume() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getDouble('bkVolume') == 0) {
+      setState(() {
+        state = true;
+      });
+    } else {
+      setState(() {
+        state = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    getVolume();
     return Stack(
       children: [
         const SizedBox(

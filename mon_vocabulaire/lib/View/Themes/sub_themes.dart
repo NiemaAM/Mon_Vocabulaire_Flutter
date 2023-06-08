@@ -64,8 +64,8 @@ class _SubThemesState extends State<SubThemes> {
       });
     } else if (widget.theme == 4) {
       setState(() {
-        images[0] = "assets/images/themes/animaux.png";
-        images[1] = "assets/images/themes/mammiferes.png";
+        images[0] = "assets/images/themes/ferme.png";
+        images[1] = "assets/images/themes/foret.png";
         titles[0] = "Ferme";
         titles[1] = "Forêt";
         background = "forest";
@@ -104,11 +104,6 @@ class _SubThemesState extends State<SubThemes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: widget.title.toUpperCase(),
-        color: color,
-        automaticallyImplyLeading: true,
-      ),
       body: Stack(
         children: [
           SvgPicture.asset('assets/images/themes/backgrounds/$background.svg',
@@ -235,6 +230,11 @@ class _SubThemesState extends State<SubThemes> {
                 ),
               ],
             ),
+          ),
+          CustomAppBar(
+            title: widget.title.toUpperCase(),
+            color: color,
+            automaticallyImplyLeading: true,
           ),
         ],
       ),

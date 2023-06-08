@@ -51,8 +51,8 @@ class DonePopup extends StatelessWidget {
                       "Tu as terminé la leçon",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: width > 500 ? 20 : 16,
-                      ),
+                          fontSize: width > 500 ? 20 : 16,
+                          color: Palette.black),
                     ),
                     const SizedBox(height: 10.0),
                     Row(

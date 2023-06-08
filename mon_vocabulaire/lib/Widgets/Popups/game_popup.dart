@@ -9,14 +9,20 @@ class GamePopup extends StatelessWidget {
   final bool win;
   final bool tie;
   final bool oneButton;
+  final String textWin;
+  final String textLose;
+  final String loseImg;
 
   const GamePopup({
     super.key,
     required this.onButton1Pressed,
     required this.onButton2Pressed,
-    required this.win,
+    this.win = true,
     this.oneButton = false,
     this.tie = false,
+    this.textWin = "Tu as gagné",
+    this.textLose = "Tu as perdu",
+    this.loseImg = "assets/images/mascotte/lose.gif",
   });
 
   @override
@@ -30,6 +36,7 @@ class GamePopup extends StatelessWidget {
     return win && !tie
         ? Dialog(
             insetPadding: EdgeInsets.all(width > 500 ? 100 : 30),
+            backgroundColor: Palette.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
@@ -59,11 +66,11 @@ class GamePopup extends StatelessWidget {
                           ),
                           const SizedBox(height: 5.0),
                           Text(
-                            "Tu as gagné(e)",
+                            textWin,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: width > 500 ? 20 : 16,
-                            ),
+                                fontSize: width > 500 ? 20 : 16,
+                                color: Palette.black),
                           ),
                           const SizedBox(height: 10.0),
                           Padding(
@@ -160,10 +167,13 @@ class GamePopup extends StatelessWidget {
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              const Icon(
-                                                Icons.restart_alt_rounded,
-                                                color: Palette.white,
-                                                size: 20,
+                                              Image.asset(
+                                                "assets/images/themes/coin.png",
+                                                scale: width >= 700
+                                                    ? 16
+                                                    : width >= 500
+                                                        ? 18
+                                                        : 22,
                                               ),
                                               const Expanded(child: SizedBox())
                                             ],
@@ -191,7 +201,7 @@ class GamePopup extends StatelessWidget {
                     height: 130.0,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Palette.white, // Replace with desired color
+                      color: Palette.white,
                     ),
                     child: Center(
                       child: Container(
@@ -248,18 +258,26 @@ class GamePopup extends StatelessWidget {
                               ),
                               const SizedBox(height: 5.0),
                               Text(
-                                "Tu as perdu(e)",
+                                textLose,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: width > 500 ? 20 : 16,
-                                ),
+                                    fontSize: width > 500 ? 20 : 16,
+                                    color: Palette.black),
                               ),
                               const SizedBox(height: 10.0),
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 40, right: 40),
+                                padding: EdgeInsets.only(
+                                    left: loseImg ==
+                                            "assets/images/mascotte/lose.gif"
+                                        ? 40
+                                        : 0,
+                                    right: loseImg ==
+                                            "assets/images/mascotte/lose.gif"
+                                        ? 40
+                                        : 0),
                                 child: Image.asset(
-                                    "assets/images/mascotte/lose.gif"),
+                                  loseImg,
+                                ),
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -360,10 +378,13 @@ class GamePopup extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
-                                                  const Icon(
-                                                    Icons.restart_alt_rounded,
-                                                    color: Palette.white,
-                                                    size: 20,
+                                                  Image.asset(
+                                                    "assets/images/themes/coin.png",
+                                                    scale: width >= 700
+                                                        ? 16
+                                                        : width >= 500
+                                                            ? 18
+                                                            : 22,
                                                   ),
                                                   const Expanded(
                                                       child: SizedBox())
@@ -392,7 +413,7 @@ class GamePopup extends StatelessWidget {
                         height: 130.0,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Palette.white, // Replace with desired color
+                          color: Palette.white,
                         ),
                         child: Center(
                           child: Container(
@@ -453,8 +474,8 @@ class GamePopup extends StatelessWidget {
                                 "Tu y étais presque",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: width > 500 ? 20 : 16,
-                                ),
+                                    fontSize: width > 500 ? 20 : 16,
+                                    color: Palette.black),
                               ),
                               const SizedBox(height: 10.0),
                               Padding(
@@ -562,10 +583,13 @@ class GamePopup extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
-                                                  const Icon(
-                                                    Icons.restart_alt_rounded,
-                                                    color: Palette.white,
-                                                    size: 20,
+                                                  Image.asset(
+                                                    "assets/images/themes/coin.png",
+                                                    scale: width >= 700
+                                                        ? 16
+                                                        : width >= 500
+                                                            ? 18
+                                                            : 22,
                                                   ),
                                                   const Expanded(
                                                       child: SizedBox())
@@ -594,7 +618,7 @@ class GamePopup extends StatelessWidget {
                         height: 130.0,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Palette.white, // Replace with desired color
+                          color: Palette.white,
                         ),
                         child: Center(
                           child: Container(

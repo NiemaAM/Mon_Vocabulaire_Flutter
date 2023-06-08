@@ -104,8 +104,8 @@ class QuizPopup extends StatelessWidget {
                             "Tu es un champion",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: width > 500 ? 20 : 16,
-                            ),
+                                fontSize: width > 500 ? 20 : 16,
+                                color: Palette.black),
                           ),
                           const SizedBox(height: 10.0),
                           Padding(
@@ -293,8 +293,8 @@ class QuizPopup extends StatelessWidget {
                                 "Bel effort",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: width > 500 ? 20 : 16,
-                                ),
+                                    fontSize: width > 500 ? 20 : 16,
+                                    color: Palette.black),
                               ),
                               const SizedBox(height: 10.0),
                               Padding(
@@ -490,8 +490,8 @@ class QuizPopup extends StatelessWidget {
                                     "Tu peux faire mieux",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: width > 500 ? 20 : 16,
-                                    ),
+                                        fontSize: width > 500 ? 20 : 16,
+                                        color: Palette.black),
                                   ),
                                   const SizedBox(height: 10.0),
                                   Padding(
@@ -645,8 +645,8 @@ class QuizPopup extends StatelessWidget {
                                 "Tu as perdu",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: width > 500 ? 20 : 16,
-                                ),
+                                    fontSize: width > 500 ? 20 : 16,
+                                    color: Palette.black),
                               ),
                               const SizedBox(height: 10.0),
                               Padding(
