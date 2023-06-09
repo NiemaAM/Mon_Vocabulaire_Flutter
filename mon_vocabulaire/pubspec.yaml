@@ -48,6 +48,8 @@ dependencies:
   flip_card: ^0.7.0
   image: ^4.0.17
   google_fonts: ^4.0.4
+  maze: ^3.0.0
+  ionicons: ^0.2.2
 
 dev_dependencies:
   flutter_test:

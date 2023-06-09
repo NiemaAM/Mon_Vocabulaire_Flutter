@@ -43,7 +43,7 @@ class _ProfilState extends State<Profil> {
             padding: const EdgeInsets.only(top: 30, bottom: 10),
             child: CircleAvatar(
               radius: width / 5,
-              backgroundColor: Palette.blue,
+              backgroundColor: Palette.lightBlue,
               child: ClipOval(
                 child: Image.asset(
                   widget.user.image, //TODO: change this to images from gallery

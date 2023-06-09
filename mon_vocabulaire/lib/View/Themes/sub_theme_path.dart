@@ -142,8 +142,8 @@ class _LessonPathState extends State<LessonPath> {
                 ),
               ),
             ),
-            width: width > 500 ? width / 2 : width / 1.5,
-            heigth: width > 500 ? width / 2 : width / 1.5,
+            width: width > 500 ? width / 2 : width / 1.8,
+            heigth: width > 500 ? width / 2 : width / 1.8,
             color: Palette.white,
             radius: 500,
           ),
@@ -193,8 +193,8 @@ class _LessonPathState extends State<LessonPath> {
                 ),
               ),
             ),
-            width: width > 500 ? width / 2 : width / 1.5,
-            heigth: width > 500 ? width / 2 : width / 1.5,
+            width: width > 500 ? width / 2 : width / 1.8,
+            heigth: width > 500 ? width / 2 : width / 1.8,
             color: Palette.white,
             radius: 500,
           ),
@@ -244,8 +244,8 @@ class _LessonPathState extends State<LessonPath> {
                 ),
               ),
             ),
-            width: width > 500 ? width / 2 : width / 1.5,
-            heigth: width > 500 ? width / 2 : width / 1.5,
+            width: width > 500 ? width / 2 : width / 1.8,
+            heigth: width > 500 ? width / 2 : width / 1.8,
             color: Palette.white,
             radius: 500,
           ),
@@ -273,12 +273,6 @@ class _LessonPathState extends State<LessonPath> {
     ];
 
     return Scaffold(
-      appBar: CustomAppBar(
-        title: widget.title.toUpperCase(),
-        color: color,
-        automaticallyImplyLeading: true,
-        image: widget.image,
-      ),
       body: Stack(
         children: [
           SvgPicture.asset('assets/images/themes/backgrounds/$background.svg',
@@ -286,98 +280,101 @@ class _LessonPathState extends State<LessonPath> {
               fit: BoxFit.cover,
               color: Palette.white.withOpacity(0.65),
               colorBlendMode: BlendMode.modulate),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              child: Button(
-                callback: () {
-                  Sfx.play("audios/sfx/plip.mp3", 1);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LessonPage(
-                        subTheme: widget.subTheme,
-                        user: widget.user,
-                      ),
-                    ),
-                  );
-                },
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Image.asset(
-                        "assets/images/themes/lesson.png",
-                        width: width / 2.8,
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: Text(
-                            "MA LEÇON",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 23,
-                                color: Palette.black),
-                          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 80),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: Button(
+                  callback: () {
+                    Sfx.play("audios/sfx/plip.mp3", 1);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LessonPage(
+                          subTheme: widget.subTheme,
+                          user: widget.user,
                         ),
-                        Button(
-                          callback: () {
-                            Sfx.play("audios/sfx/plip.mp3", 1);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LessonPage(
-                                  subTheme: widget.subTheme,
-                                  user: widget.user,
-                                ),
-                              ),
-                            );
-                          },
-                          content: const Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "LIRE",
-                                  style: TextStyle(
-                                      color: Palette.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Icon(
-                                  Icons.play_arrow_rounded,
-                                  color: Palette.white,
-                                )
-                              ],
+                      ),
+                    );
+                  },
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Image.asset(
+                          "assets/images/themes/lesson.png",
+                          width: width / 2.8,
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: Text(
+                              "MA LEÇON",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: width > 500 ? 25 : 20,
+                                  color: Palette.black),
                             ),
                           ),
-                          color: Palette.pink,
-                          width: 130,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 25,
-                    )
-                  ],
+                          Button(
+                            callback: () {
+                              Sfx.play("audios/sfx/plip.mp3", 1);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LessonPage(
+                                    subTheme: widget.subTheme,
+                                    user: widget.user,
+                                  ),
+                                ),
+                              );
+                            },
+                            content: const Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "LIRE",
+                                    style: TextStyle(
+                                        color: Palette.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Icon(
+                                    Icons.play_arrow_rounded,
+                                    color: Palette.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                            color: Palette.pink,
+                            width: 130,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: width > 500 ? 25 : 0,
+                      )
+                    ],
+                  ),
+                  width: width > 500 ? width - 150 : width - 40,
+                  heigth: 200,
+                  color: Palette.white,
+                  radius: 20,
                 ),
-                width: width > 500 ? width - 150 : width - 40,
-                heigth: 200,
-                color: Palette.white,
-                radius: 20,
               ),
             ),
           ),
           Center(
             child: Padding(
-              padding:
-                  EdgeInsets.only(top: width > 500 ? height / 3.5 : height / 3),
+              padding: EdgeInsets.only(
+                  top: width > 500 ? height / 3.5 + 80 : height / 3 + 80),
               child: Column(
                 children: [
                   SizedBox(
@@ -417,7 +414,7 @@ class _LessonPathState extends State<LessonPath> {
                               scale: scale,
                               child: Opacity(
                                 opacity: opacity,
-                                child: elements[index],
+                                child: elements[_currentIndex],
                               ),
                             ),
                           ),
@@ -458,7 +455,13 @@ class _LessonPathState extends State<LessonPath> {
                 ],
               ),
             ),
-          )
+          ),
+          CustomAppBar(
+            title: widget.title.toUpperCase(),
+            color: color,
+            automaticallyImplyLeading: true,
+            image: widget.image,
+          ),
         ],
       ),
     );

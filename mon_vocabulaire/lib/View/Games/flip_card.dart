@@ -152,25 +152,37 @@ class _FlipCardGameState extends State<FlipCardGame>
           appBar: CustomAppBarGames(
             user: widget.user,
             background: true,
+            timer: true,
           ),
           body: Stack(
             children: [
               Align(
                 alignment: Alignment.topCenter,
-                child: BubbleMessage(
-                    widget: countdown > 0
-                        ? countdown == 1
-                            ? Text(
-                                "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown seconde.")
-                            : Text(
-                                "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown secondes.")
-                        : const Text("C'est parti !")),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: BubbleMessage(
+                      widget: countdown > 0
+                          ? countdown == 1
+                              ? Text(
+                                  "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown seconde.")
+                              : Text(
+                                  "Souviens-toi de l'emplacement des cartes et trouve toutes les paires ! Il te reste $countdown secondes.")
+                          : const Text("C'est parti !")),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: width > 500 ? 130 : height / 6,
-                    left: width > 500 ? 80 : 0,
-                    right: width > 500 ? 80 : 0),
+                    top: width > 500 ? 140 : height / 6,
+                    left: width > 500
+                        ? 80
+                        : height < 780
+                            ? 15
+                            : 0,
+                    right: width > 500
+                        ? 80
+                        : height < 780
+                            ? 15
+                            : 0),
                 child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(13),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Games/TicTacToe/choose_xo.dart';
-import 'package:mon_vocabulaire/View/Games/cuisine.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:mon_vocabulaire/View/Games/flip_card.dart';
+import 'package:mon_vocabulaire/View/Games/maze_puzzle.dart';
+import 'package:mon_vocabulaire/View/Games/ninja_bubble.dart';
 import 'package:mon_vocabulaire/View/Games/puzzle.dart';
 import 'package:mon_vocabulaire/View/Games/trouvaille.dart';
 import 'package:mon_vocabulaire/View/Games/trouvaille_CorpsEtHabits.dart';
@@ -49,33 +51,35 @@ class _GamesState extends State<Games> {
                   user: widget.user,
                 ),
               ),
-              const GameBloc(
-                image: "assets/images/games/puzzle.png",
-                price: '80',
-                page: Puzzle(),
-              ),
               GameBloc(
-                image: "assets/images/games/search.png",
-                price: '100',
-                page: cuisine(
+                image: "assets/images/games/apple.png",
+                price: '80',
+                page: MazePuzzle(
                   user: widget.user,
                 ),
+                enabled: true,
+              ),
+              GameBloc(
+                image: "assets/images/games/puzzle.png",
+                price: '80',
+                page: Puzzle(
+                  user: widget.user,
+                ),
+                enabled: true,
               ),
               GameBloc(
                 image: "assets/images/games/bubbles.png",
                 price: '50',
-                page: FlipCardGame(
+                page: NinjaBubble(
                   user: widget.user,
                 ),
-                enabled: false,
+                enabled: true,
               ),
               GameBloc(
-                image: "assets/images/games/apple.png",
-                price: '80',
-                page: FlipCardGame(
-                  user: widget.user,
-                ),
-                enabled: false,
+                image: "assets/images/games/search.png",
+                price: '100',
+                page: Trouvaille(user: widget.user),
+                enabled: true,
               ),
             ],
           ),

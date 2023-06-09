@@ -104,11 +104,6 @@ class _SubThemesState extends State<SubThemes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: widget.title.toUpperCase(),
-        color: color,
-        automaticallyImplyLeading: true,
-      ),
       body: Stack(
         children: [
           SvgPicture.asset('assets/images/themes/backgrounds/$background.svg',
@@ -235,6 +230,11 @@ class _SubThemesState extends State<SubThemes> {
                 ),
               ],
             ),
+          ),
+          CustomAppBar(
+            title: widget.title.toUpperCase(),
+            color: color,
+            automaticallyImplyLeading: true,
           ),
         ],
       ),

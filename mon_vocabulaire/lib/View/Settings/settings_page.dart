@@ -229,7 +229,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 CircleAvatar(
                   radius: width / 5,
-                  backgroundColor: Palette.blue,
+                  backgroundColor: Palette.lightBlue,
                   child: ClipOval(
                     child: Image.asset(
                       widget.user.image,
@@ -263,7 +263,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Container(
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Palette.blue,
+                    color: Palette.lightBlue,
                   ),
                   child: IconButton(
                     icon: const Icon((Icons.edit), color: Colors.white),
@@ -431,7 +431,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     // overrides the default green color of the track
                     activeColor: Palette.lightGreen,
                     // color of the round icon, which moves from right to left
-                    thumbColor: notifOn ? Palette.darkGreen : Palette.blue,
+                    thumbColor: notifOn ? Palette.darkGreen : Palette.lightBlue,
                     // when the switch is off
                     trackColor: Palette.lightGrey,
                     // boolean variable value
@@ -476,7 +476,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     // overrides the default green color of the track
                     activeColor: Palette.lightGreen,
                     // color of the round icon, which moves from right to left
-                    thumbColor: darkOn ? Palette.darkGreen : Palette.blue,
+                    thumbColor: darkOn ? Palette.darkGreen : Palette.lightBlue,
                     // when the switch is off
                     trackColor: Palette.lightGrey,
                     // boolean variable value
@@ -547,7 +547,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Row(
               children: [
                 const RoundIconWidget(
-                    icon: Icons.feedback, color: Palette.blue),
+                    icon: Icons.feedback, color: Palette.lightBlue),
                 const SizedBox(
                   width: 25,
                   height: 25,
@@ -606,7 +606,8 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(bottom: 10, top: 10),
             child: Row(
               children: [
-                const RoundIconWidget(icon: Icons.logout, color: Palette.blue),
+                const RoundIconWidget(
+                    icon: Icons.logout, color: Palette.lightBlue),
                 const SizedBox(
                   width: 25,
                   height: 25,
