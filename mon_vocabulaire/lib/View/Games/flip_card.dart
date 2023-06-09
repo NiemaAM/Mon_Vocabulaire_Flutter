@@ -5,7 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/Popups/game_popup.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';

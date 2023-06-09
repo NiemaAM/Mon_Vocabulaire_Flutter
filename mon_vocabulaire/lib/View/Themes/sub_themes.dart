@@ -2,10 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
-import '../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../Services/sfx.dart';
 import 'sub_theme_path.dart';
 
@@ -29,6 +30,30 @@ class _SubThemesState extends State<SubThemes> {
   Color color = Palette.blue;
   Color color2 = Palette.blue;
   List<String> titles = ["", ""];
+
+  int result = 0;
+  int words = 0;
+
+  Future<void> calculateResult(themeId) async {
+    DatabaseHelper();
+    Progression _result =
+        await DatabaseHelper().getProgression(widget.user.id!, themeId);
+    setState(() {
+      result = _result.stars;
+      words = _result.mots;
+    });
+  }
+
+  int getResult(subThemeId) {
+    calculateResult(subThemeId);
+    return result;
+  }
+
+  int getWords(subThemeId) {
+    calculateResult(subThemeId);
+    return words;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -123,30 +148,30 @@ class _SubThemesState extends State<SubThemes> {
                   hasShadow: true,
                   image: images[0],
                   nbStars: widget.theme == 1
-                      ? widget.user.stars_per_subtheme[1]!
+                      ? getResult(1)
                       : widget.theme == 2
-                          ? widget.user.stars_per_subtheme[3]!
+                          ? getResult(3)
                           : widget.theme == 3
-                              ? widget.user.stars_per_subtheme[5]!
+                              ? getResult(5)
                               : widget.theme == 4
-                                  ? widget.user.stars_per_subtheme[7]!
+                                  ? getResult(7)
                                   : widget.theme == 5
-                                      ? widget.user.stars_per_subtheme[9]!
+                                      ? getResult(9)
                                       : widget.theme == 6
-                                          ? widget.user.stars_per_subtheme[11]!
+                                          ? getResult(11)
                                           : 0,
                   stage: widget.theme == 1
-                      ? widget.user.words_per_subtheme[1]!
+                      ? getWords(1)
                       : widget.theme == 2
-                          ? widget.user.words_per_subtheme[3]!
+                          ? getWords(3)
                           : widget.theme == 3
-                              ? widget.user.words_per_subtheme[5]!
+                              ? getWords(5)
                               : widget.theme == 4
-                                  ? widget.user.words_per_subtheme[7]!
+                                  ? getWords(7)
                                   : widget.theme == 5
-                                      ? widget.user.words_per_subtheme[9]!
+                                      ? getWords(9)
                                       : widget.theme == 6
-                                          ? widget.user.words_per_subtheme[11]!
+                                          ? getWords(11)
                                           : 0,
                   text: titles[0],
                   callback: LessonPath(
@@ -177,30 +202,30 @@ class _SubThemesState extends State<SubThemes> {
                   hasShadow: true,
                   image: images[1],
                   nbStars: widget.theme == 1
-                      ? widget.user.stars_per_subtheme[2]!
+                      ? getResult(2)
                       : widget.theme == 2
-                          ? widget.user.stars_per_subtheme[4]!
+                          ? getResult(4)
                           : widget.theme == 3
-                              ? widget.user.stars_per_subtheme[6]!
+                              ? getResult(6)
                               : widget.theme == 4
-                                  ? widget.user.stars_per_subtheme[8]!
+                                  ? getResult(8)
                                   : widget.theme == 5
-                                      ? widget.user.stars_per_subtheme[10]!
+                                      ? getResult(10)
                                       : widget.theme == 6
-                                          ? widget.user.stars_per_subtheme[12]!
+                                          ? getResult(12)
                                           : 0,
                   stage: widget.theme == 1
-                      ? widget.user.words_per_subtheme[2]!
+                      ? getWords(2)
                       : widget.theme == 2
-                          ? widget.user.words_per_subtheme[4]!
+                          ? getWords(4)
                           : widget.theme == 3
-                              ? widget.user.words_per_subtheme[6]!
+                              ? getWords(6)
                               : widget.theme == 4
-                                  ? widget.user.words_per_subtheme[8]!
+                                  ? getWords(8)
                                   : widget.theme == 5
-                                      ? widget.user.words_per_subtheme[10]!
+                                      ? getWords(10)
                                       : widget.theme == 6
-                                          ? widget.user.words_per_subtheme[12]!
+                                          ? getWords(12)
                                           : 0,
                   text: titles[1],
                   callback: LessonPath(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -24,6 +25,15 @@ class QuizAppBar extends StatefulWidget {
 }
 
 class _QuizAppBarState extends State<QuizAppBar> {
+  int coins = 0;
+  Future<void> getCoins() async {
+    DatabaseHelper();
+    User _user = await DatabaseHelper().getUser(widget.user.id!);
+    setState(() {
+      coins = _user.coins;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -106,7 +116,7 @@ class _QuizAppBarState extends State<QuizAppBar> {
                   Row(
                     children: [
                       Text(
-                        widget.user.coins.toString(),
+                        coins.toString(),
                         style: const TextStyle(
                             color: Palette.indigo,
                             fontSize: 18,

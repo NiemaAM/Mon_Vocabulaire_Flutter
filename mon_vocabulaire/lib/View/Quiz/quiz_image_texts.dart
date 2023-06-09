@@ -3,8 +3,7 @@
 import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/quiz_prposition.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
 import 'package:mon_vocabulaire/Widgets/Popups/quiz_popup.dart';
 import '../../Model/quiz_model.dart';

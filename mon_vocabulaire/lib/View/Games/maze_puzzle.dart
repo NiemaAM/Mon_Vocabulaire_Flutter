@@ -1,7 +1,7 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:maze/maze.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';

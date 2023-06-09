@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Account/avatars.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
@@ -23,6 +25,15 @@ class _CreateAccountState extends State<CreateAccount> {
   int size = 0;
   final ImagePicker _picker = ImagePicker();
   File? _image;
+
+  void createAccount(String nom, String image) {
+    User newUser = User(
+        name: nom,
+        image: "assets/images/avatars/user.png",
+        currentLevel: 1,
+        coins: 0);
+    DatabaseHelper().addUser(newUser);
+  }
 
   Future<void> _getImage(ImageSource source) async {
     // ignore: deprecated_member_use
@@ -204,6 +215,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     color: Palette.lightBlue,
                     width: 180,
                     callback: () {
+                      createAccount(_TextController.text, "");
                       Navigator.pop(context);
                     },
                     content: const Center(

@@ -9,7 +9,7 @@ import 'package:mon_vocabulaire/View/Account/avatars.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
-import '../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 
 class EditAccount extends StatefulWidget {
   final User user;

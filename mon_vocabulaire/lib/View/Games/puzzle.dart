@@ -9,7 +9,7 @@ import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
-import '../../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../../Widgets/Popups/game_popup.dart';
 import '../../../Widgets/button.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';

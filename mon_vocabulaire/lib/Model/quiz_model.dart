@@ -1,10 +1,49 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart';
-import 'package:mon_vocabulaire/Model/quiz_prposition.dart';
-import 'package:mon_vocabulaire/Model/quiz_prposition_lettres.dart';
 
-import 'lesson_model.dart';
+class Lesson {
+  String image = '';
+  String audio = '';
+  String article = '';
+  String mot = '';
+
+  Lesson({
+    required this.image,
+    required this.audio,
+    required this.article,
+    required this.mot,
+  });
+}
+
+class PropositionLettres {
+  List<dynamic> reponse = ["sons.mp3", "image.png", "article", "mot"];
+  List<String> lettresReponse = [];
+  List<String> lettresProposition = [];
+  List<String> lettresQuestion = [];
+
+  PropositionLettres(
+      {required this.reponse,
+      required this.lettresReponse,
+      required this.lettresProposition,
+      required this.lettresQuestion});
+}
+
+class Proposition {
+  List<dynamic> propositions = ["sons.mp3", "image.png", "article", "mot"];
+  List<dynamic> propositionsImages = [
+    "sons.mp3",
+    "image.png",
+    "article",
+    "mot"
+  ];
+  List<dynamic> reponse = ["sons.mp3", "image.png", "article", "mot"];
+
+  Proposition(
+      {required this.propositions,
+      required this.propositionsImages,
+      required this.reponse});
+}
 
 class QuizModel {
   List<Proposition> questions = [];
@@ -22,6 +61,8 @@ class QuizModel {
   List<String> lettresProposition = [];
   List<String> lettresQuestion = [];
 
+  int part = 2;
+
   Future<List<Lesson>> getLesson(String theme, String subtheme) async {
     // Load the JSON data from the asset file
     String jsonStr = await rootBundle.loadString('assets/data/data.json');
@@ -30,7 +71,7 @@ class QuizModel {
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
 
     // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme];
+    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$part"];
     size = elementsMap.length;
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
@@ -67,7 +108,7 @@ class QuizModel {
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
 
     // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme];
+    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$part"];
     size = elementsMap.length;
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
@@ -152,7 +193,7 @@ class QuizModel {
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
 
     // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme];
+    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$part"];
 
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
@@ -217,7 +258,7 @@ class QuizModel {
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
 
     // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme];
+    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$part"];
 
     size = elementsMap.length;
 

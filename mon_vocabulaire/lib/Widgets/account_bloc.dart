@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Home/home.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
-import '../Model/user.dart';
 import 'Palette.dart';
 import 'button.dart';
 
@@ -16,9 +16,20 @@ class AccountBloc extends StatefulWidget {
 }
 
 class _AccountBlocState extends State<AccountBloc> {
+  int _words = 0;
+
+  Future<void> calculateResult() async {
+    DatabaseHelper();
+    int words = await DatabaseHelper().getAllProgression(widget.user.id);
+    setState(() {
+      _words = words;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    calculateResult();
     return Align(
       alignment: Alignment.center,
       child: Button(
@@ -63,14 +74,12 @@ class _AccountBlocState extends State<AccountBloc> {
                       animation: true,
                       lineHeight: width / 15,
                       animationDuration: 1000,
-                      percent: widget.user
-                              .words_per_level[widget.user.current_level]! /
-                          240,
+                      percent: _words / 240,
                       barRadius: const Radius.circular(100),
                       progressColor: Palette.lightGreen,
                       backgroundColor: Palette.lightGrey,
                       center: Text(
-                        "${widget.user.words_per_level[widget.user.current_level]} sur 240 mots",
+                        "$_words sur 240 mots",
                         style: const TextStyle(
                           fontSize: 14.0,
                           color: Colors.white,
@@ -108,7 +117,7 @@ class _AccountBlocState extends State<AccountBloc> {
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              "Niveau ${(widget.user.current_level).toString()} - ${widget.user.current_level.toString()}AEP",
+                              "Niveau ${(widget.user.currentLevel).toString()} - ${widget.user.currentLevel.toString()}AEP",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Palette.indigo, fontSize: width / 25),

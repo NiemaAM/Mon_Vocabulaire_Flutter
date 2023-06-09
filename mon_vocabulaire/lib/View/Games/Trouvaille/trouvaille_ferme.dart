@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import '../../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../../Widgets/Appbars/game_app_bar.dart';
 import '../../../Widgets/Popups/game_popup.dart';
 import '../../../Widgets/message_mascotte.dart';
@@ -51,7 +51,7 @@ class _FermeState extends State<Ferme> {
     if (animals.isNotEmpty) {
       randomElement = animals[0];
       animals.removeAt(0);
-      if (animals.length == 6) {
+      if (animals.length == 3) {
         Timer(const Duration(seconds: 5), () {
           Voice.play("audios/voices/${ElementsAudios[randomElement]}", 1);
         });

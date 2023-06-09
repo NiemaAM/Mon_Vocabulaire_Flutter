@@ -10,7 +10,7 @@ import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille_habits.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille_salle_de_bain.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille_salon.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 
 class Trouvaille extends StatefulWidget {
   final User user;

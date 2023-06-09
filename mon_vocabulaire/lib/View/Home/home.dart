@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/View/Games/jeux.dart';
@@ -23,6 +24,29 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with WidgetsBindingObserver {
   late ScrollController _hideButtonController;
   bool _isVisible = true;
+  int result = 0;
+  int words = 0;
+
+  Future<void> calculateResult(themeId) async {
+    DatabaseHelper();
+    Progression _result =
+        await DatabaseHelper().getProgression(widget.user.id!, themeId);
+    setState(() {
+      result = _result.stars;
+      words = _result.mots;
+    });
+  }
+
+  int getResult(subThemeId) {
+    calculateResult(subThemeId);
+    return result;
+  }
+
+  int getWords(subThemeId) {
+    calculateResult(subThemeId);
+    return words;
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -84,10 +108,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
               children: [
                 Bubble(
                   image: "assets/images/themes/ecole.png",
-                  nbStars: widget.user.stars_per_subtheme[5]! +
-                      widget.user.stars_per_subtheme[6]!,
-                  stage: widget.user.words_per_subtheme[5]! +
-                      widget.user.words_per_subtheme[6]!,
+                  nbStars: getResult(1) + getResult(2),
+                  stage: getWords(1) + getWords(2),
                   text: 'L’école',
                   callback: SubThemes(
                     title: 'L’école',
@@ -99,10 +121,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
                 Bubble(
                   image: "assets/images/themes/maison_et_famille.png",
-                  nbStars: widget.user.stars_per_subtheme[9]! +
-                      widget.user.stars_per_subtheme[10]!,
-                  stage: widget.user.words_per_subtheme[9]! +
-                      widget.user.words_per_subtheme[10]!,
+                  nbStars: getResult(3) + getResult(4),
+                  stage: getWords(3) + getWords(4),
                   text: 'Maison et famille',
                   callback: SubThemes(
                     title: 'Maison et famille',
@@ -114,10 +134,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
                 Bubble(
                   image: "assets/images/themes/cuisine_et_aliments.png",
-                  nbStars: widget.user.stars_per_subtheme[11]! +
-                      widget.user.stars_per_subtheme[12]!,
-                  stage: widget.user.words_per_subtheme[11]! +
-                      widget.user.words_per_subtheme[12]!,
+                  nbStars: getResult(5) + getResult(6),
+                  stage: getWords(5) + getWords(6),
                   text: 'Cuisine et aliments',
                   callback: SubThemes(
                     title: 'Cuisine et aliments',
@@ -129,10 +147,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
                 Bubble(
                   image: "assets/images/themes/animaux.png",
-                  nbStars: widget.user.stars_per_subtheme[1]! +
-                      widget.user.stars_per_subtheme[2]!,
-                  stage: widget.user.words_per_subtheme[1]! +
-                      widget.user.words_per_subtheme[2]!,
+                  nbStars: getResult(7) + getResult(8),
+                  stage: getWords(7) + getWords(8),
                   text: 'Animaux',
                   callback: SubThemes(
                     title: 'Animaux',
@@ -144,10 +160,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
                 Bubble(
                   image: "assets/images/themes/mes_habits.png",
-                  nbStars: widget.user.stars_per_subtheme[3]! +
-                      widget.user.stars_per_subtheme[4]!,
-                  stage: widget.user.words_per_subtheme[3]! +
-                      widget.user.words_per_subtheme[4]!,
+                  nbStars: getResult(9) + getResult(10),
+                  stage: getWords(9) + getWords(10),
                   text: 'Mon corps et mes habits',
                   callback: SubThemes(
                     title: 'Mon corps et mes habits',
@@ -159,10 +173,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
                 Bubble(
                   image: "assets/images/themes/sports_et_loisirs.png",
-                  nbStars: widget.user.stars_per_subtheme[7]! +
-                      widget.user.stars_per_subtheme[8]!,
-                  stage: widget.user.words_per_subtheme[7]! +
-                      widget.user.words_per_subtheme[8]!,
+                  nbStars: getResult(11) + getResult(12),
+                  stage: getWords(11) + getWords(12),
                   text: 'Sports et loisirs',
                   callback: SubThemes(
                     title: 'Sports et loisirs',

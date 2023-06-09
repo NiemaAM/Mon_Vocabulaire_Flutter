@@ -6,8 +6,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
-import '../../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../../Services/audio_background.dart';
 import '../../../Services/sfx.dart';
 import '../../../Services/voice.dart';
