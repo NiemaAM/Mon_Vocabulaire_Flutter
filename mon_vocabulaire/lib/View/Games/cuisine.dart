@@ -6,7 +6,6 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../../Widgets/message_mascotte.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:confetti/confetti.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
@@ -158,13 +157,6 @@ class _cuisineState extends State<cuisine> {
     Sfx.pause();
     _timer.cancel();
     AudioBK.playBK();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      Sfx.pause();
-    }
   }
 
   @override

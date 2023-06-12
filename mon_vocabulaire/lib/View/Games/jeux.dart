@@ -5,8 +5,6 @@ import 'package:mon_vocabulaire/View/Games/flip_card.dart';
 import 'package:mon_vocabulaire/View/Games/maze_puzzle.dart';
 import 'package:mon_vocabulaire/View/Games/ninja_bubble.dart';
 import 'package:mon_vocabulaire/View/Games/puzzle.dart';
-import 'package:mon_vocabulaire/View/Games/trouvaille.dart';
-import 'package:mon_vocabulaire/View/Games/trouvaille_CorpsEtHabits.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 import '../../Model/user.dart';
 import '../../Widgets/Palette.dart';

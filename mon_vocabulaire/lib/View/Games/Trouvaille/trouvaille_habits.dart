@@ -7,7 +7,6 @@ import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:mon_vocabulaire/Widgets/message_mascotte.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../../Model/user.dart';
-import '../../../Services/audio_background.dart';
 import '../../../Services/sfx.dart';
 import '../../../Services/voice.dart';
 import '../../../Widgets/Appbars/game_app_bar.dart';

@@ -94,7 +94,6 @@ class _PuzzleState extends State<Puzzle> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     AudioBK.pauseBK();
     final minutes = (_duration ~/ 60).toString().padLeft(2, '0');
     final seconds = (_duration % 60).toString().padLeft(2, '0');
