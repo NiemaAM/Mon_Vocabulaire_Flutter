@@ -12,6 +12,7 @@ class GamePopup extends StatelessWidget {
   final String textWin;
   final String textLose;
   final String loseImg;
+  final int price;
 
   const GamePopup({
     super.key,
@@ -23,6 +24,7 @@ class GamePopup extends StatelessWidget {
     this.textWin = "Tu as gagné",
     this.textLose = "Tu as perdu",
     this.loseImg = "assets/images/mascotte/lose.gif",
+    required this.price,
   });
 
   @override

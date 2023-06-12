@@ -1,11 +1,13 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
 import 'dart:async';
 import 'dart:math';
-
 import 'package:confetti/confetti.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
+import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/Popups/game_popup.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -85,6 +87,14 @@ class _FlipCardGameState extends State<FlipCardGame>
     }
   }
 
+  int coins = 0;
+  Future<void> getCoins() async {
+    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+    setState(() {
+      coins = _coins;
+    });
+  }
+
   void endGame() {
     if (duration > 0) {
       _controllerConfetti.play();
@@ -94,20 +104,33 @@ class _FlipCardGameState extends State<FlipCardGame>
       barrierDismissible: false,
       builder: (BuildContext context) {
         return GamePopup(
+          price: 10,
           onButton1Pressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FlipCardGame(
-                  user: widget.user,
+            getCoins();
+            if (coins >= 10) {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FlipCardGame(
+                    user: widget.user,
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                duration: Duration(seconds: 2),
+                backgroundColor: Palette.indigo,
+                content: Text(
+                  'Tu n\'as pas assez de pièces pour jouer.',
+                  style: TextStyle(color: Palette.white, fontSize: 18),
+                ),
+              ));
+            }
           },
           win: duration > 0,
         );
@@ -118,6 +141,8 @@ class _FlipCardGameState extends State<FlipCardGame>
   @override
   void initState() {
     super.initState();
+    DatabaseHelper().substractCoins(widget.user.id!, 10);
+    AudioBK.pauseBK();
     WidgetsBinding.instance.addObserver(this);
     cards = getRandomCards().toList();
     cardKeys = List.generate(12, (_) => GlobalKey<FlipCardState>());
@@ -133,6 +158,7 @@ class _FlipCardGameState extends State<FlipCardGame>
     super.dispose();
     Sfx.pause();
     _timer.cancel();
+    AudioBK.playBK();
   }
 
   @override
@@ -146,6 +172,7 @@ class _FlipCardGameState extends State<FlipCardGame>
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    AudioBK.pauseBK();
     return Stack(
       children: [
         Scaffold(

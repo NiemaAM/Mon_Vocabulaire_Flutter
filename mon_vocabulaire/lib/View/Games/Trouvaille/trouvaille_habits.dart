@@ -1,12 +1,14 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:mon_vocabulaire/Widgets/message_mascotte.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import '../../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../../Services/sfx.dart';
 import '../../../Services/voice.dart';
 import '../../../Widgets/Appbars/game_app_bar.dart';
@@ -21,9 +23,10 @@ class Habits extends StatefulWidget {
   State<Habits> createState() => _HabitsState();
 }
 
-class _HabitsState extends State<Habits> {
+class _HabitsState extends State<Habits> with WidgetsBindingObserver {
   int countdown = 5;
   late Timer _timer;
+  late Timer _timer2;
   bool _isDressClicked = false;
   bool _isCoatClicked = false;
   bool _isBootsClicked = false;
@@ -60,8 +63,8 @@ class _HabitsState extends State<Habits> {
     if (dressing.isNotEmpty) {
       randomElement = dressing[0];
       dressing.removeAt(0);
-      if (dressing.length == 5) {
-        Timer(const Duration(seconds: 5), () {
+      if (dressing.length == 5 && duration > 0) {
+        _timer2 = Timer.periodic(const Duration(seconds: 5), (timer) {
           Voice.play("audios/voices/${ElementsAudios[randomElement]}", 1);
         });
       } else {
@@ -83,6 +86,7 @@ class _HabitsState extends State<Habits> {
             Sfx.play("audios/sfx/race_start.mp3", 1);
           }
           if (countdown < 0) {
+            _timer2.cancel();
             duration--;
             _canTap = true;
             if (duration == 0) {
@@ -93,18 +97,33 @@ class _HabitsState extends State<Habits> {
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     return GamePopup(
+                      price: 30,
                       onButton1Pressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Trouvaille(user: widget.user),
-                          ),
-                        );
+                        if (coins >= 30) {
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Trouvaille(user: widget.user),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Palette.indigo,
+                            content: Text(
+                              'Tu n\'as pas assez de pièces pour jouer.',
+                              style:
+                                  TextStyle(color: Palette.white, fontSize: 18),
+                            ),
+                          ));
+                        }
                       },
                       oneButton: false,
                       win: false,
@@ -119,7 +138,16 @@ class _HabitsState extends State<Habits> {
     }
   }
 
+  int coins = 0;
+  Future<void> getCoins() async {
+    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+    setState(() {
+      coins = _coins;
+    });
+  }
+
   void endGame() {
+    _timer2.cancel();
     _timer.cancel();
     if (duration > 0) {
       _controllerConfetti.play();
@@ -129,18 +157,31 @@ class _HabitsState extends State<Habits> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return GamePopup(
+          price: 30,
           onButton1Pressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Trouvaille(user: widget.user),
-              ),
-            );
+            getCoins();
+            if (coins >= 30) {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Trouvaille(user: widget.user),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                duration: Duration(seconds: 2),
+                backgroundColor: Palette.indigo,
+                content: Text(
+                  'Tu n\'as pas assez de pièces pour jouer.',
+                  style: TextStyle(color: Palette.white, fontSize: 18),
+                ),
+              ));
+            }
           },
           win: duration > 0,
         );
@@ -152,7 +193,7 @@ class _HabitsState extends State<Habits> {
   void initState() {
     super.initState();
     randomElementFunc();
-
+    WidgetsBinding.instance.addObserver(this);
     _controllerConfetti =
         ConfettiController(duration: const Duration(seconds: 1));
 
@@ -163,7 +204,20 @@ class _HabitsState extends State<Habits> {
   void dispose() {
     super.dispose();
     Sfx.pause();
+    Voice.pause();
     _timer.cancel();
+    _timer2.cancel();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      AudioBK.pauseBK();
+      Voice.pause();
+      Sfx.pause();
+    } else {
+      AudioBK.playBK();
+    }
   }
 
   @override

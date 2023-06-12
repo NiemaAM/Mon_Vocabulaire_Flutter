@@ -1,5 +1,8 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 
@@ -37,8 +40,24 @@ class _CustomAppBarGamesState extends State<CustomAppBarGames> {
     return hslDark.toColor();
   }
 
+  int coins = 0;
+  Future<void> getCoins() async {
+    DatabaseHelper();
+    User _user = await DatabaseHelper().getUser(widget.user.id!);
+    setState(() {
+      coins = _user.coins;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCoins();
+  }
+
   @override
   Widget build(BuildContext context) {
+    getCoins();
     return widget.background && !widget.timer
         ? Stack(
             children: [
@@ -99,7 +118,7 @@ class _CustomAppBarGamesState extends State<CustomAppBarGames> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "${widget.user.coins}  ",
+                              "$coins  ",
                               style: const TextStyle(
                                   color: Palette.black,
                                   fontSize: 20,
@@ -174,7 +193,7 @@ class _CustomAppBarGamesState extends State<CustomAppBarGames> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "${widget.user.coins}  ",
+                                  "$coins  ",
                                   style: const TextStyle(
                                       color: Palette.black,
                                       fontSize: 20,
@@ -227,7 +246,7 @@ class _CustomAppBarGamesState extends State<CustomAppBarGames> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "${widget.user.coins}  ",
+                              "$coins  ",
                               style: const TextStyle(
                                   color: Palette.black,
                                   fontSize: 20,

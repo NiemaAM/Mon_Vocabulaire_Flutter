@@ -15,6 +15,7 @@ class Bubble extends StatefulWidget {
   final Widget callback;
   final String type;
   final bool hasShadow;
+  final int totalWords;
   const Bubble(
       {super.key,
       required this.image,
@@ -24,7 +25,8 @@ class Bubble extends StatefulWidget {
       required this.callback,
       required this.color,
       required this.type,
-      this.hasShadow = false});
+      this.hasShadow = false,
+      this.totalWords = 40});
 
   @override
   State<Bubble> createState() => _BubbleState();
@@ -60,7 +62,7 @@ class _BubbleState extends State<Bubble> {
                   animation: true,
                   radius: width < 500 ? size : 90,
                   lineWidth: 10,
-                  percent: widget.stage / 100,
+                  percent: widget.stage / widget.totalWords,
                   progressColor: widget.color,
                   backgroundColor: Palette.lightGrey,
                 ),

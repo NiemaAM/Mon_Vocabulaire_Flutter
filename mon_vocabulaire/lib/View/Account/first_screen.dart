@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Account/accounts.dart';
+import 'package:mon_vocabulaire/View/Account/top5.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 
@@ -78,11 +80,8 @@ class _FirstSceenState extends State<FirstSceen> {
                 Center(
                   child: Button(
                     callback: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Accounts(),
-                        ),
+                      Navigator.of(context).push(
+                        SlideButtom(page: const Top5()),
                       );
                     },
                     content: Row(
@@ -90,7 +89,7 @@ class _FirstSceenState extends State<FirstSceen> {
                         Expanded(flex: 5, child: SizedBox()),
                         Center(
                             child: Text(
-                          "TOP",
+                          "TOP5",
                           style: TextStyle(
                               color: Palette.indigo,
                               fontWeight: FontWeight.bold,

@@ -1,4 +1,7 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/View/Account/profil.dart';
@@ -6,8 +9,7 @@ import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 
 class CustomAppBarHome extends StatefulWidget implements PreferredSizeWidget {
   final User user;
@@ -24,6 +26,26 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight + 100);
 
   bool state = false;
+
+  int _words = 0;
+
+  Future<void> calculateResult() async {
+    DatabaseHelper();
+    int words = await DatabaseHelper().getAllProgression(widget.user.id!);
+    setState(() {
+      _words = words;
+    });
+  }
+
+  int coins = 0;
+  Future<void> getCoins() async {
+    DatabaseHelper();
+    User _user = await DatabaseHelper().getUser(widget.user.id!);
+    setState(() {
+      coins = _user.coins;
+    });
+  }
+
   Future<void> volumeState() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (state) {
@@ -35,23 +57,11 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
     }
   }
 
-  void getVolume() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getDouble('bkVolume') == 0) {
-      setState(() {
-        state = true;
-      });
-    } else {
-      setState(() {
-        state = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    getVolume();
+    calculateResult();
+    getCoins();
     return Stack(
       children: [
         const SizedBox(
@@ -86,7 +96,7 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
                   child: SizedBox(),
                 ),
                 Text(
-                  "${widget.user.coins.toString()} ",
+                  "${coins.toString()} ",
                   style: const TextStyle(
                       color: Palette.white,
                       fontSize: 16,
@@ -101,14 +111,12 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
                   animation: true,
                   lineHeight: 25.0,
                   animationDuration: 1000,
-                  percent:
-                      widget.user.words_per_level[widget.user.current_level]! /
-                          240,
+                  percent: _words / 240,
                   barRadius: const Radius.circular(100),
                   progressColor: Palette.lightGreen,
                   backgroundColor: Palette.darkBlue,
                   center: Text(
-                    "${widget.user.words_per_level[widget.user.current_level]} sur 240 mots",
+                    "$_words sur 240 mots",
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.white,

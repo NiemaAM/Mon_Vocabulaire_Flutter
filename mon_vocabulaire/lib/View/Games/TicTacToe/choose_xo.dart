@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/View/Games/TicTacToe/tic_tac_toe.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 
