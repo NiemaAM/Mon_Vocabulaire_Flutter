@@ -1,9 +1,10 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, no_leading_underscores_for_local_identifiers
 
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
 import 'package:mon_vocabulaire/View/Quiz/quiz_text_images.dart';
@@ -15,83 +16,107 @@ import '../Quiz/drag_and_drop.dart';
 import '../Quiz/quiz_image_texts.dart';
 
 class LessonPath extends StatefulWidget {
-  final String title;
   final int subTheme;
-  final String image;
   final User user;
-  const LessonPath(
-      {super.key,
-      required this.title,
-      required this.subTheme,
-      required this.image,
-      required this.user});
+  const LessonPath({super.key, required this.subTheme, required this.user});
 
   @override
   State<LessonPath> createState() => _LessonPathState();
 }
 
 class _LessonPathState extends State<LessonPath> {
-  List<String> images = ["", ""];
   String background = "";
   Color color = Palette.blue;
-  List<String> titles = ["", ""];
+  String title = "";
+  String image = "";
+  int userProg = 0;
+
+  Future<void> getQuiz() async {
+    Progression _userProg =
+        await DatabaseHelper().getProgression(widget.user.id!, widget.subTheme);
+    setState(() {
+      userProg = _userProg.quiz;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    if (widget.subTheme == 1 || widget.subTheme == 2) {
-      setState(() {
-        images[1] = "assets/images/themes/personnes.png";
-        images[0] = "assets/images/themes/elements.png";
-        titles[1] = "Personnes";
-        titles[0] = "Éléments";
+    getQuiz();
+    switch (widget.subTheme) {
+      case 1:
+        image = "assets/images/themes/elements.png";
+        title = "Éléments";
         background = "school";
         color = Palette.ecole;
-      });
-    } else if (widget.subTheme == 3 || widget.subTheme == 4) {
-      setState(() {
-        images[0] = "assets/images/themes/maison.png";
-        images[1] = "assets/images/themes/famille.png";
-        titles[0] = "Maison";
-        titles[1] = "Famille";
+        break;
+      case 2:
+        image = "assets/images/themes/personnes.png";
+        title = "Personnes";
+        background = "school";
+        color = Palette.ecole;
+        break;
+      case 3:
+        image = "assets/images/themes/maison.png";
+        title = "Maison";
         background = "home";
         color = Palette.maison;
-      });
-    } else if (widget.subTheme == 5 || widget.subTheme == 6) {
-      setState(() {
-        images[0] = "assets/images/themes/cuisine.png";
-        images[1] = "assets/images/themes/aliments.png";
-        titles[0] = "Cuisine";
-        titles[1] = "Aliments";
+        break;
+      case 4:
+        image = "assets/images/themes/famille.png";
+        title = "Famille";
+        background = "home";
+        color = Palette.maison;
+        break;
+      case 5:
+        image = "assets/images/themes/cuisine.png";
+        title = "Cuisine";
         background = "kitchen";
         color = Palette.cuisine;
-      });
-    } else if (widget.subTheme == 7 || widget.subTheme == 8) {
-      setState(() {
-        images[0] = "assets/images/themes/animaux.png";
-        images[1] = "assets/images/themes/mammiferes.png";
-        titles[0] = "Ferme";
-        titles[1] = "Forêt";
+        break;
+      case 6:
+        image = "assets/images/themes/aliments.png";
+        title = "Aliments";
+        background = "kitchen";
+        color = Palette.cuisine;
+        break;
+      case 7:
+        image = "assets/images/themes/ferme.png";
+        title = "Ferme";
         background = "forest";
         color = Palette.animaux;
-      });
-    } else if (widget.subTheme == 9 || widget.subTheme == 10) {
-      setState(() {
-        images[0] = "assets/images/themes/mon_corps.png";
-        images[1] = "assets/images/themes/mes_habits.png";
-        titles[0] = "Mon corps";
-        titles[1] = "Mes habits";
+        break;
+      case 8:
+        image = "assets/images/themes/foret.png";
+        title = "Forêt";
+        background = "forest";
+        color = Palette.animaux;
+        break;
+      case 9:
+        image = "assets/images/themes/mon_corps.png";
+        title = "Mon corps";
         background = "cloths";
         color = Palette.corps;
-      });
-    } else if (widget.subTheme == 11 || widget.subTheme == 12) {
-      setState(() {
-        images[0] = "assets/images/themes/sports.png";
-        images[1] = "assets/images/themes/loisirs.png";
-        titles[0] = "Sports";
-        titles[1] = "Loisirs";
+        break;
+      case 10:
+        image = "assets/images/themes/mes_habits.png";
+        title = "Mes habits";
+        background = "cloths";
+        color = Palette.corps;
+        break;
+      case 11:
+        image = "assets/images/themes/sports.png";
+        title = "Sports";
         background = "sports";
         color = Palette.sports;
-      });
+        break;
+      case 12:
+        image = "assets/images/themes/loisirs.png";
+        title = "Loisirs";
+        background = "sports";
+        color = Palette.sports;
+        break;
+      default:
     }
   }
 
@@ -108,6 +133,7 @@ class _LessonPathState extends State<LessonPath> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    getQuiz();
     List<Widget> elements = [
       // Element 1
       Column(
@@ -128,15 +154,27 @@ class _LessonPathState extends State<LessonPath> {
             content: Center(
               child: Padding(
                 padding: const EdgeInsets.all(30),
-                child: Image.asset(
-                  "assets/images/themes/song.png",
+                child: Stack(
+                  children: [
+                    Opacity(
+                      opacity: userProg >= 1 ? 1 : 0.5,
+                      child: Image.asset(
+                        "assets/images/themes/song.png",
+                      ),
+                    ),
+                    Image.asset(
+                      "assets/images/themes/lock.png",
+                      color: userProg >= 1 ? Colors.transparent : Palette.black,
+                    ),
+                  ],
                 ),
               ),
             ),
             width: width > 500 ? width / 2 : width / 1.8,
             heigth: width > 500 ? width / 2 : width / 1.8,
-            color: Palette.white,
+            color: userProg >= 1 ? Palette.white : color.withOpacity(0.6),
             radius: 500,
+            enabled: userProg >= 1,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20),
@@ -179,15 +217,27 @@ class _LessonPathState extends State<LessonPath> {
             content: Center(
               child: Padding(
                 padding: const EdgeInsets.all(30),
-                child: Image.asset(
-                  "assets/images/themes/images.png",
+                child: Stack(
+                  children: [
+                    Opacity(
+                      opacity: userProg >= 2 ? 1 : 0.5,
+                      child: Image.asset(
+                        "assets/images/themes/images.png",
+                      ),
+                    ),
+                    Image.asset(
+                      "assets/images/themes/lock.png",
+                      color: userProg >= 2 ? Colors.transparent : Palette.black,
+                    ),
+                  ],
                 ),
               ),
             ),
             width: width > 500 ? width / 2 : width / 1.8,
             heigth: width > 500 ? width / 2 : width / 1.8,
-            color: Palette.white,
+            color: userProg >= 2 ? Palette.white : color.withOpacity(0.6),
             radius: 500,
+            enabled: userProg >= 2,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20),
@@ -230,15 +280,27 @@ class _LessonPathState extends State<LessonPath> {
             content: Center(
               child: Padding(
                 padding: const EdgeInsets.all(30),
-                child: Image.asset(
-                  "assets/images/themes/drag_and_drop.png",
+                child: Stack(
+                  children: [
+                    Opacity(
+                      opacity: userProg >= 3 ? 1 : 0.5,
+                      child: Image.asset(
+                        "assets/images/themes/drag_and_drop.png",
+                      ),
+                    ),
+                    Image.asset(
+                      "assets/images/themes/lock.png",
+                      color: userProg >= 3 ? Colors.transparent : Palette.black,
+                    ),
+                  ],
                 ),
               ),
             ),
             width: width > 500 ? width / 2 : width / 1.8,
             heigth: width > 500 ? width / 2 : width / 1.8,
-            color: Palette.white,
+            color: userProg >= 3 ? Palette.white : color.withOpacity(0.6),
             radius: 500,
+            enabled: userProg >= 3,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20),
@@ -448,10 +510,10 @@ class _LessonPathState extends State<LessonPath> {
             ),
           ),
           CustomAppBar(
-            title: widget.title.toUpperCase(),
+            title: title.toUpperCase(),
             color: color,
             automaticallyImplyLeading: true,
-            image: widget.image,
+            image: image,
           ),
         ],
       ),

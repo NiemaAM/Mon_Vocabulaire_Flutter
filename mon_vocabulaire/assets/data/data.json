@@ -178,7 +178,7 @@
         }}
      },
      "Personnes":{
-        "33":{
+        "p1":{"33":{
            "article":"un",
            "mot":"ami",
            "code":33
@@ -202,7 +202,7 @@
            "article":"une",
            "mot":"maîtresse",
            "code":37
-        }
+        }}
      }
   },
   "Maison et Famille":{
@@ -354,7 +354,7 @@
         }}
      },
      "Famille":{
-        "55":{
+        "p1":{"55":{
            "article":"un",
            "mot":"bébé",
            "code":55
@@ -408,12 +408,12 @@
            "article":"une",
            "mot":"sœur",
            "code":65
-        }
+        }}
      }
   },
   "Cuisine et aliments":{
      "Cuisine":{
-        "77":{
+        "p1":{"77":{
            "article":"une",
            "mot":"assiette",
            "code":77
@@ -477,7 +477,7 @@
            "article":"un",
            "mot":"verre",
            "code":89
-        }
+        }}
      },
      "Aliments":{
         "p1":{"90":{
@@ -1008,7 +1008,7 @@
            "code":192
         },
         "193":{
-           "article":"du",
+           "article":"un",
            "mot":"tricot",
            "code":193
         },
@@ -1031,7 +1031,7 @@
   },
   "Sports et loisirs":{
      "Sports":{
-        "195":{
+        "p1":{"195":{
            "article":"un",
            "mot":"boxeur",
            "code":195
@@ -1080,7 +1080,7 @@
            "article":"un",
            "mot":"tennis",
            "code":204
-        }
+        }}
      },
      "Loisirs":{
         "p1":{"205":{
@@ -1133,7 +1133,7 @@
            "mot":"magicien",
            "code":214
         }},
-        "240":{
+        "p2":{"240":{
          "article":"un",
          "mot":"clown",
          "code":240
@@ -1182,8 +1182,8 @@
            "article":"un",
            "mot":"toboggan",
            "code":223
-        },
-        "p2":{"224":{
+        }},
+        "p3":{"224":{
            "article":"une",
            "mot":"toupie",
            "code":224

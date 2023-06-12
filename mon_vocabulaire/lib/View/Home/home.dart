@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:ionicons/ionicons.dart';
@@ -5,6 +7,8 @@ import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
+import 'package:mon_vocabulaire/Services/sfx.dart';
+import 'package:mon_vocabulaire/Services/voice.dart';
 import 'package:mon_vocabulaire/View/Games/jeux.dart';
 import 'package:mon_vocabulaire/View/Themes/sub_themes.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
@@ -24,27 +28,59 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with WidgetsBindingObserver {
   late ScrollController _hideButtonController;
   bool _isVisible = true;
-  int result = 0;
-  int words = 0;
+  int wordsSubTheme1 = 0;
+  int wordsSubTheme2 = 0;
+  int wordsSubTheme3 = 0;
+  int wordsSubTheme4 = 0;
+  int wordsSubTheme5 = 0;
+  int wordsSubTheme6 = 0;
+  int starsSubTheme1 = 0;
+  int starsSubTheme2 = 0;
+  int starsSubTheme3 = 0;
+  int starsSubTheme4 = 0;
+  int starsSubTheme5 = 0;
+  int starsSubTheme6 = 0;
 
-  Future<void> calculateResult(themeId) async {
+  Future<void> getResult() async {
     DatabaseHelper();
-    Progression _result =
-        await DatabaseHelper().getProgression(widget.user.id!, themeId);
+    Progression _result1 =
+        await DatabaseHelper().getProgression(widget.user.id!, 1);
+    Progression _result2 =
+        await DatabaseHelper().getProgression(widget.user.id!, 2);
+    Progression _result3 =
+        await DatabaseHelper().getProgression(widget.user.id!, 3);
+    Progression _result4 =
+        await DatabaseHelper().getProgression(widget.user.id!, 4);
+    Progression _result5 =
+        await DatabaseHelper().getProgression(widget.user.id!, 5);
+    Progression _result6 =
+        await DatabaseHelper().getProgression(widget.user.id!, 6);
+    Progression _result7 =
+        await DatabaseHelper().getProgression(widget.user.id!, 7);
+    Progression _result8 =
+        await DatabaseHelper().getProgression(widget.user.id!, 8);
+    Progression _result9 =
+        await DatabaseHelper().getProgression(widget.user.id!, 9);
+    Progression _result10 =
+        await DatabaseHelper().getProgression(widget.user.id!, 10);
+    Progression _result11 =
+        await DatabaseHelper().getProgression(widget.user.id!, 11);
+    Progression _result12 =
+        await DatabaseHelper().getProgression(widget.user.id!, 12);
     setState(() {
-      result = _result.stars;
-      words = _result.mots;
+      wordsSubTheme1 = _result1.mots + _result2.mots;
+      wordsSubTheme2 = _result3.mots + _result4.mots;
+      wordsSubTheme3 = _result5.mots + _result6.mots;
+      wordsSubTheme4 = _result7.mots + _result8.mots;
+      wordsSubTheme5 = _result9.mots + _result10.mots;
+      wordsSubTheme6 = _result11.mots + _result12.mots;
+      starsSubTheme1 = _result1.stars + _result2.stars;
+      starsSubTheme2 = _result3.stars + _result4.stars;
+      starsSubTheme3 = _result5.stars + _result6.stars;
+      starsSubTheme4 = _result7.stars + _result8.stars;
+      starsSubTheme5 = _result9.stars + _result10.stars;
+      starsSubTheme6 = _result11.stars + _result12.stars;
     });
-  }
-
-  int getResult(subThemeId) {
-    calculateResult(subThemeId);
-    return result;
-  }
-
-  int getWords(subThemeId) {
-    calculateResult(subThemeId);
-    return words;
   }
 
   @override
@@ -58,6 +94,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
       AudioBK.pauseBK();
+      Voice.pause();
+      Sfx.pause();
     } else {
       AudioBK.playBK();
     }
@@ -70,6 +108,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     AudioBK.playBK();
     _isVisible = true;
     _hideButtonController = ScrollController();
+    getResult();
     _hideButtonController.addListener(() {
       if (_hideButtonController.position.userScrollDirection ==
           ScrollDirection.reverse) {
@@ -94,6 +133,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    getResult();
     return Scaffold(
       body: Stack(
         children: [
@@ -108,8 +148,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
               children: [
                 Bubble(
                   image: "assets/images/themes/ecole.png",
-                  nbStars: getResult(1) + getResult(2),
-                  stage: getWords(1) + getWords(2),
+                  nbStars: starsSubTheme1,
+                  stage: wordsSubTheme1,
                   text: 'L’école',
                   callback: SubThemes(
                     title: 'L’école',
@@ -121,8 +161,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
                 Bubble(
                   image: "assets/images/themes/maison_et_famille.png",
-                  nbStars: getResult(3) + getResult(4),
-                  stage: getWords(3) + getWords(4),
+                  nbStars: starsSubTheme2,
+                  stage: wordsSubTheme2,
                   text: 'Maison et famille',
                   callback: SubThemes(
                     title: 'Maison et famille',
@@ -134,8 +174,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
                 Bubble(
                   image: "assets/images/themes/cuisine_et_aliments.png",
-                  nbStars: getResult(5) + getResult(6),
-                  stage: getWords(5) + getWords(6),
+                  nbStars: starsSubTheme3,
+                  stage: wordsSubTheme3,
                   text: 'Cuisine et aliments',
                   callback: SubThemes(
                     title: 'Cuisine et aliments',
@@ -147,8 +187,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
                 Bubble(
                   image: "assets/images/themes/animaux.png",
-                  nbStars: getResult(7) + getResult(8),
-                  stage: getWords(7) + getWords(8),
+                  nbStars: starsSubTheme4,
+                  stage: wordsSubTheme4,
                   text: 'Animaux',
                   callback: SubThemes(
                     title: 'Animaux',
@@ -160,8 +200,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
                 Bubble(
                   image: "assets/images/themes/mes_habits.png",
-                  nbStars: getResult(9) + getResult(10),
-                  stage: getWords(9) + getWords(10),
+                  nbStars: starsSubTheme5,
+                  stage: wordsSubTheme5,
                   text: 'Mon corps et mes habits',
                   callback: SubThemes(
                     title: 'Mon corps et mes habits',
@@ -173,8 +213,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 ),
                 Bubble(
                   image: "assets/images/themes/sports_et_loisirs.png",
-                  nbStars: getResult(11) + getResult(12),
-                  stage: getWords(11) + getWords(12),
+                  nbStars: starsSubTheme6,
+                  stage: wordsSubTheme6,
                   text: 'Sports et loisirs',
                   callback: SubThemes(
                     title: 'Sports et loisirs',

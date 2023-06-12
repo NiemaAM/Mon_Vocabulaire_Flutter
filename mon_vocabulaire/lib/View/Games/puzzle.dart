@@ -1,10 +1,11 @@
-// ignore_for_file: must_be_immutable, unnecessary_null_comparison, cast_from_null_always_fails
+// ignore_for_file: must_be_immutable, unnecessary_null_comparison, cast_from_null_always_fails, no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
@@ -69,6 +70,7 @@ class _PuzzleState extends State<Puzzle> {
   @override
   void initState() {
     super.initState();
+    DatabaseHelper().substractCoins(widget.user.id!, 10);
     AudioBK.pauseBK();
     getIamge();
     hideWidget();
@@ -98,6 +100,7 @@ class _PuzzleState extends State<Puzzle> {
     final minutes = (_duration ~/ 60).toString().padLeft(2, '0');
     final seconds = (_duration % 60).toString().padLeft(2, '0');
     final timerText = '$minutes:$seconds';
+
     return Scaffold(
         backgroundColor: Palette.white,
         appBar: CustomAppBarGames(
@@ -510,6 +513,13 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
   }
 
   bool dialogShown = false;
+  int coins = 0;
+  Future<void> getCoins() async {
+    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+    setState(() {
+      coins = _coins;
+    });
+  }
 
   void showEndDialog() {
     if (dialogShown) {
@@ -523,20 +533,33 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return GamePopup(
+          price: 10,
           onButton1Pressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Puzzle(
-                  user: widget.user,
+            getCoins();
+            if (coins >= 10) {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Puzzle(
+                    user: widget.user,
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                duration: Duration(seconds: 2),
+                backgroundColor: Palette.indigo,
+                content: Text(
+                  'Tu n\'as pas assez de pièces pour jouer.',
+                  style: TextStyle(color: Palette.white, fontSize: 18),
+                ),
+              ));
+            }
           },
         );
       },

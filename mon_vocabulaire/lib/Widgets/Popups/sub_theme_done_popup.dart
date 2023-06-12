@@ -1,61 +1,29 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
+import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
+import 'package:mon_vocabulaire/View/Themes/sub_theme_path.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 
-class DonePopup extends StatefulWidget {
-  final VoidCallback onButton1Pressed;
-  final VoidCallback onButton2Pressed;
-  final User user;
+class SubThemeDonePopup extends StatefulWidget {
   final int subThemeId;
+  final User user;
 
-  const DonePopup({
+  const SubThemeDonePopup({
     super.key,
-    required this.onButton1Pressed,
-    required this.onButton2Pressed,
     required this.user,
     required this.subThemeId,
   });
 
   @override
-  State<DonePopup> createState() => _DonePopupState();
+  State<SubThemeDonePopup> createState() => _SubThemeDonePopupState();
 }
 
-class _DonePopupState extends State<DonePopup> {
-  int quiz = 0;
-  Future<void> getQuiz() async {
-    int _quiz =
-        await DatabaseHelper().getQuiz(widget.user.id!, widget.subThemeId);
-    setState(() {
-      quiz = _quiz;
-    });
-  }
-
+class _SubThemeDonePopupState extends State<SubThemeDonePopup> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    getQuiz();
-    Timer(const Duration(seconds: 3), () {
-      if (widget.subThemeId == 1 ||
-          widget.subThemeId == 3 ||
-          widget.subThemeId == 6 ||
-          widget.subThemeId == 7 ||
-          widget.subThemeId == 8 ||
-          widget.subThemeId == 9 ||
-          widget.subThemeId == 10 ||
-          widget.subThemeId == 12) {
-        if (quiz == 0) {
-          DatabaseHelper().updateQuiz(widget.user.id!, widget.subThemeId, 1);
-        }
-      }
-    });
-
     Sfx.play("audios/sfx/done.mp3", 1);
     return Dialog(
       insetPadding: EdgeInsets.all(width > 500 ? 100 : 30),
@@ -88,7 +56,7 @@ class _DonePopupState extends State<DonePopup> {
                     ),
                     const SizedBox(height: 5.0),
                     Text(
-                      "Tu as terminé la leçon",
+                      "Bravo! Tu as terminé cette partie",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: width > 500 ? 20 : 16,
@@ -101,7 +69,10 @@ class _DonePopupState extends State<DonePopup> {
                         Padding(
                           padding: const EdgeInsets.only(right: 5),
                           child: Button(
-                            callback: widget.onButton1Pressed,
+                            callback: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
                             content: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -128,7 +99,19 @@ class _DonePopupState extends State<DonePopup> {
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Button(
-                            callback: widget.onButton2Pressed,
+                            callback: () {
+                              if (widget.subThemeId < 12) {
+                                Navigator.pop(context);
+                                Navigator.of(context).pushReplacement(
+                                  SlideRight(
+                                    page: LessonPath(
+                                      subTheme: widget.subThemeId + 1,
+                                      user: widget.user,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
                             content: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

@@ -60,16 +60,14 @@ class _AccountsState extends State<Accounts> {
           Padding(
             padding: EdgeInsets.only(top: height / 4),
             child: SizedBox(
-              height: height / 2 + 100,
+              height: height / 2 + 35,
               width: width,
-              child: Center(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    return AccountBloc(user: users[index]);
-                  },
-                ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  return AccountBloc(user: users[index]);
+                },
               ),
             ),
           ),

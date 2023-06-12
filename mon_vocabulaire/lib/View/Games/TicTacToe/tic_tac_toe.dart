@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
@@ -37,6 +38,7 @@ class _TicTacToeState extends State<TicTacToe> {
   @override
   void initState() {
     super.initState();
+    DatabaseHelper().substractCoins(widget.user.id!, 20);
     startNewGame();
     _controllerConfetti =
         ConfettiController(duration: const Duration(seconds: 1));
@@ -198,6 +200,7 @@ class _TicTacToeState extends State<TicTacToe> {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return GamePopup(
+              price: 20,
               oneButton: true,
               onButton1Pressed: () {
                 Navigator.pop(context);
@@ -224,6 +227,7 @@ class _TicTacToeState extends State<TicTacToe> {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return GamePopup(
+              price: 20,
               oneButton: true,
               onButton1Pressed: () {
                 Navigator.pop(context);
@@ -249,6 +253,7 @@ class _TicTacToeState extends State<TicTacToe> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return GamePopup(
+            price: 20,
             onButton1Pressed: () {
               Navigator.pop(context);
               Navigator.pop(context);
@@ -278,6 +283,7 @@ class _TicTacToeState extends State<TicTacToe> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
     autoPlay();
     return Scaffold(
       backgroundColor: Palette.lightBlue,

@@ -1,4 +1,7 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/View/Games/TicTacToe/choose_xo.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:mon_vocabulaire/View/Games/flip_card.dart';
@@ -19,9 +22,19 @@ class Games extends StatefulWidget {
 }
 
 class _GamesState extends State<Games> {
+  int coins = 0;
+  Future<void> getCoins() async {
+    DatabaseHelper();
+    User _user = await DatabaseHelper().getUser(widget.user.id!);
+    setState(() {
+      coins = _user.coins;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    getCoins();
     return Scaffold(
         backgroundColor: Palette.lightBlue,
         appBar: CustomAppBarGames(
@@ -41,7 +54,7 @@ class _GamesState extends State<Games> {
                 page: Puzzle(
                   user: widget.user,
                 ),
-                enabled: widget.user.coins > 10,
+                enabled: coins >= 10,
               ),
               GameBloc(
                 image: "assets/images/games/JuMots.png",
@@ -49,7 +62,7 @@ class _GamesState extends State<Games> {
                 page: FlipCardGame(
                   user: widget.user,
                 ),
-                enabled: widget.user.coins > 10,
+                enabled: coins >= 10,
               ),
               GameBloc(
                 image: "assets/images/games/tic-tac-toe.png",
@@ -57,7 +70,7 @@ class _GamesState extends State<Games> {
                 page: ChooseXO(
                   user: widget.user,
                 ),
-                enabled: widget.user.coins > 20,
+                enabled: coins >= 20,
               ),
               GameBloc(
                 image: "assets/images/games/apple.png",
@@ -65,13 +78,13 @@ class _GamesState extends State<Games> {
                 page: MazePuzzle(
                   user: widget.user,
                 ),
-                enabled: widget.user.coins > 20,
+                enabled: coins >= 20,
               ),
               GameBloc(
                 image: "assets/images/games/search.png",
                 price: '30',
                 page: Trouvaille(user: widget.user),
-                enabled: widget.user.coins > 30,
+                enabled: coins >= 30,
               ),
               GameBloc(
                 image: "assets/images/games/bubbles.png",
@@ -79,7 +92,7 @@ class _GamesState extends State<Games> {
                 page: NinjaBubble(
                   user: widget.user,
                 ),
-                enabled: widget.user.coins > 30,
+                enabled: coins >= 30,
               ),
             ],
           ),

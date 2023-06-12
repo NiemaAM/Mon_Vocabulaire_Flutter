@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -37,6 +39,7 @@ class _LevelBlocState extends State<LevelBloc> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    calculateResult();
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),

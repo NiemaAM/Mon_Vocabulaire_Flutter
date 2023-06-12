@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
@@ -48,7 +50,14 @@ class _CustomAppBarGamesState extends State<CustomAppBarGames> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getCoins();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    getCoins();
     return widget.background && !widget.timer
         ? Stack(
             children: [

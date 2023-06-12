@@ -5,9 +5,11 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Themes/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
 import 'package:mon_vocabulaire/View/Account/first_screen.dart';
+import 'package:mon_vocabulaire/View/Settings/about.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/Popups/alert_popup.dart';
@@ -131,6 +133,10 @@ class _SettingsPageState extends State<SettingsPage> {
     generateCaptchaImage();
 
     if (captchaVerified) {
+      DatabaseHelper().deleteUser(widget.user.id!);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
       Navigator.pop(context);
       showDialog(
           context: context,
@@ -574,7 +580,14 @@ class _SettingsPageState extends State<SettingsPage> {
                       fontSize: 16.0,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AboutUs(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

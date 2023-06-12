@@ -5,6 +5,7 @@ class Progression {
   int part = 0;
   int stars = 0;
   int mots = 0;
+  bool finished;
 
   Progression(
       {required this.userId,
@@ -12,7 +13,8 @@ class Progression {
       required this.quiz,
       required this.part,
       required this.stars,
-      required this.mots});
+      required this.mots,
+      this.finished = false});
 
   Map<String, dynamic> toMap() {
     return {
@@ -22,6 +24,7 @@ class Progression {
       'part': part,
       'stars': stars,
       'words': mots,
+      'finished': finished,
     };
   }
 }
@@ -39,6 +42,16 @@ class User {
       required this.image,
       required this.currentLevel,
       required this.coins});
+
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      id: map['user_id'],
+      name: map['name'],
+      image: map['profil_img'],
+      currentLevel: map['level'],
+      coins: map['coins'],
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {

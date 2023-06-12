@@ -1,6 +1,10 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 
 class Lesson {
   String image = '';
@@ -60,10 +64,12 @@ class QuizModel {
   List<String> lettresReponse = [];
   List<String> lettresProposition = [];
   List<String> lettresQuestion = [];
+  int part = 1;
 
-  int part = 2;
-
-  Future<List<Lesson>> getLesson(String theme, String subtheme) async {
+  Future<List<Lesson>> getLesson(
+      String theme, String subtheme, User user, int subThemeId) async {
+    int _part = await DatabaseHelper().getPart(user.id!, subThemeId);
+    part = _part;
     // Load the JSON data from the asset file
     String jsonStr = await rootBundle.loadString('assets/data/data.json');
 
@@ -71,7 +77,7 @@ class QuizModel {
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
 
     // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$part"];
+    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$_part"];
     size = elementsMap.length;
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
@@ -100,7 +106,9 @@ class QuizModel {
   }
 
   Future<PropositionLettres> getRandomLettres(
-      String theme, String subtheme) async {
+      String theme, String subtheme, User user, int subThemeId) async {
+    int _part = await DatabaseHelper().getPart(user.id!, subThemeId);
+    part = _part;
     // Load the JSON data from the asset file
     String jsonStr = await rootBundle.loadString('assets/data/data.json');
 
@@ -108,7 +116,7 @@ class QuizModel {
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
 
     // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$part"];
+    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$_part"];
     size = elementsMap.length;
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
@@ -168,12 +176,12 @@ class QuizModel {
   }
 
   Future<List<PropositionLettres>> getRandomPropositionsLettres(
-      String theme, String subtheme) async {
+      String theme, String subtheme, User user, int subThemeId) async {
     List<PropositionLettres> prop = [];
     Set<String> uniqueValues = <String>{};
     PropositionLettres prop1;
     while (prop.length < size) {
-      prop1 = await getRandomLettres(theme, subtheme);
+      prop1 = await getRandomLettres(theme, subtheme, user, subThemeId);
       if (!uniqueValues.contains(prop1.reponse[3])) {
         uniqueValues.add(prop1.reponse[3]);
         prop.add(prop1);
@@ -185,7 +193,10 @@ class QuizModel {
     return prop;
   }
 
-  Future<void> getRandomWords(String theme, String subtheme) async {
+  Future<void> getRandomWords(
+      String theme, String subtheme, User user, int subThemeId) async {
+    int _part = await DatabaseHelper().getPart(user.id!, subThemeId);
+    part = _part;
     // Load the JSON data from the asset file
     String jsonStr = await rootBundle.loadString('assets/data/data.json');
 
@@ -193,7 +204,7 @@ class QuizModel {
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
 
     // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$part"];
+    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$_part"];
 
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
@@ -246,7 +257,10 @@ class QuizModel {
     reponse[3] = propositions[randomNumber5];
   }
 
-  Future<Proposition> getRandomProps(String theme, String subtheme) async {
+  Future<Proposition> getRandomProps(
+      String theme, String subtheme, User user, int subThemeId) async {
+    int _part = await DatabaseHelper().getPart(user.id!, subThemeId);
+    part = _part;
     Proposition proposition = Proposition(
         propositions: ["", "", "", ""],
         propositionsImages: ["", "", "", ""],
@@ -258,7 +272,7 @@ class QuizModel {
     Map<String, dynamic> jsonMap = json.decode(jsonStr);
 
     // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$part"];
+    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$_part"];
 
     size = elementsMap.length;
 
@@ -322,12 +336,12 @@ class QuizModel {
   }
 
   Future<List<Proposition>> getRandomPropositions(
-      String theme, String subtheme) async {
+      String theme, String subtheme, User user, int subThemeId) async {
     List<Proposition> prop = [];
     Set<String> uniqueValues = <String>{};
     Proposition prop1;
     while (prop.length < size) {
-      prop1 = await getRandomProps(theme, subtheme);
+      prop1 = await getRandomProps(theme, subtheme, user, subThemeId);
       if (!uniqueValues.contains(prop1.reponse[3])) {
         uniqueValues.add(prop1.reponse[3]);
         prop.add(prop1);

@@ -1,6 +1,9 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:maze/maze.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
@@ -22,8 +25,17 @@ class _MazePuzzleState extends State<MazePuzzle> {
   @override
   void initState() {
     super.initState();
+    DatabaseHelper().substractCoins(widget.user.id!, 20);
     _controllerConfetti =
         ConfettiController(duration: const Duration(seconds: 1));
+  }
+
+  int coins = 0;
+  Future<void> getCoins() async {
+    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+    setState(() {
+      coins = _coins;
+    });
   }
 
   @override
@@ -89,20 +101,35 @@ class _MazePuzzleState extends State<MazePuzzle> {
                         barrierDismissible: false,
                         builder: (BuildContext context) {
                           return GamePopup(
+                            price: 20,
                             onButton1Pressed: () {
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },
                             onButton2Pressed: () {
-                              Navigator.pop(context);
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MazePuzzle(
-                                    user: widget.user,
+                              getCoins();
+                              if (coins >= 20) {
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MazePuzzle(
+                                      user: widget.user,
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: Palette.indigo,
+                                  content: Text(
+                                    'Tu n\'as pas assez de pièces pour jouer.',
+                                    style: TextStyle(
+                                        color: Palette.white, fontSize: 18),
+                                  ),
+                                ));
+                              }
                             },
                             win: true,
                           );

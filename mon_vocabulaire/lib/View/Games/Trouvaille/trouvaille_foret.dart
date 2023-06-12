@@ -1,7 +1,8 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, file_names
+// ignore_for_file: prefer_typing_uninitialized_variables, file_names, non_constant_identifier_names, no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
@@ -22,7 +23,7 @@ class Foret extends StatefulWidget {
   State<Foret> createState() => _ForetState();
 }
 
-class _ForetState extends State<Foret> {
+class _ForetState extends State<Foret> with WidgetsBindingObserver {
   bool _isEleClicked = false;
   bool _isGiClicked = false;
   bool _isLiClicked = false;
@@ -30,6 +31,7 @@ class _ForetState extends State<Foret> {
   bool _isHirClicked = false;
   int countdown = 5;
   late Timer _timer;
+  late Timer _timer2;
   int duration = 60;
   bool isGameFinish = false;
   late String selectedAnimal;
@@ -53,8 +55,8 @@ class _ForetState extends State<Foret> {
     if (animals.isNotEmpty) {
       randomElement = animals[0];
       animals.removeAt(0);
-      if (animals.length == 3) {
-        Timer(const Duration(seconds: 5), () {
+      if (animals.length == 3 && duration > 0) {
+        _timer2 = Timer.periodic(const Duration(seconds: 5), (timer) {
           Voice.play("audios/voices/${ElementsAudios[randomElement]}", 1);
         });
       } else {
@@ -75,6 +77,7 @@ class _ForetState extends State<Foret> {
             Sfx.play("audios/sfx/race_start.mp3", 1);
           }
           if (countdown < 0) {
+            _timer2.cancel();
             duration--;
             _canTap = true;
             if (duration == 0) {
@@ -85,18 +88,33 @@ class _ForetState extends State<Foret> {
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     return GamePopup(
+                      price: 30,
                       onButton1Pressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Trouvaille(user: widget.user),
-                          ),
-                        );
+                        if (coins >= 30) {
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Trouvaille(user: widget.user),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Palette.indigo,
+                            content: Text(
+                              'Tu n\'as pas assez de pièces pour jouer.',
+                              style:
+                                  TextStyle(color: Palette.white, fontSize: 18),
+                            ),
+                          ));
+                        }
                       },
                       oneButton: false,
                       win: false,
@@ -111,7 +129,16 @@ class _ForetState extends State<Foret> {
     }
   }
 
+  int coins = 0;
+  Future<void> getCoins() async {
+    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+    setState(() {
+      coins = _coins;
+    });
+  }
+
   void endGame() {
+    _timer2.cancel();
     _timer.cancel();
     if (duration > 0) {
       _controllerConfetti.play();
@@ -121,18 +148,31 @@ class _ForetState extends State<Foret> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return GamePopup(
+          price: 30,
           onButton1Pressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Trouvaille(user: widget.user),
-              ),
-            );
+            getCoins();
+            if (coins >= 30) {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Trouvaille(user: widget.user),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                duration: Duration(seconds: 2),
+                backgroundColor: Palette.indigo,
+                content: Text(
+                  'Tu n\'as pas assez de pièces pour jouer.',
+                  style: TextStyle(color: Palette.white, fontSize: 18),
+                ),
+              ));
+            }
           },
           win: duration > 0,
         );
@@ -144,7 +184,7 @@ class _ForetState extends State<Foret> {
   void initState() {
     super.initState();
     randomElementFunc();
-
+    WidgetsBinding.instance.addObserver(this);
     _controllerConfetti =
         ConfettiController(duration: const Duration(seconds: 1));
 
@@ -155,12 +195,19 @@ class _ForetState extends State<Foret> {
   void dispose() {
     super.dispose();
     Sfx.pause();
+    Voice.pause();
     _timer.cancel();
+    _timer2.cancel();
   }
 
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
+      AudioBK.pauseBK();
+      Voice.pause();
       Sfx.pause();
+    } else {
+      AudioBK.playBK();
     }
   }
 

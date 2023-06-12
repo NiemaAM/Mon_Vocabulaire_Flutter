@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
@@ -29,7 +31,7 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
 
   Future<void> calculateResult() async {
     DatabaseHelper();
-    int words = await DatabaseHelper().getAllProgression(widget.user.id);
+    int words = await DatabaseHelper().getAllProgression(widget.user.id!);
     setState(() {
       _words = words;
     });
