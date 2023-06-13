@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/View/Account/profil.dart';
@@ -6,10 +9,7 @@ import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../Controllers/UserController.dart';
-import '../../DataBase/db.dart';
-import '../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 
 class CustomAppBarHome extends StatefulWidget implements PreferredSizeWidget {
   final User user;
@@ -27,17 +27,22 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
 
   bool state = false;
 
-  double result = 0.0;
+  int _words = 0;
 
-  UserController userController = UserController();
-
-  void calculateResult() {
+  Future<void> calculateResult() async {
     DatabaseHelper();
-    //DatabaseHelper().insertData_subtheme_quiz();
-    DatabaseHelper().getWordsPerUser(widget.user.id).then((wordsPerUser) {
-      setState(() {
-        result = wordsPerUser / 240;
-      });
+    int words = await DatabaseHelper().getAllProgression(widget.user.id);
+    setState(() {
+      _words = words;
+    });
+  }
+
+  int coins = 0;
+  Future<void> getCoins() async {
+    DatabaseHelper();
+    User _user = await DatabaseHelper().getUser(widget.user.id!);
+    setState(() {
+      coins = _user.coins;
     });
   }
 
@@ -55,6 +60,8 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    calculateResult();
+    getCoins();
     return Stack(
       children: [
         const SizedBox(
@@ -89,7 +96,7 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
                   child: SizedBox(),
                 ),
                 Text(
-                  "${widget.user.coins.toString()} ",
+                  "${coins.toString()} ",
                   style: const TextStyle(
                       color: Palette.white,
                       fontSize: 16,
@@ -104,12 +111,12 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
                   animation: true,
                   lineHeight: 25.0,
                   animationDuration: 1000,
-                  percent: result,
+                  percent: _words / 240,
                   barRadius: const Radius.circular(100),
                   progressColor: Palette.lightGreen,
                   backgroundColor: Palette.darkBlue,
                   center: Text(
-                    "${userController.getWordsPerUser(widget.user.id)} sur 240 mots",
+                    "$_words sur 240 mots",
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.white,
@@ -145,11 +152,34 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
                 SlideTop(page: Profil(user: widget.user)),
               );
             },
+            /* ClipOval(
+                child: widget.user.image.isNotEmpty
+                    ? Image.file(
+                        File(widget.user.image),
+                        fit: BoxFit.cover,
+                        width: width / 2.5,
+                        height: width / 2.5,
+                      )
+                    : Image.asset(
+                        'assets/images/avatars/user.png',
+                        fit: BoxFit.cover,
+                        width: width / 2.5,
+                        height: width / 2.5,
+                      ),
+              ) */
             content: CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.transparent,
-              child: Image.asset(widget.user.image),
-            ),
+                radius: 16,
+                backgroundColor: Colors.transparent,
+                child: ClipOval(
+                  child: widget.user.image.startsWith("assets")
+                      ? Image.asset(widget.user.image)
+                      : Image.file(
+                          File(widget.user.image),
+                          fit: BoxFit.cover,
+                          width: width / 2.5,
+                          height: width / 2.5,
+                        ),
+                )),
             color: Palette.lightBlue,
             heigth: 100,
             width: 100,

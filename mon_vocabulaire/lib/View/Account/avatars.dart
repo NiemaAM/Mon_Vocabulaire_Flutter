@@ -27,6 +27,10 @@ class _AvatarsState extends State<Avatars> {
 
   @override
   Widget build(BuildContext context) {
+    void selectAvatar(BuildContext context, String image) {
+      Navigator.pop(context, image);
+    }
+
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: const CustomAppBar(
@@ -49,6 +53,7 @@ class _AvatarsState extends State<Avatars> {
                     setState(() {
                       selectedImagePath = imagePath;
                     });
+                     selectAvatar(context, imagePath);
                   },
                   child: Stack(
                     alignment: Alignment.topRight,
@@ -110,7 +115,7 @@ class _AvatarsState extends State<Avatars> {
                 color: Palette.lightBlue,
                 width: 180,
                 callback: () {
-                  Navigator.pop(context);
+                  selectAvatar(context, selectedImagePath);
                 },
                 content: const Center(
                     child: Text(

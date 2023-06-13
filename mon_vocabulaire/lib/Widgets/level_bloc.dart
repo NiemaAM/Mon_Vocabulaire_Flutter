@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
-import '../Controllers/UserController.dart';
-import '../DataBase/db.dart';
-import '../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'Palette.dart';
 import 'button.dart';
 
@@ -26,14 +24,13 @@ class LevelBloc extends StatefulWidget {
 }
 
 class _LevelBlocState extends State<LevelBloc> {
-  double result = 0.0;
-  UserController userController = UserController();
-  void calculateResult() {
-    //DatabaseHelper().insertData_subtheme_quiz();
-    DatabaseHelper().getWordsPerUser(widget.user.id).then((wordsPerUser) {
-      setState(() {
-        result = wordsPerUser / 240;
-      });
+  int result = 0;
+
+  Future<void> calculateResult() async {
+    DatabaseHelper();
+    int _words = await DatabaseHelper().getAllProgression(widget.user.id);
+    setState(() {
+      result = _words;
     });
   }
 
@@ -83,7 +80,7 @@ class _LevelBlocState extends State<LevelBloc> {
                           animation: true,
                           lineHeight: width / 17,
                           animationDuration: 1000,
-                          percent: widget.locked ? 0 : result,
+                          percent: widget.locked ? 0 : result / 240,
                           barRadius: const Radius.circular(100),
                           progressColor: Palette.lightGreen,
                           backgroundColor: widget.locked
@@ -92,7 +89,7 @@ class _LevelBlocState extends State<LevelBloc> {
                           center: Text(
                             widget.locked
                                 ? "0 sur 240 mots"
-                                : "${DatabaseHelper().getWordsPerUser(widget.user.id)} sur 240 mots",
+                                : "$result sur 240 mots",
                             style: TextStyle(
                               fontSize: 14.0,
                               color: widget.locked

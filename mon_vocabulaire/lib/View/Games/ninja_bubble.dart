@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
+import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 
 import '../../Services/sfx.dart';
 import '../../Services/voice.dart';
@@ -42,7 +46,8 @@ class FallingImage {
 }
 
 class NinjaBubble extends StatefulWidget {
-  const NinjaBubble({super.key});
+  final User user;
+  const NinjaBubble({super.key, required this.user});
 
   @override
   State<NinjaBubble> createState() => _NinjaBubbleState();
@@ -51,8 +56,8 @@ class NinjaBubble extends StatefulWidget {
 class _NinjaBubbleState extends State<NinjaBubble>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  List<Bubble> _bubbles = [];
-  List<FallingImage> _fallingImages = [];
+  final List<Bubble> _bubbles = [];
+  final List<FallingImage> _fallingImages = [];
 
   late double _screenWidth;
 
@@ -61,7 +66,7 @@ class _NinjaBubbleState extends State<NinjaBubble>
   int duration = 180;
   bool pop = true;
 
-  List<String> _bubbleImages =
+  final List<String> _bubbleImages =
       List.generate(241, (index) => '${index + 1}.png');
 
   @override
@@ -70,18 +75,18 @@ class _NinjaBubbleState extends State<NinjaBubble>
     AudioBK.pauseBK();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: const Duration(seconds: 5),
     )..repeat();
 
     _controller.addListener(() {
       setState(() {
         if (!_isScreenBlocked) {
-          _bubbles.forEach((bubble) {
+          for (var bubble in _bubbles) {
             bubble.y += bubble.speed;
-          });
-          _fallingImages.forEach((image) {
+          }
+          for (var image in _fallingImages) {
             image.y += image.speed;
-          });
+          }
         }
       });
     });
@@ -94,7 +99,7 @@ class _NinjaBubbleState extends State<NinjaBubble>
     _screenWidth = MediaQuery.of(context).size.width;
 
     _createBubbles();
-    Timer.periodic(Duration(seconds: 5), (timer) {
+    Timer.periodic(const Duration(seconds: 5), (timer) {
       setState(() {
         _createBubbles();
       });
@@ -111,16 +116,16 @@ class _NinjaBubbleState extends State<NinjaBubble>
         _bubbles.add(Bubble(
           x: rng.nextDouble() * (_screenWidth - 200.0) + 50.0,
           y: -50.0 - rng.nextDouble() * 300.0,
-          size: rng.nextDouble() * 100.0 + 50.0,
-          speed: rng.nextDouble() * 3.0 + 2.0,
+          size: rng.nextInt(50) + 100.0,
+          speed: rng.nextDouble() * 3.0 + 5.0,
           image: _bubbleImages[240],
         ));
       } else {
         _bubbles.add(Bubble(
           x: rng.nextDouble() * (_screenWidth - 200.0) + 50.0,
           y: -50.0 - rng.nextDouble() * 300.0,
-          size: rng.nextDouble() * 100.0 + 50.0,
-          speed: rng.nextDouble() * 3.0 + 2.0,
+          size: rng.nextInt(50) + 100.0,
+          speed: rng.nextDouble() * 3.0 + 5.0,
           image: _bubbleImages[rng.nextInt(_bubbleImages.length)],
         ));
       }
@@ -132,22 +137,9 @@ class _NinjaBubbleState extends State<NinjaBubble>
     AudioBK.pauseBK();
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Palette.white,
-        elevation: 1,
-        iconTheme: const IconThemeData(color: Palette.black),
-        title: Row(
-          children: [
-            Image.asset(
-              "assets/images/games/bubbles.png",
-              width: 40,
-            ),
-            const Text(
-              "  Ninja Bubble",
-              style: TextStyle(color: Palette.black),
-            ),
-          ],
-        ),
+      appBar: CustomAppBarGames(
+        user: widget.user,
+        background: true,
       ),
       body: Stack(
         children: [
@@ -171,13 +163,13 @@ class _NinjaBubbleState extends State<NinjaBubble>
                     if (pop) {
                       String number = bubble.image.split('.').first;
                       if (bubble.image.startsWith("241")) {
-                        Sfx.play("audios/sfx/bubble-pop.mp3", 2);
-                        Voice.play("audios/sfx/boom.mp3", 1);
+                        Sfx.play("audios/sfx/pop.mp3", 1);
+                        Voice.play("audios/sfx/boom.mp3", 0.5);
                         endGame();
                         selected = true;
                         pop = false;
                       } else {
-                        Sfx.play("audios/sfx/bubble-pop.mp3", 1);
+                        Sfx.play("audios/sfx/pop.mp3", 1);
                         Voice.play("audios/voices/$number.mp3", 1);
                       }
                       setState(() {
@@ -208,7 +200,14 @@ class _NinjaBubbleState extends State<NinjaBubble>
                     height: bubble.size,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.blue.withOpacity(0.5),
+                      border: Border.all(
+                          width: 4,
+                          color: bubble.image.startsWith('241')
+                              ? Palette.red
+                              : Palette.lightBlue),
+                      color: bubble.image.startsWith('241')
+                          ? Palette.red.withOpacity(0.5)
+                          : Palette.lightBlue.withOpacity(0.5),
                     ),
                   ),
                 ),
@@ -230,7 +229,7 @@ class _NinjaBubbleState extends State<NinjaBubble>
                           child: Image.asset(
                             'assets/images/mascotte/bomb_explotion.gif',
                             gaplessPlayback: true,
-                            scale: 0.1,
+                            scale: 1,
                           ),
                         ),
                       )
@@ -261,7 +260,9 @@ class _NinjaBubbleState extends State<NinjaBubble>
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const NinjaBubble(),
+                builder: (context) => NinjaBubble(
+                  user: widget.user,
+                ),
               ),
             );
           },

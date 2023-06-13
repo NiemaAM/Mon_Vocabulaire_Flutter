@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/View/Games/TicTacToe/choose_xo.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:mon_vocabulaire/View/Games/flip_card.dart';
+import 'package:mon_vocabulaire/View/Games/maze_puzzle.dart';
+import 'package:mon_vocabulaire/View/Games/ninja_bubble.dart';
 import 'package:mon_vocabulaire/View/Games/puzzle.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
-import '../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/game_bloc.dart';
-import 'ninja_bubble.dart';
 
 class Games extends StatefulWidget {
   final User user;
@@ -34,11 +36,20 @@ class _GamesState extends State<Games> {
             childAspectRatio: width > 500 ? 1.03 : 0.92,
             children: [
               GameBloc(
+                image: "assets/images/games/puzzle.png",
+                price: '10',
+                page: Puzzle(
+                  user: widget.user,
+                ),
+                enabled: widget.user.coins > 10,
+              ),
+              GameBloc(
                 image: "assets/images/games/JuMots.png",
-                price: '50',
+                price: '10',
                 page: FlipCardGame(
                   user: widget.user,
                 ),
+                enabled: widget.user.coins > 10,
               ),
               GameBloc(
                 image: "assets/images/games/tic-tac-toe.png",
@@ -46,33 +57,29 @@ class _GamesState extends State<Games> {
                 page: ChooseXO(
                   user: widget.user,
                 ),
-              ),
-              const GameBloc(
-                image: "assets/images/games/puzzle.png",
-                price: '80',
-                page: Puzzle(),
-              ),
-              GameBloc(
-                image: "assets/images/games/search.png",
-                price: '100',
-                page: FlipCardGame(
-                  user: widget.user,
-                ),
-                enabled: false,
-              ),
-              const GameBloc(
-                image: "assets/images/games/bubbles.png",
-                price: '50',
-                page: NinjaBubble(),
-                enabled: true,
+                enabled: widget.user.coins > 20,
               ),
               GameBloc(
                 image: "assets/images/games/apple.png",
-                price: '80',
-                page: FlipCardGame(
+                price: '20',
+                page: MazePuzzle(
                   user: widget.user,
                 ),
-                enabled: false,
+                enabled: widget.user.coins > 20,
+              ),
+              GameBloc(
+                image: "assets/images/games/search.png",
+                price: '30',
+                page: Trouvaille(user: widget.user),
+                enabled: widget.user.coins > 30,
+              ),
+              GameBloc(
+                image: "assets/images/games/bubbles.png",
+                price: '30',
+                page: NinjaBubble(
+                  user: widget.user,
+                ),
+                enabled: widget.user.coins > 30,
               ),
             ],
           ),

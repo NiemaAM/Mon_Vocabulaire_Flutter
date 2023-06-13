@@ -2,16 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mon_vocabulaire/Controllers/UserController.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 
 import 'package:mon_vocabulaire/View/Account/create_account.dart';
 import 'package:mon_vocabulaire/Widgets/account_bloc.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
-
-import '../../DataBase/db.dart';
-import '../../Model/user.dart';
 
 class Accounts extends StatefulWidget {
   const Accounts({super.key});
@@ -21,22 +19,17 @@ class Accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<Accounts> {
-  UserController userController = UserController();
-
   List<User> users = []; // List to store retrieved users
 
   @override
   void initState() {
     super.initState();
     fetchUsers(); // Fetch users when the widget is initialized
-    print("ok");
   }
 
   Future<void> fetchUsers() async {
     // Fetch users from the database
-    List<User> fetchedUsers = await DatabaseHelper().getUsers();
-    print("ok");
-    print(fetchedUsers[1].toMap());
+    List<User> fetchedUsers = await DatabaseHelper().getAllUsers();
     setState(() {
       users = fetchedUsers;
       // Update the state with the fetched users
@@ -47,6 +40,9 @@ class _AccountsState extends State<Accounts> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    fetchUsers();
     return Scaffold(
       backgroundColor: Palette.lightBlue,
       body: Stack(
@@ -61,13 +57,20 @@ class _AccountsState extends State<Accounts> {
               ),
             ),
           ),
-          Center(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                return AccountBloc(user: users[index]);
-              },
+          Padding(
+            padding: EdgeInsets.only(top: height / 4),
+            child: SizedBox(
+              height: height / 2 + 100,
+              width: width,
+              child: Center(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    return AccountBloc(user: users[index]);
+                  },
+                ),
+              ),
             ),
           ),
           Align(

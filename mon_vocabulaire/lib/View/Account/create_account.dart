@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mon_vocabulaire/DataBase/db.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
-import 'package:mon_vocabulaire/Services/animation_route.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/View/Account/avatars.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as Path;
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
@@ -25,17 +26,42 @@ class _CreateAccountState extends State<CreateAccount> {
   int size = 0;
   final ImagePicker _picker = ImagePicker();
   File? _image;
+  String path_image = '';
 
-  Future<void> _getImage(ImageSource source) async {
-    // ignore: deprecated_member_use
+  Future<String> saveimage(File imageFile) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final imagePath = '${directory.path}/${Path.basename(imageFile.path)}';
+    final savedImage = await imageFile.copy(imagePath);
+    return savedImage.path;
+  }
+
+  Future<void> _getimage(ImageSource source) async {
     final pickedFile = await _picker.getImage(source: source);
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        _image = File("assets/images/avatars/user.png");
-      }
-    });
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      String imagePath = await saveimage(imageFile);
+      setState(() {
+        _image = imageFile;
+        path_image = imagePath;
+      });
+    }
+  }
+
+  void createAccount(String nom, String image) async {
+    String imagePath = path_image;
+    if (_image != null && !imagePath.startsWith('assets')) {
+      // Save the image file and get the saved path
+      imagePath = await saveimage(_image!);
+    } else if (_image == null) {
+      imagePath = "assets/images/avatars/user.png";
+    }
+    User newUser = User(
+      name: nom,
+      image: imagePath,
+      currentLevel: 1,
+      coins: 0,
+    );
+    DatabaseHelper().addUser(newUser);
   }
 
   @override
@@ -70,7 +96,9 @@ class _CreateAccountState extends State<CreateAccount> {
                               child: CircleAvatar(
                                 radius: 100,
                                 backgroundColor: Palette.lightBlue,
-                                backgroundImage: FileImage(_image!),
+                                backgroundImage: path_image.startsWith('assets')
+                                    ? AssetImage(path_image) as ImageProvider
+                                    : FileImage(_image!),
                               ))
                           : Container(
                               decoration: BoxDecoration(
@@ -114,7 +142,7 @@ class _CreateAccountState extends State<CreateAccount> {
                                             title:
                                                 const Text('Depuis la camera'),
                                             onTap: () {
-                                              _getImage(ImageSource.camera);
+                                              _getimage(ImageSource.camera);
                                               Navigator.pop(context);
                                             },
                                           ),
@@ -126,7 +154,7 @@ class _CreateAccountState extends State<CreateAccount> {
                                             title: const Text(
                                                 'Depuis la gallerie'),
                                             onTap: () {
-                                              _getImage(ImageSource.gallery);
+                                              _getimage(ImageSource.gallery);
                                               Navigator.pop(context);
                                             },
                                           ),
@@ -137,13 +165,24 @@ class _CreateAccountState extends State<CreateAccount> {
                                             ),
                                             title:
                                                 const Text('Choisir un avatar'),
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                              Navigator.of(context).push(
-                                                SlideTop(
-                                                  page: const Avatars(),
+                                            onTap: () async {
+                                              final selectedImagePath =
+                                                  await Navigator.of(context)
+                                                      .push(
+                                                MaterialPageRoute<String>(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          Avatars(),
                                                 ),
                                               );
+                                              if (selectedImagePath != null) {
+                                                setState(() {
+                                                  path_image =
+                                                      selectedImagePath;
+                                                  _image = File(path_image);
+                                                });
+                                              }
+                                              Navigator.pop(context);
                                             },
                                           ),
                                         ],
@@ -175,28 +214,34 @@ class _CreateAccountState extends State<CreateAccount> {
                   LengthLimitingTextInputFormatter(50),
                 ],
                 maxLines: 1,
-                decoration: const InputDecoration(
-                  suffixIcon: Icon(
+                decoration: InputDecoration(
+                  suffixIcon: const Icon(
                     Icons.edit_rounded,
                     color: Palette.lightBlue,
                     size: 30,
                   ),
                   labelText: 'Nom',
-                  labelStyle: TextStyle(color: Palette.indigo, fontSize: 18),
-                  errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Palette.red, width: 3),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Palette.lightBlue, width: 3),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  border: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Palette.lightBlue, width: 3),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Palette.blue, width: 3),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  labelStyle:
+                      const TextStyle(color: Palette.indigo, fontSize: 18),
+                  errorBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Palette.red, width: 3),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Palette.lightBlue, width: 3),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Palette.lightBlue, width: 3),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Palette.blue, width: 3),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  errorText: _TextController.text.isEmpty
+                      ? 'Le nom est requis'
+                      : null, // Add this line
                 ),
               ),
             ),
@@ -208,8 +253,10 @@ class _CreateAccountState extends State<CreateAccount> {
                     color: Palette.lightBlue,
                     width: 180,
                     callback: () {
-                      addUser(_TextController.text);
-                      Navigator.pop(context);
+                      if (_TextController.text.isNotEmpty) {
+                        createAccount(_TextController.text, "");
+                        Navigator.pop(context);
+                      }
                     },
                     content: const Center(
                         child: Text(
@@ -240,14 +287,5 @@ class _CreateAccountState extends State<CreateAccount> {
         ],
       ),
     );
-  }
-
-  void addUser(String name) {
-    User user = User(
-        name: name,
-        image: "assets/images/avatars/user.png",
-        current_level: 1,
-        coins: 0);
-    DatabaseHelper().addUser(user);
   }
 }

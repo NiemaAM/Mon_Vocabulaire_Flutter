@@ -17,7 +17,7 @@ class GamePopup extends StatelessWidget {
     super.key,
     required this.onButton1Pressed,
     required this.onButton2Pressed,
-    required this.win,
+    this.win = true,
     this.oneButton = false,
     this.tie = false,
     this.textWin = "Tu as gagné",
@@ -36,7 +36,7 @@ class GamePopup extends StatelessWidget {
     return win && !tie
         ? Dialog(
             insetPadding: EdgeInsets.all(width > 500 ? 100 : 30),
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Palette.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
@@ -69,8 +69,8 @@ class GamePopup extends StatelessWidget {
                             textWin,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: width > 500 ? 20 : 16,
-                            ),
+                                fontSize: width > 500 ? 20 : 16,
+                                color: Palette.black),
                           ),
                           const SizedBox(height: 10.0),
                           Padding(
@@ -199,9 +199,9 @@ class GamePopup extends StatelessWidget {
                   child: Container(
                     width: 130.0,
                     height: 130.0,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.background,
+                      color: Palette.white,
                     ),
                     child: Center(
                       child: Container(
@@ -261,14 +261,23 @@ class GamePopup extends StatelessWidget {
                                 textLose,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: width > 500 ? 20 : 16,
-                                ),
+                                    fontSize: width > 500 ? 20 : 16,
+                                    color: Palette.black),
                               ),
                               const SizedBox(height: 10.0),
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 40, right: 40),
-                                child: Image.asset(loseImg),
+                                padding: EdgeInsets.only(
+                                    left: loseImg ==
+                                            "assets/images/mascotte/lose.gif"
+                                        ? 40
+                                        : 0,
+                                    right: loseImg ==
+                                            "assets/images/mascotte/lose.gif"
+                                        ? 40
+                                        : 0),
+                                child: Image.asset(
+                                  loseImg,
+                                ),
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -402,9 +411,9 @@ class GamePopup extends StatelessWidget {
                       child: Container(
                         width: 130.0,
                         height: 130.0,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).colorScheme.background,
+                          color: Palette.white,
                         ),
                         child: Center(
                           child: Container(
@@ -465,8 +474,8 @@ class GamePopup extends StatelessWidget {
                                 "Tu y étais presque",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: width > 500 ? 20 : 16,
-                                ),
+                                    fontSize: width > 500 ? 20 : 16,
+                                    color: Palette.black),
                               ),
                               const SizedBox(height: 10.0),
                               Padding(
@@ -607,9 +616,9 @@ class GamePopup extends StatelessWidget {
                       child: Container(
                         width: 130.0,
                         height: 130.0,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).colorScheme.background,
+                          color: Palette.white,
                         ),
                         child: Center(
                           child: Container(

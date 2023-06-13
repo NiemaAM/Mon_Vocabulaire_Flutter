@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/bubble.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
-import '../../DataBase/db.dart';
-import '../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../Services/sfx.dart';
 import 'sub_theme_path.dart';
 
@@ -25,21 +25,35 @@ class SubThemes extends StatefulWidget {
 }
 
 class _SubThemesState extends State<SubThemes> {
-    int result = 0;
-
-  int calculateResult(theme_id) {
-    DatabaseHelper();
-    //DatabaseHelper().insertData_subtheme_quiz();
-    DatabaseHelper()
-        .getStarsPerTheme(widget.user.id, theme_id);
-    return result; 
-  }
-
   List<String> images = ["", ""];
   String background = "";
   Color color = Palette.blue;
   Color color2 = Palette.blue;
   List<String> titles = ["", ""];
+
+  int result = 0;
+  int words = 0;
+
+  Future<void> calculateResult(themeId) async {
+    DatabaseHelper();
+    Progression _result =
+        await DatabaseHelper().getProgression(widget.user.id!, themeId);
+    setState(() {
+      result = _result.stars;
+      words = _result.mots;
+    });
+  }
+
+  int getResult(subThemeId) {
+    calculateResult(subThemeId);
+    return result;
+  }
+
+  int getWords(subThemeId) {
+    calculateResult(subThemeId);
+    return words;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -75,8 +89,8 @@ class _SubThemesState extends State<SubThemes> {
       });
     } else if (widget.theme == 4) {
       setState(() {
-        images[0] = "assets/images/themes/animaux.png";
-        images[1] = "assets/images/themes/mammiferes.png";
+        images[0] = "assets/images/themes/ferme.png";
+        images[1] = "assets/images/themes/foret.png";
         titles[0] = "Ferme";
         titles[1] = "Forêt";
         background = "forest";
@@ -115,11 +129,6 @@ class _SubThemesState extends State<SubThemes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: widget.title.toUpperCase(),
-        color: color,
-        automaticallyImplyLeading: true,
-      ),
       body: Stack(
         children: [
           SvgPicture.asset('assets/images/themes/backgrounds/$background.svg',
@@ -139,30 +148,30 @@ class _SubThemesState extends State<SubThemes> {
                   hasShadow: true,
                   image: images[0],
                   nbStars: widget.theme == 1
-                      ? calculateResult(7)
+                      ? getResult(1)
                       : widget.theme == 2
-                          ? calculateResult(8)
+                          ? getResult(3)
                           : widget.theme == 3
-                              ? calculateResult(4)
+                              ? getResult(5)
                               : widget.theme == 4
-                                  ? calculateResult(2)
+                                  ? getResult(7)
                                   : widget.theme == 5
-                                      ? calculateResult(10)
+                                      ? getResult(9)
                                       : widget.theme == 6
-                                          ? calculateResult(1)
+                                          ? getResult(11)
                                           : 0,
                   stage: widget.theme == 1
-                      ? calculateResult(7)
+                      ? getWords(1)
                       : widget.theme == 2
-                          ? calculateResult(8)
+                          ? getWords(3)
                           : widget.theme == 3
-                              ? calculateResult(4)
+                              ? getWords(5)
                               : widget.theme == 4
-                                  ? calculateResult(2)
+                                  ? getWords(7)
                                   : widget.theme == 5
-                                      ? calculateResult(10)
+                                      ? getWords(9)
                                       : widget.theme == 6
-                                          ? calculateResult(1)
+                                          ? getWords(11)
                                           : 0,
                   text: titles[0],
                   callback: LessonPath(
@@ -193,30 +202,30 @@ class _SubThemesState extends State<SubThemes> {
                   hasShadow: true,
                   image: images[1],
                   nbStars: widget.theme == 1
-                      ? calculateResult(6)
+                      ? getResult(2)
                       : widget.theme == 2
-                          ? calculateResult(9)
+                          ? getResult(4)
                           : widget.theme == 3
-                              ? calculateResult(5)
+                              ? getResult(6)
                               : widget.theme == 4
-                                  ? calculateResult(3)
+                                  ? getResult(8)
                                   : widget.theme == 5
-                                      ? calculateResult(11)
+                                      ? getResult(10)
                                       : widget.theme == 6
-                                          ? calculateResult(0)
+                                          ? getResult(12)
                                           : 0,
                   stage: widget.theme == 1
-                      ? calculateResult(6)
+                      ? getWords(2)
                       : widget.theme == 2
-                          ? calculateResult(9)
+                          ? getWords(4)
                           : widget.theme == 3
-                              ? calculateResult(5)
+                              ? getWords(6)
                               : widget.theme == 4
-                                  ? calculateResult(3)
+                                  ? getWords(8)
                                   : widget.theme == 5
-                                      ? calculateResult(11)
+                                      ? getWords(10)
                                       : widget.theme == 6
-                                          ? calculateResult(0)
+                                          ? getWords(12)
                                           : 0,
                   text: titles[1],
                   callback: LessonPath(
@@ -246,6 +255,11 @@ class _SubThemesState extends State<SubThemes> {
                 ),
               ],
             ),
+          ),
+          CustomAppBar(
+            title: widget.title.toUpperCase(),
+            color: color,
+            automaticallyImplyLeading: true,
           ),
         ],
       ),

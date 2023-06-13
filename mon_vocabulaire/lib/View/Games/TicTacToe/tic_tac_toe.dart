@@ -5,7 +5,7 @@ import 'dart:math';
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/Popups/game_popup.dart';
@@ -277,6 +277,7 @@ class _TicTacToeState extends State<TicTacToe> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     autoPlay();
     return Scaffold(
       backgroundColor: Palette.lightBlue,
@@ -286,7 +287,7 @@ class _TicTacToeState extends State<TicTacToe> {
             child: ListView(
               children: <Widget>[
                 Container(
-                  height: 180,
+                  height: height / 5.5,
                   decoration: const BoxDecoration(
                       color: Palette.white,
                       boxShadow: [
@@ -309,15 +310,15 @@ class _TicTacToeState extends State<TicTacToe> {
                           Image(
                             image: AssetImage(
                                 'assets/images/games/${widget.player}.png'),
-                            width: 30,
-                            height: 30,
+                            width: height > 780 ? 30 : 25,
+                            height: height > 780 ? 30 : 25,
                           ),
                           const Expanded(flex: 2, child: SizedBox()),
                           Image(
                             image: AssetImage(
                                 'assets/images/games/${widget.AIplayer}.png'),
-                            width: 30,
-                            height: 30,
+                            width: height > 780 ? 30 : 25,
+                            height: height > 780 ? 30 : 25,
                           ),
                           const Expanded(
                             flex: 4,
@@ -332,7 +333,7 @@ class _TicTacToeState extends State<TicTacToe> {
                                 EdgeInsets.only(left: width > 500 ? 50 : 0),
                             child: Image.asset(
                               widget.user.image,
-                              width: 100,
+                              height: height / 8,
                             ),
                           ),
                           const Expanded(child: SizedBox()),
@@ -360,7 +361,7 @@ class _TicTacToeState extends State<TicTacToe> {
                                 EdgeInsets.only(right: width > 500 ? 50 : 0),
                             child: Image.asset(
                               "assets/images/logo.png",
-                              width: 100,
+                              height: height / 8,
                             ),
                           ),
                         ],
@@ -373,7 +374,7 @@ class _TicTacToeState extends State<TicTacToe> {
                 ),
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 30),
+                    padding: EdgeInsets.only(top: height > 780 ? 30 : 20),
                     child: Text(
                       'Partie $partie sur 5',
                       style: const TextStyle(
@@ -383,7 +384,7 @@ class _TicTacToeState extends State<TicTacToe> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: height > 780 ? 16 : 8),
                 Padding(
                   padding: EdgeInsets.only(
                       left: width > 500 ? 100 : 20,

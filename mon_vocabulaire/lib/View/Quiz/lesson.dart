@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/lesson_model.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Quiz/quiz_text_images.dart';
 import 'package:mon_vocabulaire/Widgets/Popups/done_popup.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../Model/quiz_model.dart';
-import '../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../Services/audio_background.dart';
 import '../../Services/sfx.dart';
 import '../../Services/voice.dart';
