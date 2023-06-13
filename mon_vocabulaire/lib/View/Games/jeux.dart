@@ -1,13 +1,17 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/View/Games/TicTacToe/choose_xo.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:mon_vocabulaire/View/Games/flip_card.dart';
-import 'package:mon_vocabulaire/View/Games/math_game.dart';
+import 'package:mon_vocabulaire/View/Games/maze_puzzle.dart';
+import 'package:mon_vocabulaire/View/Games/ninja_bubble.dart';
 import 'package:mon_vocabulaire/View/Games/puzzle.dart';
-import 'package:mon_vocabulaire/View/Games/tic_tac_toe.dart';
-import 'package:mon_vocabulaire/View/Games/tic_tac_Game.dart';
-import '../../Model/user.dart';
+import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../Widgets/Palette.dart';
 import '../../Widgets/game_bloc.dart';
-import 'Trouvaille/Trouvaille_Bureau.dart';
 
 class Games extends StatefulWidget {
   final User user;
@@ -18,81 +22,80 @@ class Games extends StatefulWidget {
 }
 
 class _GamesState extends State<Games> {
+  int coins = 0;
+  Future<void> getCoins() async {
+    DatabaseHelper();
+    User _user = await DatabaseHelper().getUser(widget.user.id!);
+    setState(() {
+      coins = _user.coins;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    getCoins();
     return Scaffold(
+        backgroundColor: Palette.lightBlue,
+        appBar: CustomAppBarGames(
+          user: widget.user,
+        ),
         body: Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: GridView.count(
-        primary: false,
-        shrinkWrap: true,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        crossAxisCount: 2,
-        children: const [
-          GameBloc(
-            color: Palette.lightGreen,
-            image: "assets/images/games/JuMots.png",
-            price: '50',
-            text: "JuMots",
-            page: FlipCardGame(),
+          padding: const EdgeInsets.only(top: 30),
+          child: GridView.count(
+            primary: false,
+            shrinkWrap: true,
+            crossAxisCount: width > 500 ? 3 : 2,
+            childAspectRatio: width > 500 ? 1.03 : 0.92,
+            children: [
+              GameBloc(
+                image: "assets/images/games/puzzle.png",
+                price: '10',
+                page: Puzzle(
+                  user: widget.user,
+                ),
+                enabled: coins >= 10,
+              ),
+              GameBloc(
+                image: "assets/images/games/JuMots.png",
+                price: '10',
+                page: FlipCardGame(
+                  user: widget.user,
+                ),
+                enabled: coins >= 10,
+              ),
+              GameBloc(
+                image: "assets/images/games/tic-tac-toe.png",
+                price: '20',
+                page: ChooseXO(
+                  user: widget.user,
+                ),
+                enabled: coins >= 20,
+              ),
+              GameBloc(
+                image: "assets/images/games/apple.png",
+                price: '20',
+                page: MazePuzzle(
+                  user: widget.user,
+                ),
+                enabled: coins >= 20,
+              ),
+              GameBloc(
+                image: "assets/images/games/search.png",
+                price: '30',
+                page: Trouvaille(user: widget.user),
+                enabled: coins >= 30,
+              ),
+              GameBloc(
+                image: "assets/images/games/bubbles.png",
+                price: '30',
+                page: NinjaBubble(
+                  user: widget.user,
+                ),
+                enabled: coins >= 30,
+              ),
+            ],
           ),
-          GameBloc(
-            color: Palette.orange,
-            image: "assets/images/games/tic-tac-toe.png",
-            price: '20',
-            text: "Tic Tac Toe",
-            page: tic_tac(),
-          ),
-          GameBloc(
-            color: Palette.pink,
-            image: "assets/images/games/puzzle.png",
-            price: '80',
-            text: "Puzzle",
-            page: Puzzle(),
-          ),
-          GameBloc(
-            color: Palette.red,
-            image: "assets/images/games/search.png",
-            price: '100',
-            text: "Trouvailles",
-            page: TrouvailleBureau(),
-            enabled: false,
-          ),
-          GameBloc(
-            color: Palette.blue,
-            image: "assets/images/games/bubbles.png",
-            price: '50',
-            text: "NinjaBubbles",
-            page: FlipCardGame(),
-            enabled: false,
-          ),
-          GameBloc(
-            color: Color.fromARGB(255, 30, 173, 173),
-            image: "assets/images/games/apple.png",
-            price: '80',
-            text: "Recoltte",
-            page: FlipCardGame(),
-            enabled: false,
-          ),
-          GameBloc(
-            color: Color.fromARGB(255, 206, 89, 227),
-            image: "assets/images/games/math_game.png",
-            price: '80',
-            text: "FruityMaths",
-            page: MathGame(),
-            enabled: false,
-          ),
-          GameBloc(
-            color: Color.fromARGB(255, 171, 131, 85),
-            image: "assets/images/games/chess.png",
-            price: '100',
-            text: "Dames",
-            page: FlipCardGame(),
-            enabled: false,
-          ),
-        ],
-      ),
-    ));
+        ));
   }
 }

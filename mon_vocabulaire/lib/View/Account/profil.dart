@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
+import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
-import 'package:mon_vocabulaire/Animation/animationRoute.dart';
+import 'package:mon_vocabulaire/Services/animation_route.dart';
 import '../../Widgets/Palette.dart';
 import '../Settings/settings_page.dart';
-import 'package:mon_vocabulaire/Animation/animationRoute.dart';
 
 class Profil extends StatefulWidget {
   final User user;
@@ -19,12 +19,15 @@ class _ProfilState extends State<Profil> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: const Text("Mon Profil"), elevation: 1, actions: [
-        IconButton(
+      appBar: CustomAppBar(
+        title: "Moi",
+        color: Palette.lightBlue,
+        automaticallyImplyLeading: true,
+        icon: IconButton(
           onPressed: () {
             Navigator.of(context).push(
               SlideRight(
-                Page: SettingsPage(
+                page: SettingsPage(
                   user: widget.user,
                 ),
               ),
@@ -33,23 +36,14 @@ class _ProfilState extends State<Profil> {
           icon: const Icon(Icons.settings),
           tooltip: "Paramètres",
         ),
-      ]),
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => SettingsPage(
-      //       user: widget.user,
-      //     ),
-      //   ),
-      // );
-
+      ),
       body: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 30, bottom: 10),
             child: CircleAvatar(
               radius: width / 5,
-              backgroundColor: Palette.blue,
+              backgroundColor: Palette.lightBlue,
               child: ClipOval(
                 child: Image.asset(
                   widget.user.image, //TODO: change this to images from gallery

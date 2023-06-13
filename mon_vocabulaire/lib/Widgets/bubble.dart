@@ -3,7 +3,7 @@ import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/star.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:mon_vocabulaire/Animation/animationRoute.dart';
+import '../Services/animation_route.dart';
 import 'button.dart';
 
 class Bubble extends StatefulWidget {
@@ -15,6 +15,7 @@ class Bubble extends StatefulWidget {
   final Widget callback;
   final String type;
   final bool hasShadow;
+  final int totalWords;
   const Bubble(
       {super.key,
       required this.image,
@@ -24,7 +25,8 @@ class Bubble extends StatefulWidget {
       required this.callback,
       required this.color,
       required this.type,
-      this.hasShadow = false});
+      this.hasShadow = false,
+      this.totalWords = 40});
 
   @override
   State<Bubble> createState() => _BubbleState();
@@ -47,56 +49,52 @@ class _BubbleState extends State<Bubble> {
         Button(
           callback: () {
             Sfx.play("audios/sfx/plip.mp3", 1);
-            Navigator.of(context).push(SizedSlide(Page: widget.callback));
+            Navigator.of(context).push(SizedSlide(page: widget.callback));
           },
-          content: SizedBox(
-            height: 140,
-            width: 150,
-            child: Stack(
-              children: [
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: CircularPercentIndicator(
-                    animation: true,
-                    radius: width < 500 ? size : 90,
-                    lineWidth: 10,
-                    percent: widget.stage / 100,
-                    progressColor: widget.color,
-                    backgroundColor: Palette.lightGrey,
-                  ),
+          content: Stack(
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: CircularPercentIndicator(
+                  animation: true,
+                  radius: width < 500 ? size : 90,
+                  lineWidth: 10,
+                  percent: widget.stage / widget.totalWords,
+                  progressColor: widget.color,
+                  backgroundColor: Palette.lightGrey,
                 ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(18),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        // ignore: unnecessary_const
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(50),
-                        ),
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      // ignore: unnecessary_const
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50),
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(width > 500 ? 15 : 5),
-                        child: Image.asset(
-                          widget.image,
-                        ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(width > 500 ? 15 : 5),
+                      child: Image.asset(
+                        widget.image,
                       ),
                     ),
                   ),
                 ),
-                Star(
-                  nbStar: widget.nbStars,
-                  typebubble: widget.type,
-                )
-              ],
-            ),
+              ),
+              Star(
+                nbStar: widget.nbStars,
+                typebubble: widget.type,
+              )
+            ],
           ),
           heigth: width < 500 ? width / 2.7 : 205,
           width: width < 500 ? width / 2.7 : 205,
@@ -116,7 +114,7 @@ class _BubbleState extends State<Bubble> {
                 )
               ],
             ),
-            width: 100,
+            width: width > 500 ? 150 : 100,
             child: Align(
               alignment: Alignment.center,
               child: Text(
@@ -124,14 +122,14 @@ class _BubbleState extends State<Bubble> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: width > 500 ? 18 : 14,
                     color: widget.hasShadow
                         ? Colors.black
                         : Theme.of(context).colorScheme.onSurface),
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

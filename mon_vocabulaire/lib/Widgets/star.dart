@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:mon_vocabulaire/Widgets/palette.dart';
+import 'Palette.dart';
 
 class Star extends StatelessWidget {
   final int? nbStar;

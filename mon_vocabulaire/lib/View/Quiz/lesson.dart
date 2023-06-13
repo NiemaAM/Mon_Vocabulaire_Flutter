@@ -1,11 +1,11 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/lesson_model.dart';
+import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Quiz/quiz_text_images.dart';
+import 'package:mon_vocabulaire/Widgets/Popups/done_popup.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../Model/quiz_model.dart';
-import '../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../Services/audio_background.dart';
 import '../../Services/sfx.dart';
 import '../../Services/voice.dart';
@@ -28,7 +28,7 @@ class _LessonPage extends State<LessonPage> {
   QuizModel quizModel = QuizModel();
   List<Lesson> lesson = [];
   int index = 0;
-  int size = 5;
+  int size = 10;
   getTheme() {
     switch (widget.subTheme) {
       case 1:
@@ -108,7 +108,8 @@ class _LessonPage extends State<LessonPage> {
   }
 
   getLesson() async {
-    List<Lesson> les = await quizModel.getLesson(theme, subTheme);
+    List<Lesson> les = await quizModel.getLesson(
+        theme, subTheme, widget.user, widget.subTheme);
     setState(() {
       lesson = les;
       if (quizModel.getSize() >= 10) {
@@ -139,7 +140,9 @@ class _LessonPage extends State<LessonPage> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     AudioBK.pauseBK();
-    Voice.play(lesson[index].audio, 1);
+    if (lesson.isNotEmpty) {
+      Voice.play(lesson[index].audio, 1);
+    }
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -147,7 +150,7 @@ class _LessonPage extends State<LessonPage> {
           automaticallyImplyLeading: false,
           title: Center(
             child: LinearPercentIndicator(
-              width: width - 57,
+              width: width - 35,
               animation: false,
               lineHeight: 25.0,
               animationDuration: 1,
@@ -165,259 +168,266 @@ class _LessonPage extends State<LessonPage> {
           ),
         ),
         //fonds container
-        body: Stack(children: [
-          Stack(
-            children: [
-              Stack(
-                alignment: AlignmentDirectional.bottomEnd,
-                children: [
-                  Container(
-                    height: height / 1.45,
-                    width: width,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(100),
-                          topRight: Radius.circular(100)),
-                    ),
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional.topCenter,
-                    child: SizedBox(
-                      height: height / 1.7,
-                    ),
-                  ),
-                ],
-              ),
-              //close icon
-              Center(
-                child: Stack(alignment: Alignment.topCenter, children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                        onPressed: () {
-                          AwesomeDialog(
-                            context: context,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.question,
-                            animType: AnimType.rightSlide,
-                            title: 'Quitter la leçon',
-                            desc: 'Es-tu sûr(e) de vouloir quitter ?',
-                            btnCancelText: "Quitter",
-                            btnCancelOnPress: () {
-                              Navigator.pop(context);
-                            },
-                            btnOkText: "Rester",
-                            btnOkOnPress: () {},
-                          ).show();
-                        },
-                        icon: const Icon(
-                          Icons.close,
-                          color: Palette.red,
-                        )),
-                  ),
-                  Stack(
-                    children: [
-                      Padding(
-                        // dis app bar button
-                        padding: EdgeInsets.only(top: height / 20),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            height: height / 2.7,
-                            width: width / 1.3,
-                            decoration: const BoxDecoration(
-                              color: Palette.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Palette.lightGrey,
-                                  blurRadius: 0,
-                                  offset: Offset(0, 8), // Shadow position
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(40),
-                              child: Image.asset(
-                                lesson[index].image,
-                              ),
-                            ),
+        body: lesson.isEmpty
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Palette.lightBlue,
+                ),
+              )
+            : Stack(children: [
+                Stack(
+                  children: [
+                    Stack(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      children: [
+                        Container(
+                          height: height / 1.45,
+                          width: width,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(100),
+                                topRight: Radius.circular(100)),
                           ),
                         ),
-                      ),
-                      Positioned(
-                        top: height / 5,
-                        left: width > 500 ? width / 13 : 15,
-                        child: Button(
-                          content: Icon(
-                            Icons.chevron_left_rounded,
-                            color: index > 0 ? Palette.white : Palette.grey,
-                            size: 40,
+                        Align(
+                          alignment: AlignmentDirectional.topCenter,
+                          child: SizedBox(
+                            height: height / 1.7,
                           ),
-                          color: index > 0
-                              ? Theme.of(context).secondaryHeaderColor
-                              : Palette.lightGrey,
-                          callback: () {
-                            if (index > 0) {
-                              Sfx.play("audios/sfx/plip.mp3", 1);
-                              setState(() {
-                                index -= 1;
-                              });
-                            }
-                            Voice.play(lesson[index].audio, 1);
-                          },
-                          heigth: 60,
-                          width: 60,
                         ),
-                      ),
-                      Positioned(
-                        top: height / 5,
-                        right: width > 500 ? width / 13 : 15,
-                        child: Button(
-                          content: Icon(
-                            Icons.chevron_right_rounded,
-                            color:
-                                index != size ? Palette.white : Palette.white,
-                            size: 40,
-                          ),
-                          color: index != size
-                              ? Theme.of(context).secondaryHeaderColor
-                              : Theme.of(context).secondaryHeaderColor,
-                          callback: () {
-                            if (index < size) {
-                              Sfx.play("audios/sfx/plip.mp3", 1);
-                              setState(() {
-                                index += 1;
-                              });
-                            } else {
-                              Sfx.play("audios/sfx/done.mp3", 1);
-                              AwesomeDialog(
-                                context: context,
-                                headerAnimationLoop: false,
-                                dialogType: DialogType.success,
-                                animType: AnimType.rightSlide,
-                                title: 'Leçon terminée',
-                                desc: 'Bravo ! Tu as terminé ta leçon.',
-                                btnCancelText: "Retour",
-                                btnCancelOnPress: () {
+                      ],
+                    ),
+                    //close icon
+                    Center(
+                      child: Stack(alignment: Alignment.topCenter, children: [
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: IconButton(
+                                onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                btnOkText: "Suivant",
-                                btnOkOnPress: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => QuizTextImages(
-                                        subTheme: widget.subTheme,
-                                        user: widget.user,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ).show();
-                            }
-                          },
-                          heigth: 60,
-                          width: 60,
+                                icon: const Icon(
+                                  Icons.close_rounded,
+                                  color: Palette.red,
+                                  size: 40,
+                                )),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: height / 2.5),
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: height / 3.8,
-                            width: width / 1.3,
-                            decoration: const BoxDecoration(
-                              color: Palette.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Palette.lightGrey,
-                                  blurRadius: 0,
-                                  offset: Offset(0, 8), // Shadow position
+                        Stack(
+                          children: [
+                            Padding(
+                              // dis app bar button
+                              padding: EdgeInsets.only(top: height / 20),
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: Container(
+                                  height: height / 2.7,
+                                  width: width / 1.3,
+                                  decoration: const BoxDecoration(
+                                    color: Palette.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Palette.lightGrey,
+                                        blurRadius: 0,
+                                        offset: Offset(0, 8), // Shadow position
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(40),
+                                    child: Image.asset(
+                                      lesson[index].image,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: height / 5,
+                              left: width > 500 ? width / 13 : 15,
+                              child: Button(
+                                content: Icon(
+                                  Icons.chevron_left_rounded,
+                                  color:
+                                      index > 0 ? Palette.white : Palette.grey,
+                                  size: 40,
+                                ),
+                                color: index > 0
+                                    ? Theme.of(context).secondaryHeaderColor
+                                    : Palette.lightGrey,
+                                callback: () {
+                                  if (index > 0) {
+                                    Sfx.play("audios/sfx/plip.mp3", 1);
+                                    setState(() {
+                                      index -= 1;
+                                    });
+                                  }
+                                  Voice.play(lesson[index].audio, 1);
+                                },
+                                heigth: 60,
+                                width: 60,
+                              ),
+                            ),
+                            Positioned(
+                              top: height / 5,
+                              right: width > 500 ? width / 13 : 15,
+                              child: Button(
+                                content: Icon(
+                                  Icons.chevron_right_rounded,
+                                  color: index != size
+                                      ? Palette.white
+                                      : Palette.white,
+                                  size: 40,
+                                ),
+                                color: index != size
+                                    ? Theme.of(context).secondaryHeaderColor
+                                    : Theme.of(context).secondaryHeaderColor,
+                                callback: () {
+                                  if (index < size) {
+                                    Sfx.play("audios/sfx/plip.mp3", 1);
+                                    setState(() {
+                                      index += 1;
+                                    });
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return DonePopup(
+                                          subThemeId: widget.subTheme,
+                                          user: widget.user,
+                                          onButton1Pressed: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          },
+                                          onButton2Pressed: () {
+                                            Navigator.pop(context);
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                              SlideRight(
+                                                page: QuizTextImages(
+                                                  subTheme: widget.subTheme,
+                                                  user: widget.user,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                heigth: 60,
+                                width: 60,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: height / 2.5),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: height / 3.8,
+                                  width: width / 1.3,
+                                  decoration: const BoxDecoration(
+                                    color: Palette.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Palette.lightGrey,
+                                        blurRadius: 0,
+                                        offset: Offset(0, 8), // Shadow position
+                                      ),
+                                    ],
+                                  ),
+                                  child: Align(
+                                      alignment: const Alignment(0.01, 0.1),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 20),
+                                            child: Text(
+                                              lesson[index].article == "une"
+                                                  ? "(Nom,Féminin,Singulier)"
+                                                  : lesson[index].article ==
+                                                          "de la"
+                                                      ? "(Nom,Féminin,Singulier)"
+                                                      : lesson[index].article ==
+                                                              "des"
+                                                          ? "(Nom,Pluriels)"
+                                                          : "(Nom,Masculin,Singulier)",
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.black45),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 10),
+                                            child: Text(
+                                              "${lesson[index].article} ${lesson[index].mot}",
+                                              style: const TextStyle(
+                                                  fontSize: 20,
+                                                  color: Palette.black),
+                                            ),
+                                          ),
+                                        ],
+                                      )),
                                 ),
                               ],
                             ),
-                            child: Align(
-                                alignment: const Alignment(0.01, 0.1),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 20),
-                                      child: Text(
-                                        lesson[index].article == "une"
-                                            ? "(Nom,Féminin,Singulier)"
-                                            : lesson[index].article == "de la"
-                                                ? "(Nom,Féminin,Singulier)"
-                                                : lesson[index].article == "des"
-                                                    ? "(Nom,Pluriels)"
-                                                    : "(Nom,Masculin,Singulier)",
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.black45),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        "${lesson[index].article} ${lesson[index].mot}",
-                                        style: const TextStyle(
-                                            fontSize: 20, color: Palette.black),
-                                      ),
-                                    ),
-                                  ],
-                                )),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: height / 8),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Button(
-                        color: Theme.of(context).secondaryHeaderColor,
-                        content: const Icon(
-                          Icons.volume_up,
-                          color: Palette.white,
-                          size: 50,
                         ),
-                        callback: () {
-                          Voice.play(lesson[index].audio, 1);
-                        },
-                        width: 100,
-                        heigth: 100,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 70, top: height / 4.5),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Button(
-                        content: Image.asset("assets/images/themes/snail.png"),
-                        color: Palette.blue,
-                        callback: () {
-                          Voice.play(lesson[index].audio, 0.60);
-                        },
-                        heigth: 35,
-                        width: 35,
-                      ),
-                    ),
-                  ),
-                ]),
-              )
-            ],
-          )
-        ]));
+                        Padding(
+                          padding: EdgeInsets.only(top: height / 8),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Button(
+                              color: Theme.of(context).secondaryHeaderColor,
+                              content: const Icon(
+                                Icons.volume_up,
+                                color: Palette.white,
+                                size: 50,
+                              ),
+                              callback: () {
+                                Voice.play(lesson[index].audio, 1);
+                              },
+                              width: 100,
+                              heigth: 100,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 70, top: height / 4.5),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Button(
+                              content:
+                                  Image.asset("assets/images/themes/snail.png"),
+                              color: Palette.blue,
+                              callback: () {
+                                Voice.play(lesson[index].audio, 0.60);
+                              },
+                              heigth: 35,
+                              width: 35,
+                            ),
+                          ),
+                        ),
+                      ]),
+                    )
+                  ],
+                )
+              ]));
   }
 }

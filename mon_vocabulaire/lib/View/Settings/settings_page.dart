@@ -2,29 +2,25 @@
 
 import 'dart:convert';
 import 'dart:math';
-
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Themes/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
-import 'package:mon_vocabulaire/View/Account/accouts.dart';
 import 'package:mon_vocabulaire/View/Account/first_screen.dart';
+import 'package:mon_vocabulaire/View/Settings/about.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
-import 'package:mon_vocabulaire/Widgets/button.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
+import 'package:mon_vocabulaire/Widgets/Popups/alert_popup.dart';
+import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Services/audio_background.dart';
-import 'package:mon_vocabulaire/View/Account/accouts.dart';
 import '../../Services/sfx.dart';
 import '../../Services/voice.dart';
 import '../../Widgets/round_icon_widget.dart';
 import '../Account/edit_account.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'dart:convert';
-import 'dart:math';
 
 class SettingsPage extends StatefulWidget {
   final User user;
@@ -137,71 +133,66 @@ class _SettingsPageState extends State<SettingsPage> {
     generateCaptchaImage();
 
     if (captchaVerified) {
-      AwesomeDialog(
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        context: context,
-        headerAnimationLoop: false,
-        dialogType: DialogType.success,
-        animType: AnimType.rightSlide,
-        body: Center(
-            child: Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 30),
-          child: Column(
-            children: const [
-              Text(
-                'Verrouillage Parental',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Compte supprimé'),
-              ),
-            ],
-          ),
-        )),
-      ).show();
+      DatabaseHelper().deleteUser(widget.user.id!);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertPopup(
+              onButton1Pressed: () {
+                Navigator.pop(context);
+              },
+              onButton2Pressed: () {
+                Navigator.pop(context);
+              },
+              buttonOnly: true,
+              button1: 'OK',
+              button2: '',
+              titre: 'Verrouillage Parental',
+              description: 'Compte supprimé',
+            );
+          });
     } else {
-      AwesomeDialog(
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        context: context,
-        headerAnimationLoop: false,
-        dialogType: DialogType.error,
-        animType: AnimType.rightSlide,
-        body: Center(
-            child: Column(
-          children: [
-            const Text(
-              'Verrouillage Parental',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Code erroné.\nEntrez le code affiché ci-dessous :',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.red),
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertPopup(
+              onButton1Pressed: () {
+                Navigator.pop(context);
+              },
+              onButton2Pressed: () {
+                verifyCaptcha(myController.text);
+                myController.clear();
+              },
+              content: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(captchaImagePath),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      decoration:
+                          const InputDecoration(hintText: 'Entrez le code ici'),
+                      controller: myController,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(captchaImagePath),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                decoration:
-                    const InputDecoration(hintText: 'Entrez le code ici'),
-                controller: myController,
-              ),
-            ),
-          ],
-        )),
-        btnCancelText: "Vérifier",
-        btnCancelOnPress: () {
-          verifyCaptcha(myController.text);
-          myController.clear();
-        },
-      ).show();
+              button1: 'Annuler',
+              button2: 'Valider',
+              titre: 'Verrouillage Parental',
+              description: 'Code erroné.\nEntrez le code affiché ci-dessous :',
+              textColor: Palette.red,
+            );
+          });
     }
   }
 
@@ -227,9 +218,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Paramètres"),
-        elevation: 1,
+      appBar: const CustomAppBar(
+        title: "Paramètres",
+        color: Palette.pink,
+        automaticallyImplyLeading: true,
       ),
       body: ListView(
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
@@ -242,7 +234,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 CircleAvatar(
                   radius: width / 5,
-                  backgroundColor: Palette.blue,
+                  backgroundColor: Palette.lightBlue,
                   child: ClipOval(
                     child: Image.asset(
                       widget.user.image,
@@ -264,7 +256,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     Text(
-                      "Niveau ${widget.user.current_level}",
+                      "Niveau ${widget.user.currentLevel}",
                       style: const TextStyle(color: Palette.darkGrey),
                     )
                   ],
@@ -276,7 +268,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Container(
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Palette.blue,
+                    color: Palette.lightBlue,
                   ),
                   child: IconButton(
                     icon: const Icon((Icons.edit), color: Colors.white),
@@ -444,7 +436,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     // overrides the default green color of the track
                     activeColor: Palette.lightGreen,
                     // color of the round icon, which moves from right to left
-                    thumbColor: notifOn ? Palette.darkGreen : Palette.blue,
+                    thumbColor: notifOn ? Palette.darkGreen : Palette.lightBlue,
                     // when the switch is off
                     trackColor: Palette.lightGrey,
                     // boolean variable value
@@ -489,7 +481,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     // overrides the default green color of the track
                     activeColor: Palette.lightGreen,
                     // color of the round icon, which moves from right to left
-                    thumbColor: darkOn ? Palette.darkGreen : Palette.blue,
+                    thumbColor: darkOn ? Palette.darkGreen : Palette.lightBlue,
                     // when the switch is off
                     trackColor: Palette.lightGrey,
                     // boolean variable value
@@ -542,14 +534,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       fontSize: 16.0,
                     ),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Accounts(),
-                      ),
-                    );
-                  },
+                  onTap: () {},
                 ),
               ],
             ),
@@ -560,7 +545,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Row(
               children: [
                 const RoundIconWidget(
-                    icon: Icons.feedback, color: Palette.blue),
+                    icon: Icons.feedback, color: Palette.lightBlue),
                 const SizedBox(
                   width: 25,
                   height: 25,
@@ -595,7 +580,14 @@ class _SettingsPageState extends State<SettingsPage> {
                       fontSize: 16.0,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AboutUs(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -619,7 +611,8 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(bottom: 10, top: 10),
             child: Row(
               children: [
-                const RoundIconWidget(icon: Icons.logout, color: Palette.blue),
+                const RoundIconWidget(
+                    icon: Icons.logout, color: Palette.lightBlue),
                 const SizedBox(
                   width: 25,
                   height: 25,
@@ -632,6 +625,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.pop(context);
                     Navigator.pushReplacement(
                       context,
@@ -662,82 +656,61 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   onTap: () {
-                    AwesomeDialog(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      dismissOnTouchOutside: false,
+                    showDialog(
                       context: context,
-                      headerAnimationLoop: false,
-                      dialogType: DialogType.info,
-                      animType: AnimType.rightSlide,
-                      title: 'Cette action est irréversible',
-                      desc:
-                          'Êtes-vous certain de vouloir supprimer ce compte ?',
-                      btnOk: Button(
-                        callback: () {
-                          Navigator.pop(context);
-                        },
-                        content: const Center(
-                            child: Text(
-                          "Annuler",
-                          style: TextStyle(color: Palette.white),
-                        )),
-                        width: 100,
-                        heigth: 50,
-                      ),
-                      btnCancel: Button(
-                        callback: () {
-                          Navigator.pop(context);
-                          AwesomeDialog(
-                            padding: const EdgeInsets.only(left: 15, right: 15),
-                            context: context,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.noHeader,
-                            animType: AnimType.rightSlide,
-                            body: Center(
-                                child: Column(
-                              children: [
-                                const Text(
-                                  'Verrouillage Parental',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                      'Entrez le code affiché ci-dessous :'),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(captchaImagePath),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    decoration: const InputDecoration(
-                                        hintText: 'Entrez le code ici'),
-                                    controller: myController,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertPopup(
+                          onButton1Pressed: () {
+                            Navigator.pop(context);
+                          },
+                          onButton2Pressed: () {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertPopup(
+                                  onButton1Pressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  onButton2Pressed: () {
+                                    verifyCaptcha(myController.text);
+                                    myController.clear();
+                                  },
+                                  content: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset(captchaImagePath),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextField(
+                                          decoration: const InputDecoration(
+                                              hintText: 'Entrez le code ici'),
+                                          controller: myController,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            )),
-                            btnCancelText: "Vérifier",
-                            btnCancelOnPress: () {
-                              verifyCaptcha(myController.text);
-                              myController.clear();
-                            },
-                          ).show();
-                        },
-                        content: const Center(
-                            child: Text(
-                          "Supprimer",
-                          style: TextStyle(color: Palette.white),
-                        )),
-                        width: 100,
-                        heigth: 50,
-                        color: Palette.red,
-                      ),
-                    ).show();
+                                  button1: 'Annuler',
+                                  button2: 'Valider',
+                                  titre: 'Verrouillage Parental',
+                                  description:
+                                      'Entrez le code affiché ci-dessous :',
+                                );
+                              },
+                            );
+                          },
+                          button1: 'Annuler',
+                          button2: 'Supprimer',
+                          titre: 'Cette action est irréversible',
+                          description:
+                              'Êtes-vous certain(e) de vouloir supprimer ce compte ?',
+                        );
+                      },
+                    );
                   },
                 ),
               ],

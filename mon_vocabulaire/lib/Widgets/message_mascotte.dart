@@ -5,7 +5,6 @@ import 'package:mon_vocabulaire/Widgets/triangle.dart';
 import 'package:animator/animator.dart';
 
 class BubbleMessage extends StatelessWidget {
-  // final String message;
   final Widget widget;
   const BubbleMessage({Key? key, required this.widget}) : super(key: key);
 
@@ -62,7 +61,7 @@ class BubbleMessage extends StatelessWidget {
                     )),
           ),
         ],
-  ),
-);
-}
+      ),
+    );
+  }
 }
