@@ -1,21 +1,61 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 
-class DonePopup extends StatelessWidget {
+class DonePopup extends StatefulWidget {
   final VoidCallback onButton1Pressed;
   final VoidCallback onButton2Pressed;
+  final User user;
+  final int subThemeId;
 
   const DonePopup({
     super.key,
     required this.onButton1Pressed,
     required this.onButton2Pressed,
+    required this.user,
+    required this.subThemeId,
   });
+
+  @override
+  State<DonePopup> createState() => _DonePopupState();
+}
+
+class _DonePopupState extends State<DonePopup> {
+  int quiz = 0;
+  Future<void> getQuiz() async {
+    int _quiz =
+        await DatabaseHelper().getQuiz(widget.user.id!, widget.subThemeId);
+    setState(() {
+      quiz = _quiz;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    getQuiz();
+    Timer(const Duration(seconds: 3), () {
+      if (widget.subThemeId == 1 ||
+          widget.subThemeId == 3 ||
+          widget.subThemeId == 6 ||
+          widget.subThemeId == 7 ||
+          widget.subThemeId == 8 ||
+          widget.subThemeId == 9 ||
+          widget.subThemeId == 10 ||
+          widget.subThemeId == 12) {
+        if (quiz == 0) {
+          DatabaseHelper().updateQuiz(widget.user.id!, widget.subThemeId, 1);
+        }
+      }
+    });
+
     Sfx.play("audios/sfx/done.mp3", 1);
     return Dialog(
       insetPadding: EdgeInsets.all(width > 500 ? 100 : 30),
@@ -40,7 +80,7 @@ class DonePopup extends StatelessWidget {
                   children: [
                     const SizedBox(height: 50.0),
                     Text(
-                      "Términé !",
+                      "Terminé !",
                       style: TextStyle(
                           fontSize: width > 500 ? 30 : 25.0,
                           fontWeight: FontWeight.bold,
@@ -51,8 +91,8 @@ class DonePopup extends StatelessWidget {
                       "Tu as terminé la leçon",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: width > 500 ? 20 : 16,
-                      ),
+                          fontSize: width > 500 ? 20 : 16,
+                          color: Palette.black),
                     ),
                     const SizedBox(height: 10.0),
                     Row(
@@ -61,7 +101,7 @@ class DonePopup extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(right: 5),
                           child: Button(
-                            callback: onButton1Pressed,
+                            callback: widget.onButton1Pressed,
                             content: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +128,7 @@ class DonePopup extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Button(
-                            callback: onButton2Pressed,
+                            callback: widget.onButton2Pressed,
                             content: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

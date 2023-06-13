@@ -4,12 +4,13 @@ import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/quiz_model.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
+import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
+import 'package:mon_vocabulaire/View/Quiz/quiz_image_texts.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/quiz_app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/Popups/quiz_popup.dart';
-import '../../Model/quiz_prposition.dart';
 import '../../Services/audio_background.dart';
 import '../../Services/sfx.dart';
 import '../../Services/voice.dart';
@@ -124,33 +125,35 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   int time = 30;
   void startTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (duration > 0 && !quizEnded) {
-          duration -= 1; // decrement the duration every second
-          time += 1;
-        } else if (chances > 0 && !quizEnded) {
-          timer.cancel(); // stop the timer when the duration reaches 0
-          nextQuestion(); // execute the function after the timer is done
-          duration = 30;
-          startTimer();
-        }
-        if (index == size || chances == 0 || quizEnded) {
-          duration = 0;
-        }
-        if (duration <= 0 && !didResponse && !quizEnded) {
-          chances--;
-          Sfx.play("audios/sfx/zew.mp3", 1);
-          heartVisible();
-          endQuiz();
-        }
-      });
+      if (questions.isNotEmpty) {
+        setState(() {
+          if (duration > 0 && !quizEnded) {
+            duration -= 1; // decrement the duration every second
+            time += 1;
+          } else if (chances > 0 && !quizEnded) {
+            timer.cancel(); // stop the timer when the duration reaches 0
+            nextQuestion(); // execute the function after the timer is done
+            duration = 30;
+            startTimer();
+          }
+          if (index == size || chances == 0 || quizEnded) {
+            duration = 0;
+          }
+          if (duration <= 0 && !didResponse && !quizEnded) {
+            chances--;
+            Sfx.play("audios/sfx/zew.mp3", 1);
+            heartVisible();
+            endQuiz();
+          }
+        });
+      }
     });
   }
 
   bool first = true;
   getQuestions() async {
-    List<Proposition> quest =
-        await quizModel.getRandomPropositions(theme, subTheme);
+    List<Proposition> quest = await quizModel.getRandomPropositions(
+        theme, subTheme, widget.user, widget.subTheme);
     setState(() {
       questions = quest;
     });
@@ -164,7 +167,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
     nextQuestion();
   }
 
-  int size = 5;
+  int size = 10;
   nextQuestion() async {
     if (first) {
       setState(() {
@@ -221,6 +224,9 @@ class _QuizTextImagesState extends State<QuizTextImages> {
         builder: (BuildContext context) {
           return QuizPopup(
             chances: chances,
+            subThemeId: widget.subTheme,
+            words: size,
+            quiz: 1,
             timer: time.toDouble(),
             onButton1Pressed: () {
               Navigator.pop(context);
@@ -228,10 +234,9 @@ class _QuizTextImagesState extends State<QuizTextImages> {
             },
             onButton2Pressed: () {
               Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => QuizTextImages(
+              Navigator.of(context).pushReplacement(
+                SlideRight(
+                  page: QuizImageTexts(
                     subTheme: widget.subTheme,
                     user: widget.user,
                   ),
@@ -250,6 +255,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                 ),
               );
             },
+            user: widget.user,
           );
         },
       );
@@ -264,6 +270,10 @@ class _QuizTextImagesState extends State<QuizTextImages> {
         builder: (BuildContext context) {
           return QuizPopup(
             chances: chances,
+            user: widget.user,
+            words: size,
+            quiz: 1,
+            subThemeId: widget.subTheme,
             timer: time.toDouble(),
             onButton1Pressed: () {
               Navigator.pop(context);
@@ -271,10 +281,9 @@ class _QuizTextImagesState extends State<QuizTextImages> {
             },
             onButton2Pressed: () {
               Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => QuizTextImages(
+              Navigator.of(context).pushReplacement(
+                SlideRight(
+                  page: QuizImageTexts(
                     subTheme: widget.subTheme,
                     user: widget.user,
                   ),
@@ -366,233 +375,241 @@ class _QuizTextImagesState extends State<QuizTextImages> {
             question: index >= size ? size : index + 1,
             size: size,
           )),
-      body: Stack(
-        children: [
-          Stack(
-            children: [
-              Align(
-                alignment: AlignmentDirectional.bottomEnd,
-                child: Stack(
-                  alignment: AlignmentDirectional.bottomEnd,
+      body: questions.isEmpty
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Palette.lightBlue,
+              ),
+            )
+          : Stack(
+              children: [
+                Stack(
                   children: [
-                    Container(
-                      height: height / 1.45,
-                      width: width,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(100),
-                            topRight: Radius.circular(100)),
-                      ),
-                    ),
                     Align(
-                      alignment: AlignmentDirectional.topCenter,
-                      child: SizedBox(
-                        height: height / 1.7,
-                        child: Center(
-                            child: Text(
-                          correct,
-                          style: const TextStyle(
-                              color: Palette.white, fontSize: 30),
-                        )),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Center(
-                child: ListView(
-                  children: [
-                    Column(
-                      children: [
-                        Stack(children: [
+                      alignment: AlignmentDirectional.bottomEnd,
+                      child: Stack(
+                        alignment: AlignmentDirectional.bottomEnd,
+                        children: [
+                          Container(
+                            height: height / 1.45,
+                            width: width,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(100),
+                                  topRight: Radius.circular(100)),
+                            ),
+                          ),
                           Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: IconButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: const Icon(
-                                    Icons.close_rounded,
-                                    color: Palette.red,
-                                    size: 40,
-                                  )),
+                            alignment: AlignmentDirectional.topCenter,
+                            child: SizedBox(
+                              height: height / 1.7,
+                              child: Center(
+                                  child: Text(
+                                correct,
+                                style: const TextStyle(
+                                    color: Palette.white, fontSize: 30),
+                              )),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Button(
-                                color: Palette.blue,
-                                content: const Icon(
-                                  Icons.volume_up,
-                                  color: Palette.white,
-                                  size: 50,
+                        ],
+                      ),
+                    ),
+                    Center(
+                      child: ListView(
+                        children: [
+                          Column(
+                            children: [
+                              Stack(children: [
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(
+                                          Icons.close_rounded,
+                                          color: Palette.red,
+                                          size: 40,
+                                        )),
+                                  ),
                                 ),
-                                callback: () {
-                                  if (!quizEnded) {
-                                    Voice.play(reponse[0], 1);
-                                  } else {
-                                    endQuiz();
-                                  }
-                                },
-                                width: 100,
-                                heigth: 100,
-                              ),
-                            ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 20),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Button(
+                                      color: Palette.pink,
+                                      content: const Icon(
+                                        Icons.volume_up,
+                                        color: Palette.white,
+                                        size: 50,
+                                      ),
+                                      callback: () {
+                                        if (!quizEnded) {
+                                          Voice.play(reponse[0], 1);
+                                        } else {
+                                          endQuiz();
+                                        }
+                                      },
+                                      width: 100,
+                                      heigth: 100,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 70, top: 20),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Button(
+                                      content: Image.asset(
+                                          "assets/images/themes/snail.png"),
+                                      color: Palette.blue,
+                                      callback: () {
+                                        if (!quizEnded) {
+                                          Voice.play(reponse[0], 0.60);
+                                        } else {
+                                          endQuiz();
+                                        }
+                                      },
+                                      heigth: 35,
+                                      width: 35,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 70, top: 20),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Button(
-                                content: Image.asset(
-                                    "assets/images/themes/snail.png"),
-                                color: Palette.pink,
-                                callback: () {
-                                  if (!quizEnded) {
-                                    Voice.play(reponse[0], 0.60);
-                                  } else {
-                                    endQuiz();
-                                  }
-                                },
-                                heigth: 35,
-                                width: 35,
-                              ),
-                            ),
-                          ),
-                        ]),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          Align(
-            alignment: AlignmentDirectional.bottomEnd,
-            child: Padding(
-              padding: EdgeInsets.only(
-                  top: width > 500 ? height / 3.7 : height / 2.7),
-              child: GridView.count(
-                crossAxisCount: 2,
-                padding: EdgeInsets.only(
-                    left: width > 500 ? 60 : 0,
-                    right: width > 500 ? 60 : 0,
-                    top: width > 500 ? 60 : 0),
-                children: List.generate(
-                  mots.length,
-                  (int index) {
-                    String key = mots[index];
-                    String value = images[index];
-                    return Center(
-                      child: Button(
-                        content: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Image.asset(
-                            value,
-                          ),
-                        ),
-                        color: didResponse
-                            ? key == response
-                                ? response == correct
-                                    ? Palette.lighterGreen
-                                    : Palette.lightRed
-                                : key == correct
-                                    ? Palette.lighterGreen
-                                    : Palette.white
-                            : Palette.white,
-                        callback: () {
-                          if (!quizEnded) {
-                            setState(() {
-                              didResponse = true;
-                              response = key;
-                            });
-                            if (key == correct) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                duration: Duration(seconds: 2),
-                                backgroundColor: Palette.lightGreen,
-                                content: Text(
-                                  'Bonne reponse',
-                                  style: TextStyle(
-                                      color: Palette.white, fontSize: 18),
+                Align(
+                  alignment: AlignmentDirectional.bottomEnd,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: width > 500 ? height / 3.7 : height / 2.7),
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      padding: EdgeInsets.only(
+                          left: width > 500 ? 60 : 0,
+                          right: width > 500 ? 60 : 0,
+                          top: width > 500 ? 60 : 0),
+                      children: List.generate(
+                        mots.length,
+                        (int index) {
+                          String key = mots[index];
+                          String value = images[index];
+                          return Center(
+                            child: Button(
+                              enabled: !didResponse,
+                              content: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Image.asset(
+                                  value,
                                 ),
-                              ));
-                              Sfx.play("audios/sfx/ding.mp3", 1);
-                              Timer(const Duration(seconds: 1), () {
-                                nextQuestion();
-                                setState(() {
-                                  duration = 30;
-                                  didResponse = false;
-                                });
-                                endQuiz();
-                              });
-                            } else {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                duration: Duration(seconds: 2),
-                                backgroundColor: Palette.red,
-                                content: Text(
-                                  'Mauvaise reponse',
-                                  style: TextStyle(
-                                      color: Palette.white, fontSize: 18),
-                                ),
-                              ));
-                              Sfx.play("audios/sfx/zew.mp3", 1);
-                              heartVisible();
-                              Timer(const Duration(seconds: 2), () {
-                                nextQuestion();
-                                setState(() {
-                                  chances -= 1;
-                                  duration = 30;
-                                  didResponse = false;
-                                });
-                                endQuiz();
-                              });
-                            }
-                          } else {
-                            endQuiz();
-                          }
+                              ),
+                              color: didResponse
+                                  ? key == response
+                                      ? response == correct
+                                          ? Palette.lighterGreen
+                                          : Palette.lightRed
+                                      : key == correct
+                                          ? Palette.lighterGreen
+                                          : Palette.white
+                                  : Palette.white,
+                              callback: () {
+                                if (!quizEnded) {
+                                  setState(() {
+                                    didResponse = true;
+                                    response = key;
+                                  });
+                                  if (key == correct) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      duration: Duration(seconds: 2),
+                                      backgroundColor: Palette.lightGreen,
+                                      content: Text(
+                                        'Bonne réponse',
+                                        style: TextStyle(
+                                            color: Palette.white, fontSize: 18),
+                                      ),
+                                    ));
+                                    Sfx.play("audios/sfx/ding.mp3", 1);
+                                    Timer(const Duration(seconds: 1), () {
+                                      nextQuestion();
+                                      setState(() {
+                                        duration = 30;
+                                        didResponse = false;
+                                      });
+                                      endQuiz();
+                                    });
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      duration: Duration(seconds: 2),
+                                      backgroundColor: Palette.red,
+                                      content: Text(
+                                        'Mauvaise réponse',
+                                        style: TextStyle(
+                                            color: Palette.white, fontSize: 18),
+                                      ),
+                                    ));
+                                    Sfx.play("audios/sfx/zew.mp3", 1);
+                                    heartVisible();
+                                    Timer(const Duration(seconds: 2), () {
+                                      nextQuestion();
+                                      setState(() {
+                                        chances -= 1;
+                                        duration = 30;
+                                        didResponse = false;
+                                      });
+                                      endQuiz();
+                                    });
+                                  }
+                                } else {
+                                  endQuiz();
+                                }
+                              },
+                              heigth: width > 500 ? width / 2.8 : width / 2.2,
+                              width: width > 500 ? width / 2.8 : width / 2.2,
+                              radius: 30,
+                            ),
+                          );
                         },
-                        heigth: width > 500 ? width / 2.8 : width / 2.2,
-                        width: width > 500 ? width / 2.8 : width / 2.2,
-                        radius: 30,
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ),
+                ConfettiWidget(
+                  gravity: 0,
+                  confettiController: _controllerConfetti,
+                  blastDirectionality: BlastDirectionality
+                      .explosive, // don't specify a direction, blast randomly
+                  numberOfParticles: 20,
+                  shouldLoop:
+                      true, // start again as soon as the animation is finished
+                  colors: const [
+                    Palette.lightGreen,
+                    Palette.blue,
+                    Palette.pink,
+                    Palette.orange,
+                    Palette.purple
+                  ], // manually specify the colors to be used
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 130),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: looseHeart(),
+                  ),
+                ),
+              ],
             ),
-          ),
-          ConfettiWidget(
-            gravity: 0,
-            confettiController: _controllerConfetti,
-            blastDirectionality: BlastDirectionality
-                .explosive, // don't specify a direction, blast randomly
-            numberOfParticles: 20,
-            shouldLoop:
-                true, // start again as soon as the animation is finished
-            colors: const [
-              Palette.lightGreen,
-              Palette.blue,
-              Palette.pink,
-              Palette.orange,
-              Palette.purple
-            ], // manually specify the colors to be used
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 130),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: looseHeart(),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

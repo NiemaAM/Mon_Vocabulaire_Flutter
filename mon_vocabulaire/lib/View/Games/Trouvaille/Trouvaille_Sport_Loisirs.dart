@@ -1,70 +1,84 @@
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, no_leading_underscores_for_local_identifiers
+
 import 'dart:async';
 
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import '../../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../../Widgets/Appbars/game_app_bar.dart';
 import '../../../Widgets/Popups/game_popup.dart';
 import '../../../Widgets/message_mascotte.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:confetti/confetti.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
 
-class sport_loisir extends StatefulWidget {
-  const sport_loisir({super.key, required this.user});
+class SportLoisirs extends StatefulWidget {
+  const SportLoisirs({super.key, required this.user});
   final User user;
 
   @override
-  State<sport_loisir> createState() => _sport_loisirState();
+  State<SportLoisirs> createState() => _SportLoisirsState();
 }
 
-class _sport_loisirState extends State<sport_loisir> {
+class _SportLoisirsState extends State<SportLoisirs>
+    with WidgetsBindingObserver {
   bool _canTap = false;
   int countdown = 5;
   late Timer _timer;
+  late Timer _timer2;
   int duration = 60;
   bool isGameFinish = false;
   int fermeObject = 0;
-  bool _isfoeClicked = false;
-  bool _isveClicked = false;
-  bool _ispaClicked = false;
-  bool _iscaClicked = false;
-  bool _isbalClicked = false;
+  bool _isbalancoireClicked = false;
+  bool _isgolfClicked = false;
+  bool _ispiscineClicked = false;
+  bool _istobogganClicked = false;
+  bool _ispingpongClicked = false;
+  bool _isveloClicked = false;
+  bool _isballonClicked = false;
   late ConfettiController _controllerConfetti;
-  late var randomCuisine;
+  late var randomElement;
   Map<String, String> ElementsAudios = {
     'Un balançoire': "205.mp3",
-    'Un football': "197.mp3",
-    'Un cirque': "209.mp3",
+    'Un golf': "198.mp3",
+    'Une piscine': "202.mp3",
     'Un toboggan': "223.mp3",
-    "Un ballon": "226.mp3"
+    "Un ballon": "226.mp3",
+    "Un ping pong": "201.mp3",
+    "Un vélo": "233.mp3",
   };
 
-  List<String> cuisine_ = [
+  List<String> sport_ = [
     'Un toboggan',
-    'Un football',
-    'Un cirque',
+    'Un golf',
+    'Une piscine',
     'Un ballon',
-    'Une balançoire'
+    'Une balançoire',
+    'Un ping pong',
+    'Un vélo'
   ];
   String randomcuisineFunc() {
-    cuisine_.shuffle();
+    sport_.shuffle();
 
-    if (cuisine_.isNotEmpty) {
-      randomCuisine = cuisine_[0];
-      print(randomCuisine);
-      cuisine_.removeAt(0);
+    if (sport_.isNotEmpty) {
+      randomElement = sport_[0];
+      sport_.removeAt(0);
+      if (sport_.length == 6 && duration > 0) {
+        _timer2 = Timer.periodic(const Duration(seconds: 5), (timer) {
+          Voice.play("audios/voices/${ElementsAudios[randomElement]}", 1);
+        });
+      } else {
+        Voice.play("audios/voices/${ElementsAudios[randomElement]}", 1);
+      }
     } else {
-      print("Fin du jeu");
       endGame();
     }
 
-    return randomCuisine;
+    return randomElement;
   }
 
   void startTimer() {
@@ -79,26 +93,41 @@ class _sport_loisirState extends State<sport_loisir> {
             duration--;
             _canTap = true;
             if (duration == 0) {
+              _timer2.cancel();
               timer.cancel();
-              if (cuisine_.isNotEmpty) {
+              if (sport_.isNotEmpty) {
                 showDialog(
                   context: context,
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     return GamePopup(
+                      price: 30,
                       onButton1Pressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                sport_loisir(user: widget.user),
-                          ),
-                        );
+                        if (coins >= 30) {
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Trouvaille(user: widget.user),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Palette.indigo,
+                            content: Text(
+                              'Tu n\'as pas assez de pièces pour jouer.',
+                              style:
+                                  TextStyle(color: Palette.white, fontSize: 18),
+                            ),
+                          ));
+                        }
                       },
                       oneButton: false,
                       win: false,
@@ -113,7 +142,17 @@ class _sport_loisirState extends State<sport_loisir> {
     }
   }
 
+  int coins = 0;
+  Future<void> getCoins() async {
+    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+    setState(() {
+      coins = _coins;
+    });
+  }
+
   void endGame() {
+    _timer2.cancel();
+    _timer.cancel();
     if (duration > 0) {
       _controllerConfetti.play();
     }
@@ -122,20 +161,33 @@ class _sport_loisirState extends State<sport_loisir> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return GamePopup(
+          price: 30,
           onButton1Pressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => sport_loisir(user: widget.user),
-              ),
-            );
+            getCoins();
+            if (coins >= 30) {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Trouvaille(user: widget.user),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                duration: Duration(seconds: 2),
+                backgroundColor: Palette.indigo,
+                content: Text(
+                  'Tu n\'as pas assez de pièces pour jouer.',
+                  style: TextStyle(color: Palette.white, fontSize: 18),
+                ),
+              ));
+            }
           },
-          win: duration > 0 ? true : false,
+          win: duration > 0,
         );
       },
     );
@@ -144,11 +196,10 @@ class _sport_loisirState extends State<sport_loisir> {
   @override
   void initState() {
     super.initState();
-    AudioBK.pauseBK();
+    WidgetsBinding.instance.addObserver(this);
     randomcuisineFunc();
     _controllerConfetti =
         ConfettiController(duration: const Duration(seconds: 1));
-
     startTimer();
   }
 
@@ -156,14 +207,19 @@ class _sport_loisirState extends State<sport_loisir> {
   void dispose() {
     super.dispose();
     Sfx.pause();
+    Voice.pause();
     _timer.cancel();
-    AudioBK.playBK();
+    _timer2.cancel();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
+      AudioBK.pauseBK();
+      Voice.pause();
       Sfx.pause();
+    } else {
+      AudioBK.playBK();
     }
   }
 
@@ -172,219 +228,271 @@ class _sport_loisirState extends State<sport_loisir> {
     AudioBK.pauseBK();
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: Palette.white,
-          appBar: CustomAppBarGames(
-            user: widget.user,
-            background: true,
-          ),
+          backgroundColor: Palette.lightBlue,
           body: Stack(
             children: [
-              Center(
-                child: Container(
-                  width: width * 0.9,
-                  height: height > 800 ? height * 0.65 : height * 0.6,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/images/games/backgrounds/sport.jpg'),
-                      fit: BoxFit.fitHeight,
+              Stack(
+                children: [
+                  Container(
+                    width: width,
+                    height: height - 100,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                            'assets/images/games/backgrounds/sport.jpg'),
+                        fit: BoxFit.fitHeight,
+                      ),
                     ),
+                    child: Stack(children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 100.0),
+                          child: SizedBox(
+                            width: width > 500 ? width / 2 + 50 : width - 30,
+                            child: BubbleMessage(
+                              widget: countdown > 0
+                                  ? Text(
+                                      "Trouvez l'objet dans : $countdown",
+                                      style: const TextStyle(
+                                          color: Palette.indigo, fontSize: 15),
+                                    )
+                                  : SizedBox(
+                                      height: 30,
+                                      child: Row(
+                                        children: [
+                                          const Expanded(child: SizedBox()),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Voice.play(
+                                                  'audios/voices/${ElementsAudios['$randomElement']}',
+                                                  1);
+                                            },
+                                            child: const Icon(
+                                              Icons.volume_up,
+                                              color: Palette.indigo,
+                                              size: 25,
+                                            ),
+                                          ),
+                                          const Expanded(child: SizedBox()),
+                                          Text(
+                                            "$randomElement",
+                                            style: const TextStyle(
+                                                color: Palette.indigo,
+                                                fontSize: 18),
+                                          ),
+                                          const Expanded(
+                                              flex: 2, child: SizedBox()),
+                                        ],
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: height * 0.4,
+                        right: width > 500 ? width * 0.8 : width * 0.7,
+                        child: GestureDetector(
+                          onTap: () {
+                            String name = "Un vélo";
+                            if (name == randomElement && _canTap) {
+                              setState(() {
+                                _isveloClicked = true;
+                              });
+                              randomcuisineFunc();
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/pics/233.png',
+                            width: width > 500 ? 150 : 120,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: width > 500 ? height * 0.33 : height * 0.36,
+                        left: width > 500 ? width * 0.2 : width * 0.25,
+                        child: GestureDetector(
+                          onTap: () {
+                            String name = "Une balançoire";
+                            if (name == randomElement && _canTap) {
+                              setState(() {
+                                _isbalancoireClicked = true;
+                              });
+
+                              randomcuisineFunc();
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/pics/205.png',
+                            width: width > 500 ? 260 : 180,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: width > 500 ? height * 0.55 : height * 0.58,
+                        right: width > 500 ? width * 0.75 : width * 0.65,
+                        child: GestureDetector(
+                          onTap: () {
+                            String name = "Une piscine";
+                            if (name == randomElement && _canTap) {
+                              setState(() {
+                                _ispiscineClicked = true;
+                              });
+
+                              randomcuisineFunc();
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/pics/202.png',
+                            width: width > 500 ? 200 : 150,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: width > 500 ? height * 0.7 : height * 0.68,
+                        left: width * 0.5,
+                        child: GestureDetector(
+                          onTap: () {
+                            String name = "Un ping pong";
+                            if (name == randomElement && _canTap) {
+                              setState(() {
+                                _ispingpongClicked = true;
+                              });
+
+                              randomcuisineFunc();
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/pics/201.png',
+                            width: width > 500 ? 250 : 200,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: width > 500 ? height * 0.35 : height * 0.38,
+                        left: width * 0.6,
+                        child: GestureDetector(
+                          onTap: () {
+                            String name = "Un toboggan";
+                            if (name == randomElement && _canTap) {
+                              setState(() {
+                                _istobogganClicked = true;
+                              });
+
+                              randomcuisineFunc();
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/pics/223.png',
+                            width: width > 500 ? 300 : 200,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: width > 500 ? height * 0.65 : height * 0.6,
+                        left: width > 500 ? width * 0.35 : width * 0.4,
+                        child: GestureDetector(
+                          onTap: () {
+                            String name = "Un golf";
+                            if (name == randomElement && _canTap) {
+                              setState(() {
+                                _isgolfClicked = true;
+                              });
+
+                              randomcuisineFunc();
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/pics/198.png',
+                            width: width > 500 ? 100 : 80,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: height * 0.6,
+                        left: width * 0.8,
+                        child: GestureDetector(
+                          onTap: () {
+                            String name = "Un ballon";
+                            if (name == randomElement && _canTap) {
+                              setState(() {
+                                _isballonClicked = true;
+                              });
+
+                              randomcuisineFunc();
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/pics/226.png',
+                            width: width > 500 ? 60 : 50,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ]),
                   ),
-                  child: Stack(children: [
-                    //monkey
-
-                    Positioned(
-                      bottom: width > 550 ? height * 0.1 : height * 0.11,
-                      left: width > 550 ? width * 0 : width * 0.01,
-                      child: GestureDetector(
-                        onTap: () {
-                          String name = "Un cirque";
-                          if (name == randomCuisine && _canTap) {
-                            _isfoeClicked = true;
-                            randomcuisineFunc();
-                            Voice.play(
-                                "audios/voices/${ElementsAudios['Un cirque']}",
-                                1);
-                          }
-                        },
-                        child: Image.asset(
-                          'assets/images/pics/209.png',
-                          scale: width > 450 ? 2 : 2.5,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: height > 800 ? height * 0.1 : height * 0.12,
-                      left: width > 550 ? width * 0.38 : width * 0.65,
-                      child: GestureDetector(
-                        onTap: () {
-                          String name = "Une balançoire";
-                          if (name == randomCuisine && _canTap) {
-                            _isbalClicked = true;
-                            randomcuisineFunc();
-                            Voice.play(
-                                "audios/voices/${ElementsAudios['Une balançoire']}",
-                                1);
-                          }
-                        },
-                        child: Image.asset(
-                          'assets/images/pics/205.png',
-                          height: 120,
-                          width: 120,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: height > 800 ? height * 0 : height * 0.05,
-                      left: width > 550 ? width * 0.35 : width * 0.5,
-                      child: GestureDetector(
-                        onTap: () {
-                          String name = "Un football";
-                          if (name == randomCuisine && _canTap) {
-                            _isveClicked = true;
-                            randomcuisineFunc();
-                            Voice.play(
-                                "audios/voices/${ElementsAudios['Un football']}",
-                                1);
-                          }
-                        },
-                        child: Image.asset(
-                          'assets/images/pics/197.png',
-                          scale: width > 450 ? 4 : 2.5,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-
-                    Positioned(
-                      bottom: height > 550 ? height * 0 : height * 0.21,
-                      left: width > 550 ? width * 0.5 : width * 0.75,
-                      child: GestureDetector(
-                        onTap: () {
-                          String name = "Un toboggan";
-                          if (name == randomCuisine && _canTap) {
-                            _ispaClicked = true;
-                            randomcuisineFunc();
-                            Voice.play(
-                                "audios/voices/${ElementsAudios['Un toboggan']}",
-                                1);
-                          }
-                        },
-                        child: Image.asset(
-                          'assets/images/pics/223.png',
-                          scale: width > 450 ? 1.99 : 2.5,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-
-                    Positioned(
-                      bottom: height > 800 ? height * 0.5 : height * 0.42,
-                      left: width > 550 ? width * 0.25 : width * 0.75,
-                      child: GestureDetector(
-                        onTap: () {
-                          String name = "Un ballon";
-                          if (name == randomCuisine && _canTap) {
-                            _iscaClicked = true;
-                            randomcuisineFunc();
-                            Voice.play(
-                                "audios/voices/${ElementsAudios['Un ballon']}",
-                                1);
-                          }
-                        },
-                        child: Image.asset(
-                          'assets/images/pics/226.png',
-                          height: width > 550 ? 70 : 40,
-                          width: width > 550 ? 70 : 40,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                  ]),
-                ),
+                ],
               ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
+                  padding: EdgeInsets.only(bottom: width > 500 ? 10.0 : 25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Image.asset(
-                        'assets/images/pics/209.png',
-                        height: 75,
-                        width: 75,
-                        color: _isfoeClicked ? null : Colors.black,
+                        'assets/images/pics/205.png',
+                        width: width > 500 ? 75 : 45,
+                        color: _isbalancoireClicked ? null : Palette.indigo,
                       ),
                       Image.asset(
-                        'assets/images/pics/197.png',
-                        height: 75,
-                        width: 75,
-                        color: _isveClicked ? null : Colors.black,
+                        'assets/images/pics/198.png',
+                        width: width > 500 ? 60 : 35,
+                        color: _isgolfClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/pics/202.png',
+                        width: width > 500 ? 60 : 40,
+                        color: _ispiscineClicked ? null : Palette.indigo,
                       ),
                       Image.asset(
                         'assets/images/pics/223.png',
-                        height: 75,
-                        width: 75,
-                        color: _ispaClicked ? null : Colors.black,
+                        width: width > 500 ? 75 : 50,
+                        color: _istobogganClicked ? null : Palette.indigo,
                       ),
                       Image.asset(
                         'assets/images/pics/226.png',
-                        height: 60,
-                        width: 60,
-                        color: _iscaClicked ? null : Colors.black,
+                        width: width > 500 ? 55 : 35,
+                        color: _isballonClicked ? null : Palette.indigo,
                       ),
                       Image.asset(
-                        'assets/images/pics/205.png',
-                        height: 75,
-                        width: 75,
-                        color: _isbalClicked ? null : Colors.black,
+                        'assets/images/pics/201.png',
+                        width: width > 500 ? 75 : 40,
+                        color: _ispingpongClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/pics/233.png',
+                        width: width > 500 ? 70 : 40,
+                        color: _isveloClicked ? null : Palette.indigo,
                       ),
                     ],
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: BubbleMessage(
-                  widget: countdown > 0
-                      ? Text(
-                          "Trouvez les élements dans : $countdown",
-                          style: const TextStyle(
-                              color: Color(0xFF0E57AC), fontSize: 15),
-                        )
-                      : Row(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 8, right: 10),
-                              child: IconButton(
-                                onPressed: () {
-                                  Voice.play(
-                                      'audios/voices/${ElementsAudios['$randomCuisine']}',
-                                      1);
-                                },
-                                icon: Icon(
-                                  Icons.volume_up,
-                                  color: Color(0xFF0E57AC),
-                                  size: 35,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              '$randomCuisine',
-                              style: const TextStyle(
-                                  color: Color(0xFF0E57AC), fontSize: 20),
-                            ),
-                          ],
-                        ),
-                ),
+              CustomAppBarGames(
+                user: widget.user,
+                background: true,
+                timer: true,
               ),
             ],
           ),
@@ -403,7 +511,7 @@ class _sport_loisirState extends State<sport_loisir> {
                 : duration <= 15
                     ? Palette.red
                     : Palette.orange,
-            backgroundColor: Theme.of(context).shadowColor,
+            backgroundColor: Palette.indigo,
           ),
         ),
       ],

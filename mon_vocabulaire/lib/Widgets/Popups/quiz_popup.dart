@@ -1,14 +1,24 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 
-class QuizPopup extends StatelessWidget {
+class QuizPopup extends StatefulWidget {
   final VoidCallback onButton1Pressed;
   final VoidCallback onButton2Pressed;
   final VoidCallback onButton3Pressed;
   final int chances;
   final double timer;
+  final User user;
+  final int subThemeId;
+  final int words;
+  final int quiz;
 
   const QuizPopup({
     super.key,
@@ -17,15 +27,132 @@ class QuizPopup extends StatelessWidget {
     required this.onButton3Pressed,
     required this.chances,
     required this.timer,
+    required this.user,
+    required this.subThemeId,
+    this.words = 10,
+    required this.quiz,
   });
+
+  @override
+  State<QuizPopup> createState() => _QuizPopupState();
+}
+
+class _QuizPopupState extends State<QuizPopup> {
+  int quiz = 0;
+  int part = 0;
+  bool finished = false;
+  Future<void> getQuiz() async {
+    int _quiz =
+        await DatabaseHelper().getQuiz(widget.user.id!, widget.subThemeId);
+    int _part =
+        await DatabaseHelper().getPart(widget.user.id!, widget.subThemeId);
+    bool _finished =
+        await DatabaseHelper().getFinished(widget.user.id!, widget.subThemeId);
+    setState(() {
+      quiz = _quiz;
+      part = _part;
+      finished = _finished;
+    });
+  }
+
+  void addCoinsWordsStars() {
+    if (widget.chances == 0) {
+      Sfx.play("audios/sfx/lose.mp3", 1);
+    }
+    if (widget.chances == 1) {
+      Sfx.play("audios/sfx/win.mp3", 1);
+      DatabaseHelper().addCoins(widget.user.id!, 5);
+    }
+    if (widget.chances == 2) {
+      Sfx.play("audios/sfx/win.mp3", 1);
+      DatabaseHelper().addCoins(widget.user.id!, 10);
+    }
+    if (widget.chances == 3) {
+      Sfx.play("audios/sfx/win.mp3", 1);
+      DatabaseHelper().addCoins(widget.user.id!, 15);
+      DatabaseHelper().addStars(widget.user.id!, widget.subThemeId, 1);
+    }
+    getQuiz();
+    Timer(const Duration(seconds: 3), () {
+      if (widget.chances > 0 && widget.quiz == 3 && !finished) {
+        DatabaseHelper()
+            .addWords(widget.user.id!, widget.words, widget.subThemeId);
+      }
+    });
+  }
+
+  void updatePart() {
+    getQuiz();
+    Timer(const Duration(seconds: 3), () {
+      if (widget.chances > 0) {
+        if (widget.quiz == 1 && quiz <= 1) {
+          DatabaseHelper().updateQuiz(widget.user.id!, widget.subThemeId, 2);
+        }
+        if (widget.quiz == 2 && quiz <= 2) {
+          DatabaseHelper().updateQuiz(widget.user.id!, widget.subThemeId, 3);
+        }
+        if (widget.quiz == 3) {
+          if (widget.subThemeId == 1 ||
+              widget.subThemeId == 3 ||
+              widget.subThemeId == 12) {
+            if (part == 1) {
+              DatabaseHelper()
+                  .updatePart(widget.user.id!, widget.subThemeId, 2);
+              DatabaseHelper()
+                  .updateQuiz(widget.user.id!, widget.subThemeId, 0);
+            }
+            if (part == 2) {
+              DatabaseHelper()
+                  .updatePart(widget.user.id!, widget.subThemeId, 3);
+              DatabaseHelper()
+                  .updateQuiz(widget.user.id!, widget.subThemeId, 0);
+            }
+            if (part == 3) {
+              DatabaseHelper()
+                  .updateFinished(widget.user.id!, widget.subThemeId, true);
+            }
+          }
+          if (widget.subThemeId == 6 ||
+              widget.subThemeId == 7 ||
+              widget.subThemeId == 8 ||
+              widget.subThemeId == 9 ||
+              widget.subThemeId == 10) {
+            if (part == 1) {
+              DatabaseHelper()
+                  .updatePart(widget.user.id!, widget.subThemeId, 2);
+              DatabaseHelper()
+                  .updateQuiz(widget.user.id!, widget.subThemeId, 0);
+            }
+            if (part == 2) {
+              DatabaseHelper()
+                  .updateFinished(widget.user.id!, widget.subThemeId, true);
+            }
+          }
+          if (widget.subThemeId == 2 ||
+              widget.subThemeId == 4 ||
+              widget.subThemeId == 5 ||
+              widget.subThemeId == 11) {
+            if (part == 1) {
+              DatabaseHelper()
+                  .updateFinished(widget.user.id!, widget.subThemeId, true);
+            }
+          }
+        }
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    addCoinsWordsStars();
+    updatePart();
+  }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    chances > 0
-        ? Sfx.play("audios/sfx/win.mp3", 1)
-        : Sfx.play("audios/sfx/lose.mp3", 1);
-    return chances == 3
+    return widget.chances == 3
         ? Dialog(
             insetPadding: EdgeInsets.all(width > 500 ? 100 : 30),
             shape: RoundedRectangleBorder(
@@ -76,9 +203,9 @@ class QuizPopup extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
-                                  timer < 60
-                                      ? "${timer.toInt()} sec"
-                                      : "${(timer ~/ 60).toInt()} min",
+                                  widget.timer < 60
+                                      ? "${widget.timer.toInt()} sec"
+                                      : "${(widget.timer ~/ 60).toInt()} min",
                                   style: const TextStyle(
                                       color: Palette.lightBlue,
                                       fontWeight: FontWeight.bold,
@@ -104,8 +231,8 @@ class QuizPopup extends StatelessWidget {
                             "Tu es un champion",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: width > 500 ? 20 : 16,
-                            ),
+                                fontSize: width > 500 ? 20 : 16,
+                                color: Palette.black),
                           ),
                           const SizedBox(height: 10.0),
                           Padding(
@@ -120,7 +247,7 @@ class QuizPopup extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(right: 5),
                                 child: Button(
-                                  callback: onButton1Pressed,
+                                  callback: widget.onButton1Pressed,
                                   content: Center(
                                     child: Row(
                                       mainAxisAlignment:
@@ -148,21 +275,21 @@ class QuizPopup extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 5),
                                 child: Button(
-                                  callback: onButton2Pressed,
+                                  callback: widget.onButton2Pressed,
                                   content: Center(
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "Rejouer ",
+                                          "Suivant ",
                                           style: TextStyle(
                                               color: Palette.white,
                                               fontSize: width > 500 ? 20 : 16,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         const Icon(
-                                          Icons.restart_alt_rounded,
+                                          Icons.arrow_forward_ios_rounded,
                                           color: Palette.white,
                                           size: 20,
                                         ),
@@ -214,7 +341,7 @@ class QuizPopup extends StatelessWidget {
               ],
             ),
           )
-        : chances == 2
+        : widget.chances == 2
             ? Dialog(
                 insetPadding: EdgeInsets.all(width > 500 ? 100 : 30),
                 shape: RoundedRectangleBorder(
@@ -265,9 +392,9 @@ class QuizPopup extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 5),
                                     child: Text(
-                                      timer < 60
-                                          ? "${timer.toInt()} sec"
-                                          : "${(timer ~/ 60).toInt()} min",
+                                      widget.timer < 60
+                                          ? "${widget.timer.toInt()} sec"
+                                          : "${(widget.timer ~/ 60).toInt()} min",
                                       style: const TextStyle(
                                           color: Palette.lightBlue,
                                           fontWeight: FontWeight.bold,
@@ -293,8 +420,8 @@ class QuizPopup extends StatelessWidget {
                                 "Bel effort",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: width > 500 ? 20 : 16,
-                                ),
+                                    fontSize: width > 500 ? 20 : 16,
+                                    color: Palette.black),
                               ),
                               const SizedBox(height: 10.0),
                               Padding(
@@ -311,7 +438,7 @@ class QuizPopup extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(right: 5),
                                     child: Button(
-                                      callback: onButton1Pressed,
+                                      callback: widget.onButton1Pressed,
                                       content: Center(
                                         child: Row(
                                           mainAxisAlignment:
@@ -341,7 +468,7 @@ class QuizPopup extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 5),
                                     child: Button(
-                                      callback: onButton2Pressed,
+                                      callback: widget.onButton2Pressed,
                                       content: Center(
                                         child: Row(
                                           mainAxisAlignment:
@@ -350,7 +477,7 @@ class QuizPopup extends StatelessWidget {
                                             const Expanded(
                                                 flex: 2, child: SizedBox()),
                                             Text(
-                                              "Rejouer ",
+                                              "Suivant ",
                                               style: TextStyle(
                                                   color: Palette.white,
                                                   fontSize:
@@ -358,7 +485,7 @@ class QuizPopup extends StatelessWidget {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             const Icon(
-                                              Icons.restart_alt_rounded,
+                                              Icons.arrow_forward_ios_rounded,
                                               color: Palette.white,
                                               size: 20,
                                             ),
@@ -411,7 +538,7 @@ class QuizPopup extends StatelessWidget {
                   ],
                 ),
               )
-            : chances == 1
+            : widget.chances == 1
                 ? Dialog(
                     insetPadding: EdgeInsets.all(width > 500 ? 100 : 30),
                     shape: RoundedRectangleBorder(
@@ -462,9 +589,9 @@ class QuizPopup extends StatelessWidget {
                                       Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
-                                          timer < 60
-                                              ? "${timer.toInt()} sec"
-                                              : "${(timer ~/ 60).toInt()} min",
+                                          widget.timer < 60
+                                              ? "${widget.timer.toInt()} sec"
+                                              : "${(widget.timer ~/ 60).toInt()} min",
                                           style: const TextStyle(
                                               color: Palette.lightBlue,
                                               fontWeight: FontWeight.bold,
@@ -490,8 +617,8 @@ class QuizPopup extends StatelessWidget {
                                     "Tu peux faire mieux",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: width > 500 ? 20 : 16,
-                                    ),
+                                        fontSize: width > 500 ? 20 : 16,
+                                        color: Palette.black),
                                   ),
                                   const SizedBox(height: 10.0),
                                   Padding(
@@ -509,7 +636,7 @@ class QuizPopup extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(right: 5),
                                         child: Button(
-                                          callback: onButton1Pressed,
+                                          callback: widget.onButton1Pressed,
                                           content: Center(
                                             child: Row(
                                               mainAxisAlignment:
@@ -542,14 +669,14 @@ class QuizPopup extends StatelessWidget {
                                       Padding(
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Button(
-                                          callback: onButton2Pressed,
+                                          callback: widget.onButton2Pressed,
                                           content: Center(
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  "Rejouer ",
+                                                  "Suivant ",
                                                   style: TextStyle(
                                                       color: Palette.white,
                                                       fontSize:
@@ -558,7 +685,8 @@ class QuizPopup extends StatelessWidget {
                                                           FontWeight.bold),
                                                 ),
                                                 const Icon(
-                                                  Icons.restart_alt_rounded,
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
                                                   color: Palette.white,
                                                   size: 20,
                                                 ),
@@ -645,8 +773,8 @@ class QuizPopup extends StatelessWidget {
                                 "Tu as perdu",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: width > 500 ? 20 : 16,
-                                ),
+                                    fontSize: width > 500 ? 20 : 16,
+                                    color: Palette.black),
                               ),
                               const SizedBox(height: 10.0),
                               Padding(
@@ -661,7 +789,7 @@ class QuizPopup extends StatelessWidget {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Button(
-                                    callback: onButton3Pressed,
+                                    callback: widget.onButton3Pressed,
                                     content: Center(
                                       child: Row(
                                         mainAxisAlignment:

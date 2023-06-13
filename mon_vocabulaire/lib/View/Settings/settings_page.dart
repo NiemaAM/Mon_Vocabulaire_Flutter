@@ -5,12 +5,13 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Themes/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
-import 'package:mon_vocabulaire/View/Account/accounts.dart';
 import 'package:mon_vocabulaire/View/Account/first_screen.dart';
+import 'package:mon_vocabulaire/View/Settings/about.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/Popups/alert_popup.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:provider/provider.dart';
@@ -132,6 +133,10 @@ class _SettingsPageState extends State<SettingsPage> {
     generateCaptchaImage();
 
     if (captchaVerified) {
+      DatabaseHelper().deleteUser(widget.user.id!);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
       Navigator.pop(context);
       showDialog(
           context: context,
@@ -229,7 +234,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 CircleAvatar(
                   radius: width / 5,
-                  backgroundColor: Palette.blue,
+                  backgroundColor: Palette.lightBlue,
                   child: ClipOval(
                     child: Image.asset(
                       widget.user.image,
@@ -251,7 +256,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     Text(
-                      "Niveau ${widget.user.current_level}",
+                      "Niveau ${widget.user.currentLevel}",
                       style: const TextStyle(color: Palette.darkGrey),
                     )
                   ],
@@ -263,7 +268,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Container(
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Palette.blue,
+                    color: Palette.lightBlue,
                   ),
                   child: IconButton(
                     icon: const Icon((Icons.edit), color: Colors.white),
@@ -431,7 +436,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     // overrides the default green color of the track
                     activeColor: Palette.lightGreen,
                     // color of the round icon, which moves from right to left
-                    thumbColor: notifOn ? Palette.darkGreen : Palette.blue,
+                    thumbColor: notifOn ? Palette.darkGreen : Palette.lightBlue,
                     // when the switch is off
                     trackColor: Palette.lightGrey,
                     // boolean variable value
@@ -476,7 +481,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     // overrides the default green color of the track
                     activeColor: Palette.lightGreen,
                     // color of the round icon, which moves from right to left
-                    thumbColor: darkOn ? Palette.darkGreen : Palette.blue,
+                    thumbColor: darkOn ? Palette.darkGreen : Palette.lightBlue,
                     // when the switch is off
                     trackColor: Palette.lightGrey,
                     // boolean variable value
@@ -529,14 +534,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       fontSize: 16.0,
                     ),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Accounts(),
-                      ),
-                    );
-                  },
+                  onTap: () {},
                 ),
               ],
             ),
@@ -547,7 +545,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Row(
               children: [
                 const RoundIconWidget(
-                    icon: Icons.feedback, color: Palette.blue),
+                    icon: Icons.feedback, color: Palette.lightBlue),
                 const SizedBox(
                   width: 25,
                   height: 25,
@@ -582,7 +580,14 @@ class _SettingsPageState extends State<SettingsPage> {
                       fontSize: 16.0,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AboutUs(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -606,7 +611,8 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(bottom: 10, top: 10),
             child: Row(
               children: [
-                const RoundIconWidget(icon: Icons.logout, color: Palette.blue),
+                const RoundIconWidget(
+                    icon: Icons.logout, color: Palette.lightBlue),
                 const SizedBox(
                   width: 25,
                   height: 25,

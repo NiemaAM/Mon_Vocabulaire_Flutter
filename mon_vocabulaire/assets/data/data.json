@@ -1,7 +1,7 @@
 {
   "École":{
      "Eléments":{
-        "1":{
+        "p1":{"1":{
            "article":"une",
            "mot":"affiche",
            "code":1
@@ -55,8 +55,8 @@
            "article":"un",
            "mot":"jardin",
            "code":11
-        },
-        "12":{
+        }},
+        "p2":{"12":{
            "article":"un",
            "mot":"portail",
            "code":12
@@ -110,8 +110,8 @@
            "article":"des",
            "mot":"ciseaux",
            "code":22
-        },
-        "23":{
+        }},
+        "p3":{"23":{
            "article":"une",
            "mot":"colle",
            "code":23
@@ -175,10 +175,10 @@
          "article":"un",
          "mot":"crayon",
          "code":236
-        }
+        }}
      },
      "Personnes":{
-        "33":{
+        "p1":{"33":{
            "article":"un",
            "mot":"ami",
            "code":33
@@ -202,12 +202,12 @@
            "article":"une",
            "mot":"maîtresse",
            "code":37
-        }
+        }}
      }
   },
   "Maison et Famille":{
      "Maison":{
-        "38":{
+        "p1":{"38":{
            "article":"un",
            "mot":"balai",
            "code":38
@@ -256,8 +256,8 @@
            "article":"du",
            "mot":"gazon",
            "code":46
-        },
-        "47":{
+        }},
+        "p2":{"47":{
            "article":"un",
            "mot":"lavabo",
            "code":47
@@ -306,8 +306,8 @@
            "article":"un",
            "mot":"drap",
            "code":67
-        },
-        "68":{
+        }},
+        "p3":{"68":{
            "article":"une",
            "mot":"étagère",
            "code":68
@@ -351,10 +351,10 @@
            "article":"un",
            "mot":"vase",
            "code":76
-        }
+        }}
      },
      "Famille":{
-        "55":{
+        "p1":{"55":{
            "article":"un",
            "mot":"bébé",
            "code":55
@@ -408,12 +408,12 @@
            "article":"une",
            "mot":"sœur",
            "code":65
-        }
+        }}
      }
   },
   "Cuisine et aliments":{
      "Cuisine":{
-        "77":{
+        "p1":{"77":{
            "article":"une",
            "mot":"assiette",
            "code":77
@@ -477,10 +477,10 @@
            "article":"un",
            "mot":"verre",
            "code":89
-        }
+        }}
      },
      "Aliments":{
-        "90":{
+        "p1":{"90":{
            "article":"une",
            "mot":"banane",
            "code":90
@@ -544,8 +544,8 @@
            "article":"un",
            "mot":"melon",
            "code":102
-        },
-        "103":{
+        }},
+        "p2":{"103":{
            "article":"un",
            "mot":"œuf",
            "code":103
@@ -614,12 +614,12 @@
            "article":"une",
            "mot":"viande",
            "code":116
-        }
+        }}
      }
   },
   "Animaux":{
      "Forêt":{
-        "136":{
+        "p1":{"136":{
            "article":"une",
            "mot":"corne",
            "code":136
@@ -663,8 +663,8 @@
            "article":"une",
            "mot":"fourmi",
            "code":152
-        },
-        "153":{
+        }},
+        "p2":{"153":{
            "article":"une",
            "mot":"mouche",
            "code":153
@@ -708,10 +708,10 @@
           "article":"une",
           "mot":"hirondelle",
           "code":123
-        }
+        }}
      },
      "Ferme":{
-        "141":{
+        "p1":{"141":{
            "article":"de la",
            "mot":"laine",
            "code":141
@@ -765,8 +765,8 @@
            "article":"un",
            "mot":"coq",
            "code":121
-        },
-        "129":{
+        }},
+        "p2":{"129":{
            "article":"un",
            "mot":"âne",
            "code":129
@@ -820,12 +820,12 @@
            "article":"une",
            "mot":"vache",
            "code":148
-        }
+        }}
      }
   },
   "Mon corps et mes habits":{
      "Mon corps":{
-        "157":{
+        "p1":{"157":{
            "article":"une",
            "mot":"bouche",
            "code":157
@@ -859,8 +859,8 @@
            "article":"un",
            "mot":"genou",
            "code":163
-        },
-        "164":{
+        }},
+        "p2":{"164":{
            "article":"une",
            "mot":"langue",
            "code":164
@@ -909,10 +909,10 @@
            "article":"un",
            "mot":"ventre",
            "code":173
-        }
+        }}
      },
      "Mes habits":{
-        "174":{
+        "p1":{"174":{
            "article":"un",
            "mot":"bonnet",
            "code":174
@@ -966,8 +966,8 @@
            "article":"un",
            "mot":"foulard",
            "code":184
-        },
-        "185":{
+        }},
+        "p2":{"185":{
            "article":"une",
            "mot":"jupe",
            "code":185
@@ -1008,7 +1008,7 @@
            "code":192
         },
         "193":{
-           "article":"du",
+           "article":"un",
            "mot":"tricot",
            "code":193
         },
@@ -1026,12 +1026,12 @@
            "article":"une",
            "mot":"veste",
            "code":194
-        }
+        }}
      }
   },
   "Sports et loisirs":{
      "Sports":{
-        "195":{
+        "p1":{"195":{
            "article":"un",
            "mot":"boxeur",
            "code":195
@@ -1080,10 +1080,10 @@
            "article":"un",
            "mot":"tennis",
            "code":204
-        }
+        }}
      },
      "Loisirs":{
-        "205":{
+        "p1":{"205":{
            "article":"une",
            "mot":"balançoire",
            "code":205
@@ -1132,8 +1132,8 @@
            "article":"un",
            "mot":"magicien",
            "code":214
-        },
-        "240":{
+        }},
+        "p2":{"240":{
          "article":"un",
          "mot":"clown",
          "code":240
@@ -1182,8 +1182,8 @@
            "article":"un",
            "mot":"toboggan",
            "code":223
-        },
-        "224":{
+        }},
+        "p3":{"224":{
            "article":"une",
            "mot":"toupie",
            "code":224
@@ -1232,7 +1232,7 @@
            "article":"un",
            "mot":"vélo",
            "code":233
-        }
+        }}
      }
   }
 }

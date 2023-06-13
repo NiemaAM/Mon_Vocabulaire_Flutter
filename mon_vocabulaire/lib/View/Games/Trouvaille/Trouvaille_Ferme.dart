@@ -1,30 +1,31 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names, no_leading_underscores_for_local_identifiers
+
 import 'dart:async';
 
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import '../../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../../Widgets/Appbars/game_app_bar.dart';
 import '../../../Widgets/Popups/game_popup.dart';
 import '../../../Widgets/message_mascotte.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:confetti/confetti.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
 
 class Ferme extends StatefulWidget {
   final User user;
-  Ferme({super.key, required this.user});
+  const Ferme({super.key, required this.user});
 
   @override
   State<Ferme> createState() => _FermeState();
 }
 
-class _FermeState extends State<Ferme> {
+class _FermeState extends State<Ferme> with WidgetsBindingObserver {
   bool _isCowClicked = false;
   bool _isHorClicked = false;
   bool _isChiClicked = false;
@@ -32,33 +33,37 @@ class _FermeState extends State<Ferme> {
   bool _canTap = false;
   int countdown = 5;
   late Timer _timer;
+  late Timer _timer2;
   int duration = 60;
   bool isGameFinish = false;
   late String selectedAnimal;
   late ConfettiController _controllerConfetti;
-  late var randomAnimal;
+  late var randomElement;
   List<String> animals = ['Une vache', 'Une poule', 'Un cheval', "Un mouton"];
-  Map<String, String> animalsAudios = {
+  Map<String, String> ElementsAudios = {
     'Une vache': "148.mp3",
     'Un cheval': "133.mp3",
     'Une poule': "127.mp3",
     'Un mouton': "144.mp3"
   };
 
-  String randomAnimalFunc() {
+  String randomElementFunc() {
     animals.shuffle();
 
     if (animals.isNotEmpty) {
-      randomAnimal = animals[0];
-
-      print(randomAnimal);
+      randomElement = animals[0];
       animals.removeAt(0);
+      if (animals.length == 3 && duration > 0) {
+        _timer2 = Timer.periodic(const Duration(seconds: 5), (timer) {
+          Voice.play("audios/voices/${ElementsAudios[randomElement]}", 1);
+        });
+      } else {
+        Voice.play("audios/voices/${ElementsAudios[randomElement]}", 1);
+      }
     } else {
-      print("Fin du jeu");
       endGame();
     }
-    //Voice.play("/", 1);
-    return randomAnimal;
+    return randomElement;
   }
 
   void startTimer() {
@@ -70,6 +75,7 @@ class _FermeState extends State<Ferme> {
             Sfx.play("audios/sfx/race_start.mp3", 1);
           }
           if (countdown < 0) {
+            _timer2.cancel();
             duration--;
             _canTap = true;
             if (duration == 0) {
@@ -80,22 +86,36 @@ class _FermeState extends State<Ferme> {
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     return GamePopup(
+                      price: 30,
                       onButton1Pressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Ferme(user: widget.user),
-                          ),
-                        );
+                        if (coins >= 30) {
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Trouvaille(user: widget.user),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Palette.indigo,
+                            content: Text(
+                              'Tu n\'as pas assez de pièces pour jouer.',
+                              style:
+                                  TextStyle(color: Palette.white, fontSize: 18),
+                            ),
+                          ));
+                        }
                       },
-                      oneButton: true,
+                      oneButton: false,
                       win: false,
-                      tie: false,
                     );
                   },
                 );
@@ -107,7 +127,17 @@ class _FermeState extends State<Ferme> {
     }
   }
 
+  int coins = 0;
+  Future<void> getCoins() async {
+    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+    setState(() {
+      coins = _coins;
+    });
+  }
+
   void endGame() {
+    _timer2.cancel();
+    _timer.cancel();
     if (duration > 0) {
       _controllerConfetti.play();
     }
@@ -116,20 +146,33 @@ class _FermeState extends State<Ferme> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return GamePopup(
+          price: 30,
           onButton1Pressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Ferme(user: widget.user),
-              ),
-            );
+            getCoins();
+            if (coins >= 30) {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Trouvaille(user: widget.user),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                duration: Duration(seconds: 2),
+                backgroundColor: Palette.indigo,
+                content: Text(
+                  'Tu n\'as pas assez de pièces pour jouer.',
+                  style: TextStyle(color: Palette.white, fontSize: 18),
+                ),
+              ));
+            }
           },
-          win: duration > 0 ? true : false,
+          win: duration > 0,
         );
       },
     );
@@ -138,9 +181,8 @@ class _FermeState extends State<Ferme> {
   @override
   void initState() {
     super.initState();
-    randomAnimalFunc();
-    AudioBK.pauseBK();
-
+    randomElementFunc();
+    WidgetsBinding.instance.addObserver(this);
     _controllerConfetti =
         ConfettiController(duration: const Duration(seconds: 1));
 
@@ -151,14 +193,19 @@ class _FermeState extends State<Ferme> {
   void dispose() {
     super.dispose();
     Sfx.pause();
+    Voice.pause();
     _timer.cancel();
-    AudioBK.playBK();
+    _timer2.cancel();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
+      AudioBK.pauseBK();
+      Voice.pause();
       Sfx.pause();
+    } else {
+      AudioBK.playBK();
     }
   }
 
@@ -170,209 +217,215 @@ class _FermeState extends State<Ferme> {
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: Palette.white,
-          appBar: CustomAppBarGames(
-            user: widget.user,
-            background: true,
-          ),
-          body: Column(
+          backgroundColor: Palette.lightBlue,
+          body: Stack(
             children: [
-              Stack(children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: BubbleMessage(
-                    widget: countdown > 0
-                        ? Text(
-                            "Trouvez l'animal dans : $countdown",
-                            style: const TextStyle(
-                                color: Color(0xFF0E57AC), fontSize: 15),
-                          )
-                        : Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  Voice.play(
-                                      'audios/voices/${animalsAudios['$randomAnimal']}',
-                                      1);
-                                },
-                                icon: Icon(
-                                  Icons.volume_up,
-                                  color: Color(0xFF0E57AC),
-                                  size: 35,
-                                ),
-                              ),
-                              Text(
-                                "$randomAnimal",
-                                style: const TextStyle(
-                                    color: Color(0xFF0E57AC), fontSize: 25),
-                              ),
-                            ],
-                          ),
-                    // widget:
-                  ),
-                ),
-              ]),
               Stack(
                 children: [
                   Container(
-                    width: width * 0.9,
-                    height: height > 800 ? height * 0.65 : height * 0.6,
+                    width: width,
+                    height: height - 100,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(
                             'assets/images/games/backgrounds/ferme.jpg'),
-                        fit: BoxFit.fill,
+                        fit: BoxFit.fitHeight,
                       ),
                     ),
                     child: Stack(children: [
-                      //mouton
-                      Positioned(
-                          bottom: height > 800 ? height * 0.15 : height * 0.08,
-                          right: width > 550 ? width * 0.2 : width * 0.2,
-                          child: GestureDetector(
-                            onTap: () {
-                              selectedAnimal = "Un mouton";
-                              if (selectedAnimal == randomAnimal && _canTap) {
-                                _isCheClicked = true;
-                                Voice.play(
-                                    "audios/voices/${animalsAudios['Un mouton']}",
-                                    1);
-                                randomAnimalFunc();
-                              }
-                            },
-                            child: Image.asset(
-                              'assets/images/pics/144.png',
-                              width: 110,
-                              height: 110,
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 100.0),
+                          child: SizedBox(
+                            width: width > 500 ? width / 2 + 50 : width - 30,
+                            child: BubbleMessage(
+                              widget: countdown > 0
+                                  ? Text(
+                                      "Trouvez l'animal dans : $countdown",
+                                      style: const TextStyle(
+                                          color: Palette.indigo, fontSize: 15),
+                                    )
+                                  : SizedBox(
+                                      height: 30,
+                                      child: Row(
+                                        children: [
+                                          const Expanded(child: SizedBox()),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Voice.play(
+                                                  'audios/voices/${ElementsAudios['$randomElement']}',
+                                                  1);
+                                            },
+                                            child: const Icon(
+                                              Icons.volume_up,
+                                              color: Palette.indigo,
+                                              size: 25,
+                                            ),
+                                          ),
+                                          const Expanded(child: SizedBox()),
+                                          Text(
+                                            "$randomElement",
+                                            style: const TextStyle(
+                                                color: Palette.indigo,
+                                                fontSize: 18),
+                                          ),
+                                          const Expanded(
+                                              flex: 2, child: SizedBox()),
+                                        ],
+                                      ),
+                                    ),
                             ),
-                          )),
-
-                      //vache
-                      Positioned(
-                        top: height > 800 ? height - 1050 : height * -0.3,
-                        left: width > 550 ? width - 360 : width * 0.15,
-                        bottom: -180,
-                        child: GestureDetector(
-                            onTap: () {
-                              selectedAnimal = "Une vache";
-                              print("vache");
-                              if (selectedAnimal == randomAnimal && _canTap) {
-                                _isCowClicked = true;
-                                Voice.play(
-                                    "audios/voices/${animalsAudios['Une vache']}",
-                                    1);
-
-                                randomAnimalFunc();
-                              }
-                            },
-                            child: Image.asset(
-                              'assets/images/pics/148.png',
-                              height: 120,
-                              width: 120,
-                            )),
+                          ),
+                        ),
                       ),
-// Poule
-                      Positioned(
-                          top: height > 800 ? height * 0.30 : height - 500,
-                          right: width > 550 ? width * 0.7 : width - 180,
-                          child: GestureDetector(
-                            onTap: () {
-                              selectedAnimal = "Une poule";
-                              print("poule");
-                              if (selectedAnimal == randomAnimal && _canTap) {
-                                _isChiClicked = true;
-                                Voice.play(
-                                    "audios/voices/${animalsAudios['Une poule']}",
-                                    1);
-                                randomAnimalFunc();
-                              }
-                            },
-                            child: Image.asset(
-                              'assets/images/pics/127.png',
-                              height: 60,
-                              width: 60,
-                            ),
-                          )),
+
                       //Poulailler
                       Positioned(
-                          top: height > 800 ? height - 850 : height - 900,
-                          right: width > 550 ? width - 220 : width - 120,
-                          bottom: -180,
+                          top: height > 800 ? height * 0.1 : height * 0.1,
+                          right: width > 550 ? width * 0.7 : width * 0.7,
+                          bottom: 1,
                           child: Image.asset(
                             'assets/images/pics/126.png',
-                            height: 80,
-                            width: 80,
+                            width: width > 500 ? 120 : 80,
                           )),
 
                       //coq
                       Positioned(
-                          top: height > 800 ? height - 800 : height - 610,
-                          right: width > 550 ? width - 340 : width - 220,
-                          bottom: -180,
+                          top: height > 800 ? height * 0.30 : height * 0.35,
+                          right: width > 550 ? width * 0.65 : width * 0.65,
+                          bottom: 1,
                           child: Image.asset(
                             'assets/images/pics/121.png',
-                            height: 70,
-                            width: 70,
+                            width: width > 500 ? 100 : 70,
                           )),
+
+                      //vache
+                      Positioned(
+                        top: height > 800 ? height * 0.35 : height * 0.35,
+                        right: width > 550 ? width * 0.2 : width * 0.1,
+                        child: GestureDetector(
+                            onTap: () {
+                              selectedAnimal = "Une vache";
+                              if (selectedAnimal == randomElement && _canTap) {
+                                setState(() {
+                                  _isCowClicked = true;
+                                });
+
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/pics/148.png',
+                              width: width > 500 ? 180 : 120,
+                            )),
+                      ),
 
                       //cheval
                       Positioned(
-                          top: height > 800 ? height * 0.22 : height * 0.25,
-                          left: width > 500 ? width * 0.65 : width * 0.6,
+                          top: height > 800 ? height * 0.55 : height * 0.5,
+                          left: width > 500 ? width * 0.55 : width * 0.4,
                           child: GestureDetector(
                             onTap: () {
                               selectedAnimal = "Un cheval";
 
-                              if (selectedAnimal == randomAnimal && _canTap) {
-                                _isHorClicked = true;
-                                Voice.play(
-                                    "audios/voices/${animalsAudios['Un cheval']}",
-                                    1);
-                                randomAnimalFunc();
+                              if (selectedAnimal == randomElement && _canTap) {
+                                setState(() {
+                                  _isHorClicked = true;
+                                });
+
+                                randomElementFunc();
                               }
                             },
                             child: Image.asset(
                               'assets/images/pics/133.png',
-                              width: 100,
-                              height: 100,
+                              width: width > 500 ? 200 : 180,
+                            ),
+                          )),
+
+                      //mouton
+                      Positioned(
+                          top: height > 800 ? height * 0.6 : height * 0.6,
+                          right: width > 550 ? width * 0.6 : width * 0.6,
+                          bottom: 1,
+                          child: GestureDetector(
+                            onTap: () {
+                              selectedAnimal = "Un mouton";
+                              if (selectedAnimal == randomElement && _canTap) {
+                                setState(() {
+                                  _isCheClicked = true;
+                                });
+
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/pics/144.png',
+                              width: width > 500 ? 150 : 110,
+                            ),
+                          )),
+
+                      // Poule
+                      Positioned(
+                          top: height > 800 ? height * 0.2 : height * 0.2,
+                          right: width > 550 ? width * 0.55 : width * 0.5,
+                          bottom: 1,
+                          child: GestureDetector(
+                            onTap: () {
+                              selectedAnimal = "Une poule";
+                              if (selectedAnimal == randomElement && _canTap) {
+                                setState(() {
+                                  _isChiClicked = true;
+                                });
+
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/pics/127.png',
+                              width: width > 500 ? 80 : 60,
                             ),
                           )),
                     ]),
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Image.asset(
-                      'assets/images/pics/148.png',
-                      height: 75,
-                      width: 75,
-                      color: _isCowClicked ? null : Colors.black,
-                    ),
-                    Image.asset(
-                      'assets/images/pics/133.png',
-                      height: 75,
-                      width: 75,
-                      color: _isHorClicked ? null : Colors.black,
-                    ),
-                    Image.asset(
-                      'assets/images/pics/127.png',
-                      height: 50,
-                      width: 50,
-                      color: _isChiClicked ? null : Colors.black,
-                    ),
-                    Image.asset(
-                      'assets/images/pics/144.png',
-                      height: 75,
-                      width: 75,
-                      color: _isCheClicked ? null : Colors.black,
-                    ),
-                  ],
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.asset(
+                        'assets/images/pics/148.png',
+                        width: 75,
+                        color: _isCowClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/pics/133.png',
+                        width: 75,
+                        color: _isHorClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/pics/127.png',
+                        width: 65,
+                        color: _isChiClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/pics/144.png',
+                        width: 75,
+                        color: _isCheClicked ? null : Palette.indigo,
+                      ),
+                    ],
+                  ),
                 ),
-              )
+              ),
+              CustomAppBarGames(
+                user: widget.user,
+                background: true,
+                timer: true,
+              ),
             ],
           ),
         ),
@@ -390,7 +443,7 @@ class _FermeState extends State<Ferme> {
                 : duration <= 15
                     ? Palette.red
                     : Palette.orange,
-            backgroundColor: Theme.of(context).shadowColor,
+            backgroundColor: Palette.indigo,
           ),
         ),
       ],

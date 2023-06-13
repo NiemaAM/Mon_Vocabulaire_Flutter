@@ -1,13 +1,13 @@
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, no_leading_underscores_for_local_identifiers
+
 import 'dart:async';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
-import '../../../Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import '../../../Services/audio_background.dart';
 import '../../../Services/sfx.dart';
 import '../../../Services/voice.dart';
@@ -15,8 +15,6 @@ import '../../../Widgets/Appbars/game_app_bar.dart';
 import '../../../Widgets/Palette.dart';
 import '../../../Widgets/Popups/game_popup.dart';
 import '../../../Widgets/message_mascotte.dart';
-import 'TrouvailleThemes.dart';
-import 'Trouvaille_SalleDeBain.dart';
 
 class Salon extends StatefulWidget {
   final User user;
@@ -26,7 +24,7 @@ class Salon extends StatefulWidget {
   State<Salon> createState() => _SalonState();
 }
 
-class _SalonState extends State<Salon> {
+class _SalonState extends State<Salon> with WidgetsBindingObserver {
   bool _isTelClicked = false;
   bool _isBoyClicked = false;
   bool _isBebClicked = false;
@@ -36,17 +34,18 @@ class _SalonState extends State<Salon> {
   bool _canTap = false;
   int countdown = 5;
   late Timer _timer;
+  late Timer _timer2;
   int duration = 60;
   bool isGameFinish = false;
   late ConfettiController _controllerConfetti;
-  late var randomRoom;
+  late var randomElement;
   List<String> Room = [
     'Une télévision',
     'Un garcon',
     'Une maman',
     'Une fille',
     'Un vase',
-    'un bébé'
+    'Un bébé'
   ];
   Map<String, String> ElementsAudios = {
     'Une télévision': "75.mp3",
@@ -56,19 +55,24 @@ class _SalonState extends State<Salon> {
     "Une maman": "63.mp3",
     "Un bébé": "55.mp3",
   };
-  String randomRoomFunc() {
+  String randomElementFunc() {
     Room.shuffle();
 
     if (Room.isNotEmpty) {
-      randomRoom = Room[0];
-      print(randomRoom);
+      randomElement = Room[0];
       Room.removeAt(0);
+      if (Room.length == 5 && duration > 0) {
+        _timer2 = Timer.periodic(const Duration(seconds: 5), (timer) {
+          Voice.play("audios/voices/${ElementsAudios[randomElement]}", 1);
+        });
+      } else {
+        Voice.play("audios/voices/${ElementsAudios[randomElement]}", 1);
+      }
     } else {
-      print("Fin du jeu");
       endGame();
     }
 
-    return randomRoom;
+    return randomElement;
   }
 
   void startTimer() {
@@ -80,6 +84,7 @@ class _SalonState extends State<Salon> {
             Sfx.play("audios/sfx/race_start.mp3", 1);
           }
           if (countdown < 0) {
+            _timer2.cancel();
             duration--;
             _canTap = true;
             if (duration == 0) {
@@ -90,22 +95,36 @@ class _SalonState extends State<Salon> {
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     return GamePopup(
+                      price: 30,
                       onButton1Pressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Salon(user: widget.user),
-                          ),
-                        );
+                        if (coins >= 30) {
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Trouvaille(user: widget.user),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Palette.indigo,
+                            content: Text(
+                              'Tu n\'as pas assez de pièces pour jouer.',
+                              style:
+                                  TextStyle(color: Palette.white, fontSize: 18),
+                            ),
+                          ));
+                        }
                       },
-                      oneButton: true,
+                      oneButton: false,
                       win: false,
-                      tie: false,
                     );
                   },
                 );
@@ -117,7 +136,17 @@ class _SalonState extends State<Salon> {
     }
   }
 
+  int coins = 0;
+  Future<void> getCoins() async {
+    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+    setState(() {
+      coins = _coins;
+    });
+  }
+
   void endGame() {
+    _timer2.cancel();
+    _timer.cancel();
     if (duration > 0) {
       _controllerConfetti.play();
     }
@@ -126,20 +155,33 @@ class _SalonState extends State<Salon> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return GamePopup(
+          price: 30,
           onButton1Pressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Salon(user: widget.user),
-              ),
-            );
+            getCoins();
+            if (coins >= 30) {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Trouvaille(user: widget.user),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                duration: Duration(seconds: 2),
+                backgroundColor: Palette.indigo,
+                content: Text(
+                  'Tu n\'as pas assez de pièces pour jouer.',
+                  style: TextStyle(color: Palette.white, fontSize: 18),
+                ),
+              ));
+            }
           },
-          win: duration > 0 ? true : false,
+          win: duration > 0,
         );
       },
     );
@@ -148,9 +190,8 @@ class _SalonState extends State<Salon> {
   @override
   void initState() {
     super.initState();
-    randomRoomFunc();
-    AudioBK.pauseBK();
-
+    randomElementFunc();
+    WidgetsBinding.instance.addObserver(this);
     _controllerConfetti =
         ConfettiController(duration: const Duration(seconds: 1));
 
@@ -161,14 +202,19 @@ class _SalonState extends State<Salon> {
   void dispose() {
     super.dispose();
     Sfx.pause();
+    Voice.pause();
     _timer.cancel();
-    AudioBK.playBK();
+    _timer2.cancel();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
+      AudioBK.pauseBK();
+      Voice.pause();
       Sfx.pause();
+    } else {
+      AudioBK.playBK();
     }
   }
 
@@ -177,256 +223,253 @@ class _SalonState extends State<Salon> {
     AudioBK.pauseBK();
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
     return Stack(
       children: [
         Scaffold(
-          appBar: CustomAppBarGames(
-            user: widget.user,
-            background: true,
-          ),
-          body: Column(
+          backgroundColor: Palette.lightBlue,
+          body: Stack(
             children: [
-              //Mot à trouver mascotte
-              SafeArea(
-                child: Stack(children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: BubbleMessage(
-                      widget: countdown > 0
-                          ? Text(
-                              "Trouvez l'element dans : $countdown",
-                              style: const TextStyle(
-                                  color: Color(0xFF0E57AC), fontSize: 15),
-                            )
-                          : Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Voice.play(
-                                        'audios/voices/${ElementsAudios['$randomRoom']}',
-                                        1);
-                                  },
-                                  icon: Icon(
-                                    Icons.volume_up,
-                                    color: Color(0xFF0E57AC),
-                                    size: 35,
-                                  ),
-                                ),
-                                Text(
-                                  "$randomRoom",
-                                  style: const TextStyle(
-                                      color: Color(0xFF0E57AC), fontSize: 25),
-                                ),
-                              ],
+              Stack(
+                children: [
+                  Container(
+                    width: width,
+                    height: height - 100,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                            'assets/images/games/backgrounds/salon.jpg'),
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                    child: Stack(children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 100.0),
+                          child: SizedBox(
+                            width: width > 500 ? width / 2 + 50 : width - 30,
+                            child: BubbleMessage(
+                              widget: countdown > 0
+                                  ? Text(
+                                      "Trouvez le mot dans : $countdown",
+                                      style: const TextStyle(
+                                          color: Palette.indigo, fontSize: 15),
+                                    )
+                                  : SizedBox(
+                                      height: 30,
+                                      child: Row(
+                                        children: [
+                                          const Expanded(child: SizedBox()),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Voice.play(
+                                                  'audios/voices/${ElementsAudios['$randomElement']}',
+                                                  1);
+                                            },
+                                            child: const Icon(
+                                              Icons.volume_up,
+                                              color: Color(0xFF0E57AC),
+                                              size: 25,
+                                            ),
+                                          ),
+                                          const Expanded(child: SizedBox()),
+                                          Text(
+                                            "$randomElement",
+                                            style: const TextStyle(
+                                                color: Color(0xFF0E57AC),
+                                                fontSize: 18),
+                                          ),
+                                          const Expanded(
+                                              flex: 2, child: SizedBox()),
+                                        ],
+                                      ),
+                                    ),
                             ),
-                      // widget:
-                    ),
+                          ),
+                        ),
+                      ),
+
+                      //Television
+                      Positioned(
+                        top: width > 500 ? height * 0.35 : height * 0.32,
+                        right: width > 500 ? width * 0.42 : width * 0.32,
+                        child: GestureDetector(
+                            onTap: () {
+                              var element = "Une télévision";
+
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isTelClicked = true;
+                                });
+
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/pics/75.png',
+                              width: 220,
+                            )),
+                      ),
+
+                      //garcon
+                      Positioned(
+                        top: width > 500 ? height * 0.55 : height * 0.45,
+                        left: width > 500 ? width * 0.62 : width * 0.6,
+                        child: GestureDetector(
+                            onTap: () {
+                              var element = "Un garcon";
+
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isBoyClicked = true;
+                                });
+
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/games/garcon.png',
+                              width: 140,
+                            )),
+                      ),
+
+                      //vase
+                      Positioned(
+                        top: width > 500 ? height * 0.75 : height * 0.7,
+                        left: width > 500 ? width * 0.75 : width * 0.7,
+                        child: GestureDetector(
+                            onTap: () {
+                              var element = "Un vase";
+
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isVasClicked = true;
+                                });
+
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/pics/76.png',
+                              width: width > 500 ? 120 : 100,
+                            )),
+                      ),
+
+                      //fille
+                      Positioned(
+                        top: width > 500 ? height * 0.56 : height * 0.53,
+                        left: width > 500 ? width * 0.4 : width * 0.35,
+                        child: GestureDetector(
+                            onTap: () {
+                              var element = "Une fille";
+
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isGirClicked = true;
+                                });
+
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/games/fille.png',
+                              width: 120,
+                            )),
+                      ),
+
+                      //maman
+                      Positioned(
+                        top: width > 500 ? height * 0.5 : height * 0.45,
+                        right: width * 0.65,
+                        child: GestureDetector(
+                            onTap: () {
+                              var element = "Une maman";
+
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isMomClicked = true;
+                                });
+
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/games/maman.png',
+                              width: 130,
+                            )),
+                      ),
+
+                      //bébé
+                      Positioned(
+                        top: height * 0.74,
+                        left: width * 0.4,
+                        child: GestureDetector(
+                            onTap: () {
+                              var element = "Un bébé";
+
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isBebClicked = true;
+                                });
+
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/pics/55.png',
+                              width: 90,
+                            )),
+                      ),
+                    ]),
                   ),
-                ]),
+                ],
               ),
-              Stack(children: [
-                Container(
-                  height: height * 0.6,
-                  width: width * 0.7,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/images/games/backgrounds/maison.png'),
-                      fit: BoxFit.cover,
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.asset(
+                          'assets/images/pics/76.png',
+                          width: 50,
+                          color: _isVasClicked ? null : Palette.indigo,
+                        ),
+                        Image.asset(
+                          'assets/images/games/garcon.png',
+                          width: 40,
+                          color: _isBoyClicked ? null : Palette.indigo,
+                        ),
+                        Image.asset(
+                          'assets/images/games/fille.png',
+                          width: 55,
+                          color: _isGirClicked ? null : Palette.indigo,
+                        ),
+                        Image.asset(
+                          'assets/images/pics/75.png',
+                          width: 50,
+                          color: _isTelClicked ? null : Palette.indigo,
+                        ),
+                        Image.asset(
+                          'assets/images/games/maman.png',
+                          width: 40,
+                          color: _isMomClicked ? null : Palette.indigo,
+                        ),
+                        Image.asset(
+                          'assets/images/pics/55.png',
+                          width: 50,
+                          color: _isBebClicked ? null : Palette.indigo,
+                        )
+                      ],
                     ),
-                  ),
-                ),
-
-                //vase
-                Positioned(
-                  bottom: height * 0.23,
-                  left: width * 0.42,
-                  child: GestureDetector(
-                      onTap: () {
-                        var element = "Un vase";
-                        print("vase");
-
-                        if (element == randomRoom && _canTap) {
-                          _isVasClicked = true;
-                          Voice.play(
-                              "audios/voices/${ElementsAudios['Un vase']}", 1);
-                          print("You win");
-                          randomRoomFunc();
-                        } else {
-                          print("You lose");
-                        }
-                      },
-                      child: Image.asset(
-                        'assets/images/pics/76.png',
-                        height: 50,
-                        width: 50,
-                      )),
-                ),
-                //Television
-                Positioned(
-                  bottom: height * 0.055,
-                  left: width * 0.442,
-                  child: GestureDetector(
-                      onTap: () {
-                        var element = "Une télévision";
-
-                        if (element == randomRoom && _canTap) {
-                          _isTelClicked = true;
-                          Voice.play(
-                              "audios/voices/${ElementsAudios['Une télévision']}",
-                              1);
-
-                          randomRoomFunc();
-                        }
-                      },
-                      child: Image.asset(
-                        'assets/images/pics/75.png',
-                        height: 95,
-                        width: 95,
-                      )),
-                ),
-
-                //bébé
-                Positioned(
-                  bottom: height * 0.02,
-                  left: width * 0.45,
-                  child: GestureDetector(
-                      onTap: () {
-                        var element = "Un bébé";
-
-                        if (element == randomRoom && _canTap) {
-                          _isBebClicked = true;
-                          Voice.play(
-                              "audios/voices/${ElementsAudios['Un bébé']}", 1);
-
-                          randomRoomFunc();
-                        }
-                      },
-                      child: Image.asset(
-                        'assets/images/pics/55.png',
-                        height: 50,
-                        width: 50,
-                      )),
-                ),
-
-                //maman
-                Positioned(
-                  bottom: height * 0.000,
-                  left: width * 0.1,
-                  child: GestureDetector(
-                      onTap: () {
-                        var element = "Une maman";
-
-                        if (element == randomRoom && _canTap) {
-                          _isMomClicked = true;
-                          Voice.play(
-                              "audios/voices/${ElementsAudios['Une maman']}",
-                              1);
-
-                          randomRoomFunc();
-                        }
-                      },
-                      child: Image.asset(
-                        'assets/images/games/maman.png',
-                        height: 150,
-                        width: 150,
-                      )),
-                ),
-
-                //garcon
-                Positioned(
-                  bottom: height * 0.325,
-                  left: width * 0.12,
-                  child: GestureDetector(
-                      onTap: () {
-                        var element = "Un garcon";
-
-                        if (element == randomRoom && _canTap) {
-                          _isBoyClicked = true;
-                          Voice.play(
-                              "audios/voices/${ElementsAudios['Un garcon']}",
-                              1);
-
-                          randomRoomFunc();
-                        }
-                      },
-                      child: Image.asset(
-                        'assets/images/games/garcon.png',
-                        height: 145,
-                        width: 145,
-                      )),
-                ),
-
-                //fille
-                Positioned(
-                  bottom: height * 0.36,
-                  left: width * 0.45,
-                  child: GestureDetector(
-                      onTap: () {
-                        var element = "Une fille";
-
-                        if (element == randomRoom && _canTap) {
-                          _isGirClicked = true;
-                          Voice.play(
-                              "audios/voices/${ElementsAudios['Une fille']}",
-                              1);
-
-                          randomRoomFunc();
-                        }
-                      },
-                      child: Image.asset(
-                        'assets/images/games/fille.png',
-                        height: 60,
-                        width: 60,
-                      )),
-                ),
-              ]),
-
-              //élements à trouver
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Image.asset(
-                      'assets/images/pics/76.png',
-                      height: 40,
-                      width: 40,
-                      color: _isVasClicked ? null : Colors.black,
-                    ),
-                    Image.asset(
-                      'assets/images/games/garcon.png',
-                      height: 56,
-                      width: 56,
-                      color: _isBoyClicked ? null : Colors.black,
-                    ),
-                    Image.asset(
-                      'assets/images/games/fille.png',
-                      height: 45,
-                      width: 45,
-                      color: _isGirClicked ? null : Colors.black,
-                    ),
-                    Image.asset(
-                      'assets/images/pics/75.png',
-                      height: 40,
-                      width: 40,
-                      color: _isTelClicked ? null : Colors.black,
-                    ),
-                    Image.asset(
-                      'assets/images/games/maman.png',
-                      height: 50,
-                      width: 50,
-                      color: _isMomClicked ? null : Colors.black,
-                    ),
-                    Image.asset(
-                      'assets/images/pics/55.png',
-                      height: 40,
-                      width: 40,
-                      color: _isBebClicked ? null : Colors.black,
-                    )
-                  ],
-                ),
-              )
+                  )),
+              CustomAppBarGames(
+                user: widget.user,
+                background: true,
+                timer: true,
+              ),
             ],
           ),
         ),
@@ -444,7 +487,7 @@ class _SalonState extends State<Salon> {
                 : duration <= 15
                     ? Palette.red
                     : Palette.orange,
-            backgroundColor: Theme.of(context).shadowColor,
+            backgroundColor: Palette.indigo,
           ),
         ),
       ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Model/user.dart';
+import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
@@ -43,7 +43,7 @@ class _ProfilState extends State<Profil> {
             padding: const EdgeInsets.only(top: 30, bottom: 10),
             child: CircleAvatar(
               radius: width / 5,
-              backgroundColor: Palette.blue,
+              backgroundColor: Palette.lightBlue,
               child: ClipOval(
                 child: Image.asset(
                   widget.user.image, //TODO: change this to images from gallery
