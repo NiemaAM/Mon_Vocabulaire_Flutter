@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
@@ -148,7 +149,11 @@ class _Top5State extends State<Top5> {
                                             ),
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
-                                              image: AssetImage(images[1]),
+                                              image: images[1]
+                                                      .startsWith('assets')
+                                                  ? AssetImage(images[1])
+                                                      as ImageProvider
+                                                  : FileImage(File(images[1])),
                                             ))),
                                   ),
                                 ),
@@ -217,7 +222,11 @@ class _Top5State extends State<Top5> {
                                             ),
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
-                                              image: AssetImage(images[2]),
+                                              image: images[2]
+                                                      .startsWith('assets')
+                                                  ? AssetImage(images[2])
+                                                      as ImageProvider
+                                                  : FileImage(File(images[2])),
                                             ))),
                                   ),
                                 ),
@@ -290,9 +299,11 @@ class _Top5State extends State<Top5> {
                                             ),
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
-                                              image: AssetImage(
-                                                images[0],
-                                              ),
+                                              image: images[0]
+                                                      .startsWith('assets')
+                                                  ? AssetImage(images[0])
+                                                      as ImageProvider
+                                                  : FileImage(File(images[0])),
                                             ))),
                                   ),
                                 ),
@@ -381,7 +392,12 @@ class _Top5State extends State<Top5> {
                                             width: 3,
                                           ),
                                           image: DecorationImage(
-                                              image: AssetImage(images[3]))),
+                                            image: images[3]
+                                                    .startsWith('assets')
+                                                ? AssetImage(images[3])
+                                                    as ImageProvider
+                                                : FileImage(File(images[3])),
+                                          )),
                                     ),
                                   ),
                                   const Expanded(child: SizedBox()),
@@ -471,7 +487,12 @@ class _Top5State extends State<Top5> {
                                             width: 3,
                                           ),
                                           image: DecorationImage(
-                                              image: AssetImage(images[4]))),
+                                            image: images[4]
+                                                    .startsWith('assets')
+                                                ? AssetImage(images[4])
+                                                    as ImageProvider
+                                                : FileImage(File(images[4])),
+                                          )),
                                     ),
                                   ),
                                   const Expanded(child: SizedBox()),

@@ -1,5 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
@@ -28,10 +30,18 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
   bool state = false;
 
   int _words = 0;
+  String image = 'assets/images/avatars/user.png';
+  Future<void> getImage() async {
+    DatabaseHelper();
+    String _image = await DatabaseHelper().getImage(widget.user.id!);
+    setState(() {
+      image = _image;
+    });
+  }
 
   Future<void> calculateResult() async {
     DatabaseHelper();
-    int words = await DatabaseHelper().getAllProgression(widget.user.id!);
+    int words = await DatabaseHelper().getAllProgression(widget.user.id);
     setState(() {
       _words = words;
     });
@@ -62,6 +72,7 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
     double width = MediaQuery.of(context).size.width;
     calculateResult();
     getCoins();
+    getImage();
     return Stack(
       children: [
         const SizedBox(
@@ -153,10 +164,18 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
               );
             },
             content: CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.transparent,
-              child: Image.asset(widget.user.image),
-            ),
+                radius: 16,
+                backgroundColor: Colors.transparent,
+                child: ClipOval(
+                  child: image.startsWith("assets")
+                      ? Image.asset(image)
+                      : Image.file(
+                          File(image),
+                          fit: BoxFit.cover,
+                          width: width / 2.5,
+                          height: width / 2.5,
+                        ),
+                )),
             color: Palette.lightBlue,
             heigth: 100,
             width: 100,

@@ -1,69 +1,69 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, no_leading_underscores_for_local_identifiers
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names, no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
-import 'package:mon_vocabulaire/Services/audio_background.dart';
-import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
-import 'package:mon_vocabulaire/Widgets/message_mascotte.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
+import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import '../../../Services/audio_background.dart';
 import '../../../Services/sfx.dart';
 import '../../../Services/voice.dart';
 import '../../../Widgets/Appbars/game_app_bar.dart';
 import '../../../Widgets/Palette.dart';
 import '../../../Widgets/Popups/game_popup.dart';
+import '../../../Widgets/message_mascotte.dart';
 
-class Habits extends StatefulWidget {
+class ClassRoom extends StatefulWidget {
   final User user;
-  const Habits({super.key, required this.user});
+  const ClassRoom({super.key, required this.user});
 
   @override
-  State<Habits> createState() => _HabitsState();
+  State<ClassRoom> createState() => _ClassRoomState();
 }
 
-class _HabitsState extends State<Habits> with WidgetsBindingObserver {
+class _ClassRoomState extends State<ClassRoom> with WidgetsBindingObserver {
+  bool _isBoaClicked = false;
+  bool _isTeaClicked = false;
+  bool _isWinClicked = false;
+  bool _isDesClicked = false;
+  bool _isCloClicked = false;
+  bool _isTableClicked = false;
+  bool _isChairClicked = false;
+  bool _canTap = false;
   int countdown = 5;
   late Timer _timer;
   late Timer _timer2;
-  bool _isDressClicked = false;
-  bool _isCoatClicked = false;
-  bool _isBootsClicked = false;
-  bool _isSneakersClicked = false;
-  bool _isSweatherClicked = false;
-  bool _isGlassesClicked = false;
-  bool _canTap = false;
-
   int duration = 60;
   bool isGameFinish = false;
   late ConfettiController _controllerConfetti;
   late var randomElement;
-  late var selectedElement;
-  List<String> dressing = [
-    'Une robe',
-    'Un manteau',
-    'Des bottes',
-    'Des espadrilles',
-    'Un tricot',
-    'Des lunettes'
+  List<String> School = [
+    'Un bureau',
+    'Une fenêtre',
+    'Une horloge',
+    'Une maîtresse',
+    'Un tableau',
+    'Une chaise',
+    'Une table'
   ];
   Map<String, String> ElementsAudios = {
-    'Une robe': "190.mp3",
-    'Un manteau': "187.mp3",
-    'Des bottes': "175.mp3",
-    'Des espadrilles': "183.mp3",
-    'Un tricot': "193.mp3",
-    'Des lunettes': "186.mp3",
+    'Un bureau': "4.mp3",
+    'Une fenêtre': "9.mp3",
+    'Une horloge': "10.mp3",
+    'Une maîtresse': "37.mp3",
+    'Un tableau': "15.mp3",
+    'Une chaise': "21.mp3",
+    'Une table': "14.mp3",
   };
-
   String randomElementFunc() {
-    dressing.shuffle();
+    School.shuffle();
 
-    if (dressing.isNotEmpty) {
-      randomElement = dressing[0];
-      dressing.removeAt(0);
-      if (dressing.length == 5 && duration > 0) {
+    if (School.isNotEmpty) {
+      randomElement = School[0];
+      School.removeAt(0);
+      if (School.length == 6 && duration > 0) {
         _timer2 = Timer.periodic(const Duration(seconds: 5), (timer) {
           Voice.play("audios/voices/${ElementsAudios[randomElement]}", 1);
         });
@@ -93,7 +93,7 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
             if (duration == 0) {
               _timer2.cancel();
               timer.cancel();
-              if (dressing.isNotEmpty) {
+              if (School.isNotEmpty) {
                 showDialog(
                   context: context,
                   barrierDismissible: false,
@@ -207,8 +207,8 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    randomElementFunc();
     WidgetsBinding.instance.addObserver(this);
+    randomElementFunc();
     _controllerConfetti =
         ConfettiController(duration: const Duration(seconds: 1));
 
@@ -237,9 +237,9 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    AudioBK.pauseBK();
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
     return Stack(
       children: [
         Scaffold(
@@ -254,7 +254,7 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(
-                            'assets/images/games/backgrounds/dressing.png'),
+                            'assets/images/games/backgrounds/Classe.png'),
                         fit: BoxFit.fitHeight,
                       ),
                     ),
@@ -268,7 +268,7 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
                             child: BubbleMessage(
                               widget: countdown > 0
                                   ? Text(
-                                      "Trouvez l'habit dans : $countdown",
+                                      "Trouvez l'objet dans : $countdown",
                                       style: const TextStyle(
                                           color: Palette.indigo, fontSize: 15),
                                     )
@@ -280,7 +280,7 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
                                           GestureDetector(
                                             onTap: () {
                                               Voice.play(
-                                                  'audios/voices/${ElementsAudios['$randomElement']}',
+                                                  'audios/voices/${ElementsAudios[randomElement]}',
                                                   1);
                                             },
                                             child: const Icon(
@@ -291,7 +291,7 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
                                           ),
                                           const Expanded(child: SizedBox()),
                                           Text(
-                                            "$randomElement",
+                                            randomElement,
                                             style: const TextStyle(
                                                 color: Palette.indigo,
                                                 fontSize: 18),
@@ -305,191 +305,196 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-
-                      //Robe
+                      //Tableau
                       Positioned(
-                        top: width > 500 ? height * 0.29 : height * 0.285,
-                        left: width > 500 ? width * 0.5 : width * 0.5,
+                        top: width > 500 ? height * 0.25 : height * 0.3,
+                        right: width > 500 ? width * 0.45 : width * 0.39,
                         child: GestureDetector(
-                          onTap: () {
-                            if (randomElement == "Une robe" && _canTap) {
-                              setState(() {
-                                _isDressClicked = true;
-                              });
+                            onTap: () {
+                              var element = "Un tableau";
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isBoaClicked = true;
+                                });
 
-                              randomElementFunc();
-                            }
-                          },
-                          child: Image.asset(
-                            'assets/images/pics/190.png',
-                            width: width > 500 ? 270 : 220,
-                            fit: BoxFit.cover,
-                            color: Colors.transparent,
-                          ),
-                        ),
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/pics/15.png',
+                              width: width > 500 ? 350 : 250,
+                            )),
                       ),
-
-                      //Manteau
+                      //Maitresse
                       Positioned(
-                        top: height * 0.27,
-                        right: width > 500 ? width * 0.52 : width * 0.55,
+                        top: height * 0.4,
+                        left: width * 0.45,
                         child: GestureDetector(
-                          onTap: () {
-                            if (randomElement == "Un manteau" && _canTap) {
-                              setState(() {
-                                _isCoatClicked = true;
-                              });
+                            onTap: () {
+                              var element = "Une maîtresse";
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isTeaClicked = true;
+                                });
 
-                              randomElementFunc();
-                            }
-                          },
-                          child: Image.asset(
-                            'assets/images/pics/187.png',
-                            width: width > 500 ? 250 : 200,
-                            fit: BoxFit.cover,
-                            color: Colors.transparent,
-                          ),
-                        ),
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/games/maitresse.png',
+                              width: width > 500 ? 130 : 100,
+                            )),
                       ),
-
-                      // Bottes
+                      //Bureau
                       Positioned(
-                        top: width > 500 ? height * 0.7 : height * 0.68,
-                        left: width * 0.1,
+                        top: width > 500 ? height * 0.5 : height * 0.53,
+                        left: width > 500 ? width * 0.6 : width * 0.58,
                         child: GestureDetector(
-                          onTap: () {
-                            if (randomElement == "Des bottes" && _canTap) {
-                              setState(() {
-                                _isBootsClicked = true;
-                              });
+                            onTap: () {
+                              var element = "Un bureau";
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isDesClicked = true;
+                                });
 
-                              randomElementFunc();
-                            }
-                          },
-                          child: Image.asset(
-                            "assets/images/pics/175.png",
-                            width: 130,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/games/desk.png',
+                              width: width > 500 ? 210 : 150,
+                            )),
                       ),
-
-                      //Espadrilles
+                      //Table
                       Positioned(
-                        top: height * 0.75,
-                        left: width * 0.6,
+                        top: height * 0.62,
+                        left: width * 0.17,
                         child: GestureDetector(
-                          onTap: () {
-                            if (randomElement == "Des espadrilles" && _canTap) {
-                              setState(() {
-                                _isSneakersClicked = true;
-                              });
+                            onTap: () {
+                              var element = "Une table";
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isTableClicked = true;
+                                });
 
-                              randomElementFunc();
-                            }
-                          },
-                          child: Image.asset(
-                            'assets/images/pics/183.png',
-                            width: width > 500 ? 120 : 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/games/table.png',
+                              width: width > 500 ? 180 : 150,
+                            )),
                       ),
-
-                      //Tricot
+                      //Chaise
                       Positioned(
-                        top: width > 500 ? height * 0.28 : height * 0.27,
-                        left: width > 500 ? width * 0.38 : width * 0.33,
+                        top: height * 0.67,
+                        left: width * 0.2,
                         child: GestureDetector(
-                          onTap: () {
-                            if (randomElement == "Un tricot" && _canTap) {
-                              setState(() {
-                                _isSweatherClicked = true;
-                              });
+                            onTap: () {
+                              var element = "Une chaise";
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isChairClicked = true;
+                                });
 
-                              randomElementFunc();
-                            }
-                          },
-                          child: Image.asset(
-                            'assets/images/pics/193.png',
-                            width: width > 500 ? 150 : 120,
-                            fit: BoxFit.cover,
-                            color: Colors.transparent,
-                          ),
-                        ),
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/games/chair.png',
+                              width: width > 500 ? 150 : 130,
+                            )),
                       ),
-
-                      //Lunettes
+                      //Fenêtre
                       Positioned(
-                        top: width > 500 ? height * 0.63 : height * 0.6,
-                        left: width * 0.65,
+                        bottom: height * 0.45,
+                        right: width * 0.02,
                         child: GestureDetector(
-                          onTap: () {
-                            if (randomElement == "Des lunettes" && _canTap) {
-                              setState(() {
-                                _isGlassesClicked = true;
-                              });
+                            onTap: () {
+                              var element = "Une fenêtre";
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isWinClicked = true;
+                                });
 
-                              randomElementFunc();
-                            }
-                          },
-                          child: Image.asset(
-                            'assets/images/pics/186.png',
-                            width: 80,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      )
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/games/window.png',
+                              width: width > 500 ? 150 : 100,
+                            )),
+                      ),
+                      //Horloge
+                      Positioned(
+                        top: height * 0.25,
+                        right: width > 500 ? width * 0.36 : width * 0.42,
+                        child: GestureDetector(
+                            onTap: () {
+                              var element = "Une horloge";
+                              if (element == randomElement && _canTap) {
+                                setState(() {
+                                  _isCloClicked = true;
+                                });
+
+                                randomElementFunc();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/pics/10.png',
+                              width: width > 500 ? 80 : 60,
+                            )),
+                      ),
                     ]),
                   ),
                 ],
               ),
               Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        //robe
-                        Image.asset(
-                          "assets/images/pics/190.png",
-                          scale: width > 450 ? 8 : 10,
-                          color: _isDressClicked ? null : Palette.indigo,
-                        ),
-                        //manteau
-                        Image.asset(
-                          "assets/images/pics/187.png",
-                          scale: width > 450 ? 8 : 10,
-                          color: _isCoatClicked ? null : Palette.indigo,
-                        ),
-                        //bottes
-                        Image.asset(
-                          "assets/images/pics/175.png",
-                          scale: width > 450 ? 8 : 10,
-                          color: _isBootsClicked ? null : Palette.indigo,
-                        ),
-                        //espadrilles
-                        Image.asset(
-                          "assets/images/pics/183.png",
-                          scale: width > 450 ? 8 : 10,
-                          color: _isSneakersClicked ? null : Palette.indigo,
-                        ),
-                        //tricot
-                        Image.asset(
-                          "assets/images/pics/193.png",
-                          scale: width > 450 ? 8 : 10,
-                          color: _isSweatherClicked ? null : Palette.indigo,
-                        ),
-                        //lunettes
-                        Image.asset(
-                          "assets/images/pics/186.png",
-                          scale: width > 450 ? 8 : 10,
-                          color: _isGlassesClicked ? null : Palette.indigo,
-                        ),
-                      ],
-                    ),
-                  )),
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: width > 500 ? 10 : 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.asset(
+                        'assets/images/pics/10.png',
+                        width: width > 500 ? 40 : 30,
+                        color: _isCloClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/games/table.png',
+                        width: width > 500 ? 50 : 40,
+                        color: _isTableClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/games/maitresse.png',
+                        width: width > 500 ? 40 : 30,
+                        color: _isTeaClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/games/chair.png',
+                        width: width > 500 ? 50 : 40,
+                        color: _isChairClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/pics/15.png',
+                        width: width > 500 ? 60 : 50,
+                        color: _isBoaClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/games/desk.png',
+                        width: width > 500 ? 60 : 50,
+                        color: _isDesClicked ? null : Palette.indigo,
+                      ),
+                      Image.asset(
+                        'assets/images/games/window.png',
+                        width: width > 500 ? 40 : 30,
+                        color: _isWinClicked ? null : Palette.indigo,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               CustomAppBarGames(
                 user: widget.user,
                 background: true,

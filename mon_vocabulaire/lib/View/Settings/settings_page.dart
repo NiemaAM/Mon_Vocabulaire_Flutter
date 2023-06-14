@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -205,6 +206,7 @@ class _SettingsPageState extends State<SettingsPage> {
     getVoiceVolume();
     getTheme();
     loadCaptchaData();
+    getUser();
   }
 
   @override
@@ -214,8 +216,20 @@ class _SettingsPageState extends State<SettingsPage> {
     myController.dispose();
   }
 
+  String image = '';
+  String name = '';
+  Future<void> getUser() async {
+    DatabaseHelper();
+    User _user = await DatabaseHelper().getUser(widget.user.id!);
+    setState(() {
+      image = _user.image;
+      name = _user.name;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    getUser();
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: const CustomAppBar(
@@ -223,501 +237,524 @@ class _SettingsPageState extends State<SettingsPage> {
         color: Palette.pink,
         automaticallyImplyLeading: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        children: [
-          //Profile + edite profile
-          Padding(
-            padding:
-                const EdgeInsets.only(top: 20, left: 0, right: 0, bottom: 40),
-            child: Row(
+      body: image.isEmpty || name.isEmpty
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Palette.lightBlue,
+              ),
+            )
+          : ListView(
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
               children: [
-                CircleAvatar(
-                  radius: width / 5,
-                  backgroundColor: Palette.lightBlue,
-                  child: ClipOval(
-                    child: Image.asset(
-                      widget.user.image,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 25,
-                  height: 25,
-                ),
-                Column(
-                  children: [
-                    Text(
-                      widget.user.name.replaceFirst(
-                          widget.user.name.characters.first,
-                          widget.user.name.characters.first.toUpperCase()),
-                      style: const TextStyle(
-                        fontSize: 20.0,
+                //Profile + edite profile
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 20, left: 0, right: 0, bottom: 40),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: width / 5,
+                        backgroundColor: Palette.lightBlue,
+                        child: ClipOval(
+                            child: image.startsWith("assets")
+                                ? Image.asset(
+                                    image,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.file(
+                                    File(image),
+                                    fit: BoxFit.cover,
+                                    width: width / 2.5,
+                                    height: width / 2.5,
+                                  )),
                       ),
-                    ),
-                    Text(
-                      "Niveau ${widget.user.currentLevel}",
-                      style: const TextStyle(color: Palette.darkGrey),
-                    )
-                  ],
-                ),
-                const Expanded(
-                  flex: 2,
-                  child: SizedBox(),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Palette.lightBlue,
-                  ),
-                  child: IconButton(
-                    icon: const Icon((Icons.edit), color: Colors.white),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditAccount(
-                            user: widget.user,
+                      const SizedBox(
+                        width: 25,
+                        height: 25,
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            name.replaceFirst(name.characters.first,
+                                name.characters.first.toUpperCase()),
+                            style: const TextStyle(
+                              fontSize: 20.0,
+                            ),
                           ),
+                          Text(
+                            "Niveau ${widget.user.currentLevel}",
+                            style: const TextStyle(color: Palette.darkGrey),
+                          )
+                        ],
+                      ),
+                      const Expanded(
+                        flex: 2,
+                        child: SizedBox(),
+                      ),
+                      Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Palette.lightBlue,
                         ),
-                      );
-                    },
-                  ),
-                ),
-                const Expanded(child: SizedBox()),
-              ],
-            ),
-          ),
-
-          //Géneral Settings
-          Title(
-              color: Colors.black,
-              child: const Text(
-                "Général",
-                style: TextStyle(
-                  fontSize: 15.0,
-                ),
-              )),
-          const Divider(),
-
-          //Musique de fond
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Column(
-              children: [
-                Row(
-                  children: const [
-                    RoundIconWidget(
-                        icon: Icons.music_note, color: Palette.pink),
-                    SizedBox(
-                      width: 25,
-                      height: 25,
-                    ),
-                    Text(
-                      "Musique de fond",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
-                Slider(
-                  min: 0.0,
-                  max: 1.0,
-                  value: bkVolume,
-                  activeColor: Palette.pink,
-                  onChanged: (value) {
-                    setState(() {
-                      bkVolume = value;
-                    });
-                    setBkVolume();
-                  },
-                )
-              ],
-            ),
-          ),
-
-          //sond's effect
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Column(
-              children: [
-                Row(
-                  children: const [
-                    RoundIconWidget(
-                        icon: Icons.volume_up, color: Palette.orange),
-                    SizedBox(
-                      width: 25,
-                      height: 25,
-                    ),
-                    Text(
-                      "Effets Sonores",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
-                Slider(
-                  min: 0.0,
-                  max: 1.0,
-                  value: sfxVolume,
-                  activeColor: Palette.orange,
-                  onChanged: (value) {
-                    setState(() {
-                      sfxVolume = value;
-                    });
-                    setSfxVolume();
-                  },
-                )
-              ],
-            ),
-          ),
-
-          //voix
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Column(
-              children: [
-                Row(
-                  children: const [
-                    RoundIconWidget(
-                        icon: Icons.record_voice_over, color: Palette.indigo),
-                    SizedBox(
-                      width: 25,
-                      height: 25,
-                    ),
-                    Text(
-                      "Voix",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
-                Slider(
-                  min: 0.0,
-                  max: 1.0,
-                  value: voiceVolume,
-                  activeColor: Palette.indigo,
-                  onChanged: (value) {
-                    setState(() {
-                      voiceVolume = value;
-                    });
-                    setVoiceVolume();
-                  },
-                )
-              ],
-            ),
-          ),
-
-          //Notification
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Row(
-              children: [
-                const RoundIconWidget(
-                    icon: Icons.notifications, color: Palette.lightGreen),
-                const SizedBox(
-                  width: 25,
-                  height: 25,
-                ),
-                const Text(
-                  "Notifications",
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
-                const Expanded(child: SizedBox()),
-                CupertinoSwitch(
-                    // overrides the default green color of the track
-                    activeColor: Palette.lightGreen,
-                    // color of the round icon, which moves from right to left
-                    thumbColor: notifOn ? Palette.darkGreen : Palette.lightBlue,
-                    // when the switch is off
-                    trackColor: Palette.lightGrey,
-                    // boolean variable value
-                    value: notifOn,
-                    // changes the state of the switch
-                    onChanged: (value) {
-                      if (notifOn) {
-                        setState(() {
-                          notifOn = false;
-                        });
-                        localNotificationService.setNotificationState(false);
-                      } else {
-                        setState(() {
-                          notifOn = true;
-                        });
-                        localNotificationService.setNotificationState(true);
-                      }
-                    })
-              ],
-            ),
-          ),
-
-          //DarkMode
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Row(
-              children: [
-                const RoundIconWidget(
-                    icon: Icons.dark_mode, color: Palette.black),
-                const SizedBox(
-                  width: 25,
-                  height: 25,
-                ),
-                const Text(
-                  "Mode Sombre",
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
-                const Expanded(child: SizedBox()),
-                CupertinoSwitch(
-                    // overrides the default green color of the track
-                    activeColor: Palette.lightGreen,
-                    // color of the round icon, which moves from right to left
-                    thumbColor: darkOn ? Palette.darkGreen : Palette.lightBlue,
-                    // when the switch is off
-                    trackColor: Palette.lightGrey,
-                    // boolean variable value
-                    value: darkOn,
-                    // changes the state of the switch
-                    onChanged: (value) {
-                      if (darkOn) {
-                        setState(() {
-                          darkOn = false;
-                        });
-                      } else {
-                        setState(() {
-                          darkOn = true;
-                        });
-                      }
-                      Provider.of<ThemeProvider>(context, listen: false)
-                          .setTheme(darkOn);
-                    }),
-              ],
-            ),
-          ),
-
-          //Retour
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Title(
-                color: Colors.black,
-                child: const Text(
-                  "Informations",
-                  style: TextStyle(
-                    fontSize: 15.0,
-                  ),
-                )),
-          ),
-          const Divider(),
-          //bug
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Row(
-              children: [
-                const RoundIconWidget(icon: Icons.help, color: Colors.purple),
-                const SizedBox(
-                  width: 25,
-                  height: 25,
-                ),
-                GestureDetector(
-                  child: const Text(
-                    "Aide",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Row(
-              children: [
-                const RoundIconWidget(
-                    icon: Icons.feedback, color: Palette.lightBlue),
-                const SizedBox(
-                  width: 25,
-                  height: 25,
-                ),
-                GestureDetector(
-                  child: const Text(
-                    "Laisser un avis",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Row(
-              children: [
-                const RoundIconWidget(
-                    icon: Icons.info, color: Palette.lighterGreen),
-                const SizedBox(
-                  width: 25,
-                  height: 25,
-                ),
-                GestureDetector(
-                  child: const Text(
-                    "À propos",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AboutUs(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-
-          //Retour
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Title(
-                color: Colors.black,
-                child: const Text(
-                  "Compte",
-                  style: TextStyle(
-                    fontSize: 15.0,
-                  ),
-                )),
-          ),
-          const Divider(),
-
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Row(
-              children: [
-                const RoundIconWidget(
-                    icon: Icons.logout, color: Palette.lightBlue),
-                const SizedBox(
-                  width: 25,
-                  height: 25,
-                ),
-                GestureDetector(
-                  child: const Text(
-                    "Changer de compte",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const FirstSceen(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Row(
-              children: [
-                const RoundIconWidget(icon: Icons.delete, color: Palette.red),
-                const SizedBox(
-                  width: 25,
-                  height: 25,
-                ),
-                GestureDetector(
-                  child: const Text(
-                    "Supprimer ce compte",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.red,
-                    ),
-                  ),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return AlertPopup(
-                          onButton1Pressed: () {
-                            Navigator.pop(context);
-                          },
-                          onButton2Pressed: () {
-                            Navigator.pop(context);
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return AlertPopup(
-                                  onButton1Pressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  onButton2Pressed: () {
-                                    verifyCaptcha(myController.text);
-                                    myController.clear();
-                                  },
-                                  content: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset(captchaImagePath),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          decoration: const InputDecoration(
-                                              hintText: 'Entrez le code ici'),
-                                          controller: myController,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  button1: 'Annuler',
-                                  button2: 'Valider',
-                                  titre: 'Verrouillage Parental',
-                                  description:
-                                      'Entrez le code affiché ci-dessous :',
-                                );
-                              },
+                        child: IconButton(
+                          icon: const Icon((Icons.edit), color: Colors.white),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditAccount(
+                                  user: widget.user,
+                                ),
+                              ),
                             );
                           },
-                          button1: 'Annuler',
-                          button2: 'Supprimer',
-                          titre: 'Cette action est irréversible',
-                          description:
-                              'Êtes-vous certain(e) de vouloir supprimer ce compte ?',
-                        );
-                      },
-                    );
-                  },
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                    ],
+                  ),
+                ),
+
+                //Géneral Settings
+                Title(
+                    color: Colors.black,
+                    child: const Text(
+                      "Général",
+                      style: TextStyle(
+                        fontSize: 15.0,
+                      ),
+                    )),
+                const Divider(),
+
+                //Musique de fond
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: const [
+                          RoundIconWidget(
+                              icon: Icons.music_note, color: Palette.pink),
+                          SizedBox(
+                            width: 25,
+                            height: 25,
+                          ),
+                          Text(
+                            "Musique de fond",
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          Expanded(child: SizedBox()),
+                        ],
+                      ),
+                      Slider(
+                        min: 0.0,
+                        max: 1.0,
+                        value: bkVolume,
+                        activeColor: Palette.pink,
+                        onChanged: (value) {
+                          setState(() {
+                            bkVolume = value;
+                          });
+                          setBkVolume();
+                        },
+                      )
+                    ],
+                  ),
+                ),
+
+                //sond's effect
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: const [
+                          RoundIconWidget(
+                              icon: Icons.volume_up, color: Palette.orange),
+                          SizedBox(
+                            width: 25,
+                            height: 25,
+                          ),
+                          Text(
+                            "Effets Sonores",
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          Expanded(child: SizedBox()),
+                        ],
+                      ),
+                      Slider(
+                        min: 0.0,
+                        max: 1.0,
+                        value: sfxVolume,
+                        activeColor: Palette.orange,
+                        onChanged: (value) {
+                          setState(() {
+                            sfxVolume = value;
+                          });
+                          setSfxVolume();
+                        },
+                      )
+                    ],
+                  ),
+                ),
+
+                //voix
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: const [
+                          RoundIconWidget(
+                              icon: Icons.record_voice_over,
+                              color: Palette.indigo),
+                          SizedBox(
+                            width: 25,
+                            height: 25,
+                          ),
+                          Text(
+                            "Voix",
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          Expanded(child: SizedBox()),
+                        ],
+                      ),
+                      Slider(
+                        min: 0.0,
+                        max: 1.0,
+                        value: voiceVolume,
+                        activeColor: Palette.indigo,
+                        onChanged: (value) {
+                          setState(() {
+                            voiceVolume = value;
+                          });
+                          setVoiceVolume();
+                        },
+                      )
+                    ],
+                  ),
+                ),
+
+                //Notification
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Row(
+                    children: [
+                      const RoundIconWidget(
+                          icon: Icons.notifications, color: Palette.lightGreen),
+                      const SizedBox(
+                        width: 25,
+                        height: 25,
+                      ),
+                      const Text(
+                        "Notifications",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      CupertinoSwitch(
+                          // overrides the default green color of the track
+                          activeColor: Palette.lightGreen,
+                          // color of the round icon, which moves from right to left
+                          thumbColor:
+                              notifOn ? Palette.darkGreen : Palette.lightBlue,
+                          // when the switch is off
+                          trackColor: Palette.lightGrey,
+                          // boolean variable value
+                          value: notifOn,
+                          // changes the state of the switch
+                          onChanged: (value) {
+                            if (notifOn) {
+                              setState(() {
+                                notifOn = false;
+                              });
+                              localNotificationService
+                                  .setNotificationState(false);
+                            } else {
+                              setState(() {
+                                notifOn = true;
+                              });
+                              localNotificationService
+                                  .setNotificationState(true);
+                            }
+                          })
+                    ],
+                  ),
+                ),
+
+                //DarkMode
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Row(
+                    children: [
+                      const RoundIconWidget(
+                          icon: Icons.dark_mode, color: Palette.black),
+                      const SizedBox(
+                        width: 25,
+                        height: 25,
+                      ),
+                      const Text(
+                        "Mode Sombre",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      const Expanded(child: SizedBox()),
+                      CupertinoSwitch(
+                          // overrides the default green color of the track
+                          activeColor: Palette.lightGreen,
+                          // color of the round icon, which moves from right to left
+                          thumbColor:
+                              darkOn ? Palette.darkGreen : Palette.lightBlue,
+                          // when the switch is off
+                          trackColor: Palette.lightGrey,
+                          // boolean variable value
+                          value: darkOn,
+                          // changes the state of the switch
+                          onChanged: (value) {
+                            if (darkOn) {
+                              setState(() {
+                                darkOn = false;
+                              });
+                            } else {
+                              setState(() {
+                                darkOn = true;
+                              });
+                            }
+                            Provider.of<ThemeProvider>(context, listen: false)
+                                .setTheme(darkOn);
+                          }),
+                    ],
+                  ),
+                ),
+
+                //Retour
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Title(
+                      color: Colors.black,
+                      child: const Text(
+                        "Informations",
+                        style: TextStyle(
+                          fontSize: 15.0,
+                        ),
+                      )),
+                ),
+                const Divider(),
+                //bug
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Row(
+                    children: [
+                      const RoundIconWidget(
+                          icon: Icons.help, color: Colors.purple),
+                      const SizedBox(
+                        width: 25,
+                        height: 25,
+                      ),
+                      GestureDetector(
+                        child: const Text(
+                          "Aide",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Row(
+                    children: [
+                      const RoundIconWidget(
+                          icon: Icons.feedback, color: Palette.lightBlue),
+                      const SizedBox(
+                        width: 25,
+                        height: 25,
+                      ),
+                      GestureDetector(
+                        child: const Text(
+                          "Laisser un avis",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Row(
+                    children: [
+                      const RoundIconWidget(
+                          icon: Icons.info, color: Palette.lighterGreen),
+                      const SizedBox(
+                        width: 25,
+                        height: 25,
+                      ),
+                      GestureDetector(
+                        child: const Text(
+                          "À propos",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AboutUs(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+                //Retour
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Title(
+                      color: Colors.black,
+                      child: const Text(
+                        "Compte",
+                        style: TextStyle(
+                          fontSize: 15.0,
+                        ),
+                      )),
+                ),
+                const Divider(),
+
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Row(
+                    children: [
+                      const RoundIconWidget(
+                          icon: Icons.logout, color: Palette.lightBlue),
+                      const SizedBox(
+                        width: 25,
+                        height: 25,
+                      ),
+                      GestureDetector(
+                        child: const Text(
+                          "Changer de compte",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FirstSceen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Row(
+                    children: [
+                      const RoundIconWidget(
+                          icon: Icons.delete, color: Palette.red),
+                      const SizedBox(
+                        width: 25,
+                        height: 25,
+                      ),
+                      GestureDetector(
+                        child: const Text(
+                          "Supprimer ce compte",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.red,
+                          ),
+                        ),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertPopup(
+                                onButton1Pressed: () {
+                                  Navigator.pop(context);
+                                },
+                                onButton2Pressed: () {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return AlertPopup(
+                                        onButton1Pressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        onButton2Pressed: () {
+                                          verifyCaptcha(myController.text);
+                                          myController.clear();
+                                        },
+                                        content: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child:
+                                                  Image.asset(captchaImagePath),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: TextField(
+                                                decoration: const InputDecoration(
+                                                    hintText:
+                                                        'Entrez le code ici'),
+                                                controller: myController,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        button1: 'Annuler',
+                                        button2: 'Valider',
+                                        titre: 'Verrouillage Parental',
+                                        description:
+                                            'Entrez le code affiché ci-dessous :',
+                                      );
+                                    },
+                                  );
+                                },
+                                button1: 'Annuler',
+                                button2: 'Supprimer',
+                                titre: 'Cette action est irréversible',
+                                description:
+                                    'Êtes-vous certain(e) de vouloir supprimer ce compte ?',
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -22,9 +22,14 @@ class SubThemeDonePopup extends StatefulWidget {
 
 class _SubThemeDonePopupState extends State<SubThemeDonePopup> {
   @override
+  void initState() {
+    super.initState();
+    Sfx.play("audios/sfx/done.mp3", 1);
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    Sfx.play("audios/sfx/done.mp3", 1);
     return Dialog(
       insetPadding: EdgeInsets.all(width > 500 ? 100 : 30),
       shape: RoundedRectangleBorder(

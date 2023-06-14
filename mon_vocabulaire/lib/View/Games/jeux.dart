@@ -22,7 +22,7 @@ class Games extends StatefulWidget {
 }
 
 class _GamesState extends State<Games> {
-  int coins = 0;
+  int coins = -1;
   Future<void> getCoins() async {
     DatabaseHelper();
     User _user = await DatabaseHelper().getUser(widget.user.id!);
@@ -40,62 +40,68 @@ class _GamesState extends State<Games> {
         appBar: CustomAppBarGames(
           user: widget.user,
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 30),
-          child: GridView.count(
-            primary: false,
-            shrinkWrap: true,
-            crossAxisCount: width > 500 ? 3 : 2,
-            childAspectRatio: width > 500 ? 1.03 : 0.92,
-            children: [
-              GameBloc(
-                image: "assets/images/games/puzzle.png",
-                price: '10',
-                page: Puzzle(
-                  user: widget.user,
+        body: coins == -1
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Palette.white,
                 ),
-                enabled: coins >= 10,
-              ),
-              GameBloc(
-                image: "assets/images/games/JuMots.png",
-                price: '10',
-                page: FlipCardGame(
-                  user: widget.user,
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: GridView.count(
+                  primary: false,
+                  shrinkWrap: true,
+                  crossAxisCount: width > 500 ? 3 : 2,
+                  childAspectRatio: width > 500 ? 1.03 : 0.92,
+                  children: [
+                    GameBloc(
+                      image: "assets/images/games/puzzle.png",
+                      price: '10',
+                      page: Puzzle(
+                        user: widget.user,
+                      ),
+                      enabled: coins >= 10,
+                    ),
+                    GameBloc(
+                      image: "assets/images/games/JuMots.png",
+                      price: '10',
+                      page: FlipCardGame(
+                        user: widget.user,
+                      ),
+                      enabled: coins >= 10,
+                    ),
+                    GameBloc(
+                      image: "assets/images/games/tic-tac-toe.png",
+                      price: '20',
+                      page: ChooseXO(
+                        user: widget.user,
+                      ),
+                      enabled: coins >= 20,
+                    ),
+                    GameBloc(
+                      image: "assets/images/games/apple.png",
+                      price: '20',
+                      page: MazePuzzle(
+                        user: widget.user,
+                      ),
+                      enabled: coins >= 20,
+                    ),
+                    GameBloc(
+                      image: "assets/images/games/search.png",
+                      price: '30',
+                      page: Trouvaille(user: widget.user),
+                      enabled: coins >= 30,
+                    ),
+                    GameBloc(
+                      image: "assets/images/games/bubbles.png",
+                      price: '30',
+                      page: NinjaBubble(
+                        user: widget.user,
+                      ),
+                      enabled: coins >= 30,
+                    ),
+                  ],
                 ),
-                enabled: coins >= 10,
-              ),
-              GameBloc(
-                image: "assets/images/games/tic-tac-toe.png",
-                price: '20',
-                page: ChooseXO(
-                  user: widget.user,
-                ),
-                enabled: coins >= 20,
-              ),
-              GameBloc(
-                image: "assets/images/games/apple.png",
-                price: '20',
-                page: MazePuzzle(
-                  user: widget.user,
-                ),
-                enabled: coins >= 20,
-              ),
-              GameBloc(
-                image: "assets/images/games/search.png",
-                price: '30',
-                page: Trouvaille(user: widget.user),
-                enabled: coins >= 30,
-              ),
-              GameBloc(
-                image: "assets/images/games/bubbles.png",
-                price: '30',
-                page: NinjaBubble(
-                  user: widget.user,
-                ),
-                enabled: coins >= 30,
-              ),
-            ],
-          ),
-        ));
+              ));
   }
 }

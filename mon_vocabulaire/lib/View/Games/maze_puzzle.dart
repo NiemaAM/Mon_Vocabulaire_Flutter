@@ -1,5 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'dart:async';
+
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:maze/maze.dart';
@@ -96,11 +98,13 @@ class _MazePuzzleState extends State<MazePuzzle> {
                     }
                     if (widget.partie + 1 == 6 && checkpoints == 4) {
                       _controllerConfetti.play();
+                      bool isClicked = false;
                       showDialog(
                         context: context,
                         barrierDismissible: false,
                         builder: (BuildContext context) {
                           return GamePopup(
+                            isClicked: isClicked,
                             price: 20,
                             onButton1Pressed: () {
                               Navigator.pop(context);
@@ -108,28 +112,31 @@ class _MazePuzzleState extends State<MazePuzzle> {
                             },
                             onButton2Pressed: () {
                               getCoins();
-                              if (coins >= 20) {
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MazePuzzle(
-                                      user: widget.user,
+                              isClicked = true;
+                              Timer(const Duration(seconds: 1), () {
+                                if (coins >= 20) {
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MazePuzzle(
+                                        user: widget.user,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  duration: Duration(seconds: 2),
-                                  backgroundColor: Palette.indigo,
-                                  content: Text(
-                                    'Tu n\'as pas assez de pièces pour jouer.',
-                                    style: TextStyle(
-                                        color: Palette.white, fontSize: 18),
-                                  ),
-                                ));
-                              }
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                    duration: Duration(seconds: 2),
+                                    backgroundColor: Palette.indigo,
+                                    content: Text(
+                                      'Tu n\'as pas assez de pièces pour jouer.',
+                                      style: TextStyle(
+                                          color: Palette.white, fontSize: 18),
+                                    ),
+                                  ));
+                                }
+                              });
                             },
                             win: true,
                           );

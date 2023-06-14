@@ -29,7 +29,7 @@ class _LessonPathState extends State<LessonPath> {
   Color color = Palette.blue;
   String title = "";
   String image = "";
-  int userProg = 0;
+  int userProg = -1;
 
   Future<void> getQuiz() async {
     Progression _userProg =
@@ -326,197 +326,222 @@ class _LessonPathState extends State<LessonPath> {
     ];
 
     return Scaffold(
-      body: Stack(
-        children: [
-          SvgPicture.asset('assets/images/themes/backgrounds/$background.svg',
-              alignment: Alignment.center,
-              fit: BoxFit.cover,
-              color: Palette.white.withOpacity(0.65),
-              colorBlendMode: BlendMode.modulate),
-          Padding(
-            padding: const EdgeInsets.only(top: 80),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: Button(
-                  callback: () {
-                    Sfx.play("audios/sfx/plip.mp3", 1);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LessonPage(
-                          subTheme: widget.subTheme,
-                          user: widget.user,
-                        ),
-                      ),
-                    );
-                  },
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Image.asset(
-                          "assets/images/themes/lesson.png",
-                          width: width / 2.8,
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Text(
-                              "MA LEÇON",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: width > 500 ? 25 : 20,
-                                  color: Palette.black),
+      body: userProg == -1
+          ? Stack(
+              children: [
+                SvgPicture.asset(
+                    'assets/images/themes/backgrounds/$background.svg',
+                    alignment: Alignment.center,
+                    fit: BoxFit.cover,
+                    color: Palette.white.withOpacity(0.65),
+                    colorBlendMode: BlendMode.modulate),
+                const Center(
+                  child: CircularProgressIndicator(
+                    color: Palette.lightBlue,
+                  ),
+                ),
+                CustomAppBar(
+                  title: title.toUpperCase(),
+                  color: color,
+                  automaticallyImplyLeading: true,
+                  image: image,
+                ),
+              ],
+            )
+          : Stack(
+              children: [
+                SvgPicture.asset(
+                    'assets/images/themes/backgrounds/$background.svg',
+                    alignment: Alignment.center,
+                    fit: BoxFit.cover,
+                    color: Palette.white.withOpacity(0.65),
+                    colorBlendMode: BlendMode.modulate),
+                Padding(
+                  padding: const EdgeInsets.only(top: 80),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: Button(
+                        callback: () {
+                          Sfx.play("audios/sfx/plip.mp3", 1);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LessonPage(
+                                subTheme: widget.subTheme,
+                                user: widget.user,
+                              ),
                             ),
-                          ),
-                          Button(
-                            callback: () {
-                              Sfx.play("audios/sfx/plip.mp3", 1);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LessonPage(
-                                    subTheme: widget.subTheme,
-                                    user: widget.user,
+                          );
+                        },
+                        content: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Image.asset(
+                                "assets/images/themes/lesson.png",
+                                width: width / 2.8,
+                              ),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: Text(
+                                    "MA LEÇON",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: width > 500 ? 25 : 20,
+                                        color: Palette.black),
+                                  ),
+                                ),
+                                Button(
+                                  callback: () {
+                                    Sfx.play("audios/sfx/plip.mp3", 1);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LessonPage(
+                                          subTheme: widget.subTheme,
+                                          user: widget.user,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  content: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Text(
+                                          "LIRE",
+                                          style: TextStyle(
+                                              color: Palette.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Icon(
+                                          Icons.play_arrow_rounded,
+                                          color: Palette.white,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  color: Palette.pink,
+                                  width: 130,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: width > 500 ? 25 : 0,
+                            )
+                          ],
+                        ),
+                        width: width > 500 ? width - 150 : width - 40,
+                        heigth: 200,
+                        color: Palette.white,
+                        radius: 20,
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: width > 500 ? height / 3.5 + 80 : height / 3 + 80),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: height / 2.2,
+                          child: PageView.builder(
+                            controller: _pageController,
+                            itemCount: elements.length,
+                            onPageChanged: (index) {
+                              setState(() {
+                                _currentIndex = index;
+                              });
+                            },
+                            itemBuilder: (context, index) {
+                              double scale = max(0.85,
+                                  1 - (index - _currentIndex).abs() * 0.15);
+                              double opacity = max(
+                                  0.5, 1 - (index - _currentIndex).abs() * 0.5);
+
+                              // Adjust the padding based on the current index
+                              EdgeInsets padding = EdgeInsets.only(
+                                left: index == _currentIndex ? 0 : 5,
+                                right: index == _currentIndex ? 0 : 5,
+                              );
+
+                              // Adjust the alignment based on the current index
+                              Alignment alignment = index == _currentIndex
+                                  ? Alignment.center
+                                  : index > _currentIndex
+                                      ? Alignment.centerLeft
+                                      : Alignment.centerRight;
+
+                              return Padding(
+                                padding: padding,
+                                child: Align(
+                                  alignment: alignment,
+                                  child: Transform.scale(
+                                    scale: scale,
+                                    child: Opacity(
+                                      opacity: opacity,
+                                      child: elements[_currentIndex],
+                                    ),
                                   ),
                                 ),
                               );
                             },
-                            content: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text(
-                                    "LIRE",
-                                    style: TextStyle(
-                                        color: Palette.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(elements.length, (index) {
+                            return Container(
+                              width: 40,
+                              height: 40,
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: _currentIndex == index
+                                    ? Palette.pink
+                                    : Palette.white,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _currentIndex == index
+                                      ? "${_currentIndex + 1}"
+                                      : "${index + 1}",
+                                  style: TextStyle(
+                                    color: _currentIndex == index
+                                        ? Palette.white
+                                        : Palette.grey,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 23,
                                   ),
-                                  Icon(
-                                    Icons.play_arrow_rounded,
-                                    color: Palette.white,
-                                  )
-                                ],
+                                ),
                               ),
-                            ),
-                            color: Palette.pink,
-                            width: 130,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: width > 500 ? 25 : 0,
-                      )
-                    ],
-                  ),
-                  width: width > 500 ? width - 150 : width - 40,
-                  heigth: 200,
-                  color: Palette.white,
-                  radius: 20,
-                ),
-              ),
-            ),
-          ),
-          Center(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  top: width > 500 ? height / 3.5 + 80 : height / 3 + 80),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: height / 2.2,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: elements.length,
-                      onPageChanged: (index) {
-                        setState(() {
-                          _currentIndex = index;
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        double scale =
-                            max(0.85, 1 - (index - _currentIndex).abs() * 0.15);
-                        double opacity =
-                            max(0.5, 1 - (index - _currentIndex).abs() * 0.5);
-
-                        // Adjust the padding based on the current index
-                        EdgeInsets padding = EdgeInsets.only(
-                          left: index == _currentIndex ? 0 : 5,
-                          right: index == _currentIndex ? 0 : 5,
-                        );
-
-                        // Adjust the alignment based on the current index
-                        Alignment alignment = index == _currentIndex
-                            ? Alignment.center
-                            : index > _currentIndex
-                                ? Alignment.centerLeft
-                                : Alignment.centerRight;
-
-                        return Padding(
-                          padding: padding,
-                          child: Align(
-                            alignment: alignment,
-                            child: Transform.scale(
-                              scale: scale,
-                              child: Opacity(
-                                opacity: opacity,
-                                child: elements[_currentIndex],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                            );
+                          }),
+                        ),
+                      ],
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(elements.length, (index) {
-                      return Container(
-                        width: 40,
-                        height: 40,
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _currentIndex == index
-                              ? Palette.pink
-                              : Palette.white,
-                        ),
-                        child: Center(
-                          child: Text(
-                            _currentIndex == index
-                                ? "${_currentIndex + 1}"
-                                : "${index + 1}",
-                            style: TextStyle(
-                              color: _currentIndex == index
-                                  ? Palette.white
-                                  : Palette.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 23,
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                ],
-              ),
+                ),
+                CustomAppBar(
+                  title: title.toUpperCase(),
+                  color: color,
+                  automaticallyImplyLeading: true,
+                  image: image,
+                ),
+              ],
             ),
-          ),
-          CustomAppBar(
-            title: title.toUpperCase(),
-            color: color,
-            automaticallyImplyLeading: true,
-            image: image,
-          ),
-        ],
-      ),
     );
   }
 }

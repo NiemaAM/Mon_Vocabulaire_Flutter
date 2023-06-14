@@ -88,7 +88,9 @@ class _CuisineState extends State<Cuisine> with WidgetsBindingObserver {
             _timer2.cancel();
             duration--;
             _canTap = true;
+            bool isClicked = false;
             if (duration == 0) {
+              _timer2.cancel();
               timer.cancel();
               if (cuisine_.isNotEmpty) {
                 showDialog(
@@ -96,33 +98,39 @@ class _CuisineState extends State<Cuisine> with WidgetsBindingObserver {
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     return GamePopup(
+                      isClicked: isClicked,
                       price: 30,
                       onButton1Pressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        if (coins >= 30) {
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  Trouvaille(user: widget.user),
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            duration: Duration(seconds: 2),
-                            backgroundColor: Palette.indigo,
-                            content: Text(
-                              'Tu n\'as pas assez de pièces pour jouer.',
-                              style:
-                                  TextStyle(color: Palette.white, fontSize: 18),
-                            ),
-                          ));
-                        }
+                        getCoins();
+                        isClicked = true;
+                        Timer(const Duration(seconds: 1), () {
+                          if (coins >= 30) {
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Trouvaille(
+                                  user: widget.user,
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Palette.indigo,
+                              content: Text(
+                                'Tu n\'as pas assez de pièces pour jouer.',
+                                style: TextStyle(
+                                    color: Palette.white, fontSize: 18),
+                              ),
+                            ));
+                          }
+                        });
                       },
                       oneButton: false,
                       win: false,
@@ -151,11 +159,13 @@ class _CuisineState extends State<Cuisine> with WidgetsBindingObserver {
     if (duration > 0) {
       _controllerConfetti.play();
     }
+    bool isClicked = false;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return GamePopup(
+          isClicked: isClicked,
           price: 30,
           onButton1Pressed: () {
             Navigator.pop(context);
@@ -163,24 +173,29 @@ class _CuisineState extends State<Cuisine> with WidgetsBindingObserver {
           },
           onButton2Pressed: () {
             getCoins();
-            if (coins >= 30) {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Trouvaille(user: widget.user),
-                ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                duration: Duration(seconds: 2),
-                backgroundColor: Palette.indigo,
-                content: Text(
-                  'Tu n\'as pas assez de pièces pour jouer.',
-                  style: TextStyle(color: Palette.white, fontSize: 18),
-                ),
-              ));
-            }
+            isClicked = true;
+            Timer(const Duration(seconds: 1), () {
+              if (coins >= 30) {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Trouvaille(
+                      user: widget.user,
+                    ),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  duration: Duration(seconds: 2),
+                  backgroundColor: Palette.indigo,
+                  content: Text(
+                    'Tu n\'as pas assez de pièces pour jouer.',
+                    style: TextStyle(color: Palette.white, fontSize: 18),
+                  ),
+                ));
+              }
+            });
           },
           win: duration > 0,
         );
@@ -485,6 +500,21 @@ class _CuisineState extends State<Cuisine> with WidgetsBindingObserver {
                     : Palette.orange,
             backgroundColor: Palette.indigo,
           ),
+        ),
+        ConfettiWidget(
+          gravity: 0,
+          confettiController: _controllerConfetti,
+          blastDirectionality: BlastDirectionality
+              .explosive, // don't specify a direction, blast randomly
+          numberOfParticles: 20,
+          shouldLoop: true, // start again as soon as the animation is finished
+          colors: const [
+            Palette.lightGreen,
+            Palette.blue,
+            Palette.pink,
+            Palette.orange,
+            Palette.purple
+          ], // manually specify the colors to be used
         ),
       ],
     );

@@ -10,136 +10,39 @@ class Star extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    if (typebubble == "subtheme") {
-      return Stack(
-        children: [
-          Positioned(
-              bottom: width > 500 ? -150 : -80,
-              left: width > 500 ? -50 : -35,
-              top: 0,
-              right: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: Palette.white,
-                size: width < 500 ? width / 7.5 : 65,
-              )),
-          Positioned(
-              bottom: width > 500 ? -150 : -80,
-              left: width > 500 ? -50 : -35,
-              top: 0,
-              right: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: nbStar! >= 1 ? Palette.yellow : Palette.lightGrey,
-                size: width < 500 ? width / 9.5 : 50,
-              )),
-          Positioned(
-              bottom: width > 500 ? -150 : -80,
-              right: width > 500 ? -50 : -35,
-              top: 0,
-              left: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: Palette.white,
-                size: width < 500 ? width / 7.5 : 65,
-              )),
-          Positioned(
-              bottom: width > 500 ? -150 : -80,
-              right: width > 500 ? -50 : -35,
-              top: 0,
-              left: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: nbStar! >= 2 ? Palette.yellow : Palette.lightGrey,
-                size: width < 500 ? width / 9.5 : 50,
-              )),
-        ],
-      );
-    } else {
-      return Stack(
-        children: [
-          Positioned(
-              bottom: width > 500 ? -100 : -40,
-              left: width > 500 ? -150 : -85,
-              top: 0,
-              right: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: Palette.white,
-                size: width < 500 ? width / 7.5 : 65,
-              )),
-          Positioned(
-              bottom: width > 500 ? -100 : -40,
-              left: width > 500 ? -150 : -85,
-              top: 0,
-              right: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: nbStar! >= 1 ? Palette.yellow : Palette.lightGrey,
-                size: width < 500 ? width / 9.5 : 50,
-              )),
-          Positioned(
-              bottom: width > 500 ? -150 : -80,
-              left: width > 500 ? -50 : -35,
-              top: 0,
-              right: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: Palette.white,
-                size: width < 500 ? width / 7.5 : 65,
-              )),
-          Positioned(
-              bottom: width > 500 ? -150 : -80,
-              left: width > 500 ? -50 : -35,
-              top: 0,
-              right: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: nbStar! >= 2 ? Palette.yellow : Palette.lightGrey,
-                size: width < 500 ? width / 9.5 : 50,
-              )),
-          Positioned(
-              bottom: width > 500 ? -150 : -80,
-              right: width > 500 ? -50 : -35,
-              top: 0,
-              left: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: Palette.white,
-                size: width < 500 ? width / 7.5 : 65,
-              )),
-          Positioned(
-              bottom: width > 500 ? -150 : -80,
-              right: width > 500 ? -50 : -35,
-              top: 0,
-              left: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: nbStar! >= 3 ? Palette.yellow : Palette.lightGrey,
-                size: width < 500 ? width / 9.5 : 50,
-              )),
-          Positioned(
-              bottom: width > 500 ? -100 : -40,
-              right: width > 500 ? -150 : -85,
-              top: 0,
-              left: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: Palette.white,
-                size: width < 500 ? width / 7.5 : 65,
-              )),
-          Positioned(
-              bottom: width > 500 ? -100 : -40,
-              right: width > 500 ? -150 : -85,
-              top: 0,
-              left: 0,
-              child: Icon(
-                Icons.star_rounded,
-                color: nbStar! >= 4 ? Palette.yellow : Palette.lightGrey,
-                size: width < 500 ? width / 9.5 : 50,
-              )),
-        ],
-      );
-    }
+
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        width: width > 500 ? 100 : 80,
+        height: width > 500 ? 50 : 40,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(50),
+          ),
+          color: Palette.yellow,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Expanded(child: SizedBox()),
+            Icon(
+              Icons.star_rounded,
+              color: const Color.fromARGB(255, 241, 152, 0),
+              size: width < 500 ? 30 : 45,
+            ),
+            Text(
+              " $nbStar",
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: Color.fromARGB(255, 241, 152, 0)),
+            ),
+            const Expanded(flex: 2, child: SizedBox()),
+          ],
+        ),
+      ),
+    );
   }
 }

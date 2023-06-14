@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
@@ -93,13 +95,19 @@ class _AccountBlocState extends State<AccountBloc> {
                         padding: const EdgeInsets.only(left: 20),
                         child: CircleAvatar(
                           radius: width > 500 ? width / 9 : width / 9.5,
-                          backgroundColor: Palette.blue,
+                          backgroundColor: Palette.lightBlue,
                           child: ClipOval(
-                            child: Image.asset(
-                              widget.user.image,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                              child: widget.user.image.startsWith("assets")
+                                  ? Image.asset(
+                                      widget.user.image,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File(widget.user.image),
+                                      fit: BoxFit.cover,
+                                      width: width / 2.5,
+                                      height: width / 2.5,
+                                    )),
                         ),
                       ),
                       const Expanded(flex: 2, child: SizedBox()),

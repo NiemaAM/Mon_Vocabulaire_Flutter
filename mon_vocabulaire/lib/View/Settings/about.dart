@@ -98,7 +98,7 @@ class _AboutUsState extends State<AboutUs> {
                     Flexible(
                       child: Column(children: const [
                         Text(
-                          "GRATUIT",
+                          "GRATUITE",
                           style: TextStyle(
                               color: Palette.indigo,
                               fontSize: 20,

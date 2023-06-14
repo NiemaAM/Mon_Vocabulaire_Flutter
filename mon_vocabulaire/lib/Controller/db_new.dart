@@ -101,6 +101,17 @@ class DatabaseHelper {
     return maps.first['coins'];
   }
 
+  Future<String> getImage(int userId) async {
+    final Database db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'User',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+      limit: 1,
+    );
+    return maps.first['profil_img'];
+  }
+
   Future<int> addUser(User user) async {
     final Database db = await database;
     int insertedId = await db.insert('User', user.toMap());
@@ -112,6 +123,16 @@ class DatabaseHelper {
     final Database db = await database;
     await db.update('User', user.toMap(),
         where: 'user_id = ?', whereArgs: [user.id]);
+  }
+
+  Future<void> editUser(int userId, String name, String image) async {
+    final Database db = await database;
+    await db.transaction((txn) async {
+      await txn.rawUpdate(
+        'UPDATE User SET name = ?, profil_img = ? WHERE user_id = ?',
+        [name, image, userId],
+      );
+    });
   }
 
   Future<void> addCoins(int userId, int coins) async {

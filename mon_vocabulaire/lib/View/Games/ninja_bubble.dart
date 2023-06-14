@@ -256,11 +256,13 @@ class _NinjaBubbleState extends State<NinjaBubble>
 
   Future<void> endGame() async {
     await Future.delayed(const Duration(seconds: 4));
+    bool isClicked = false;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return GamePopup(
+          isClicked: isClicked,
           price: 30,
           onButton1Pressed: () {
             Navigator.pop(context);
@@ -268,26 +270,29 @@ class _NinjaBubbleState extends State<NinjaBubble>
           },
           onButton2Pressed: () {
             getCoins();
-            if (coins >= 30) {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NinjaBubble(
-                    user: widget.user,
+            isClicked = true;
+            Timer(const Duration(seconds: 1), () {
+              if (coins >= 30) {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NinjaBubble(
+                      user: widget.user,
+                    ),
                   ),
-                ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                duration: Duration(seconds: 2),
-                backgroundColor: Palette.indigo,
-                content: Text(
-                  'Tu n\'as pas assez de pièces pour jouer.',
-                  style: TextStyle(color: Palette.white, fontSize: 18),
-                ),
-              ));
-            }
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  duration: Duration(seconds: 2),
+                  backgroundColor: Palette.indigo,
+                  content: Text(
+                    'Tu n\'as pas assez de pièces pour jouer.',
+                    style: TextStyle(color: Palette.white, fontSize: 18),
+                  ),
+                ));
+              }
+            });
           },
           win: false,
           textLose: "Tu as touché la bombe",

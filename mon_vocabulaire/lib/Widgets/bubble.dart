@@ -46,48 +46,63 @@ class _BubbleState extends State<Bubble> {
     setsize(width);
     return Column(
       children: [
-        Button(
-          callback: () {
-            Sfx.play("audios/sfx/plip.mp3", 1);
-            Navigator.of(context).push(SizedSlide(page: widget.callback));
-          },
-          content: Stack(
+        SizedBox(
+          height: width > 500 ? 230 : 155,
+          child: Stack(
             children: [
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-                child: CircularPercentIndicator(
-                  animation: true,
-                  radius: width < 500 ? size : 90,
-                  lineWidth: 10,
-                  percent: widget.stage / widget.totalWords,
-                  progressColor: widget.color,
-                  backgroundColor: Palette.lightGrey,
-                ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      // ignore: unnecessary_const
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(50),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Button(
+                  callback: () {
+                    Sfx.play("audios/sfx/plip.mp3", 1);
+                    Navigator.of(context)
+                        .push(SizedSlide(page: widget.callback));
+                  },
+                  content: Stack(
+                    children: [
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: CircularPercentIndicator(
+                          animation: true,
+                          radius: width < 500 ? size : 90,
+                          lineWidth: 10,
+                          percent: widget.stage / widget.totalWords,
+                          progressColor: widget.color,
+                          backgroundColor: Palette.lightGrey,
+                        ),
                       ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(width > 500 ? 15 : 5),
-                      child: Image.asset(
-                        widget.image,
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              // ignore: unnecessary_const
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(width > 500 ? 15 : 5),
+                              child: Image.asset(
+                                widget.image,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
+                  heigth: width < 500 ? width / 2.7 : 205,
+                  width: width < 500 ? width / 2.7 : 205,
+                  color: Colors.white,
+                  radius: 1000,
                 ),
               ),
               Star(
@@ -96,10 +111,6 @@ class _BubbleState extends State<Bubble> {
               )
             ],
           ),
-          heigth: width < 500 ? width / 2.7 : 205,
-          width: width < 500 ? width / 2.7 : 205,
-          color: Colors.white,
-          radius: 1000,
         ),
         Padding(
           padding: const EdgeInsets.only(top: 10),

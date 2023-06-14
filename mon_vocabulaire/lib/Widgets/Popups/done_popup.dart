@@ -38,6 +38,12 @@ class _DonePopupState extends State<DonePopup> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Sfx.play("audios/sfx/done.mp3", 1);
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     getQuiz();
@@ -56,7 +62,6 @@ class _DonePopupState extends State<DonePopup> {
       }
     });
 
-    Sfx.play("audios/sfx/done.mp3", 1);
     return Dialog(
       insetPadding: EdgeInsets.all(width > 500 ? 100 : 30),
       shape: RoundedRectangleBorder(

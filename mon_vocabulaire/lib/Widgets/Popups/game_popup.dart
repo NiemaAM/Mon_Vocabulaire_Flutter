@@ -13,6 +13,7 @@ class GamePopup extends StatelessWidget {
   final String textLose;
   final String loseImg;
   final int price;
+  final bool isClicked;
 
   const GamePopup({
     super.key,
@@ -25,6 +26,7 @@ class GamePopup extends StatelessWidget {
     this.textLose = "Tu as perdu",
     this.loseImg = "assets/images/mascotte/lose.gif",
     required this.price,
+    required this.isClicked,
   });
 
   @override
@@ -86,6 +88,7 @@ class GamePopup extends StatelessWidget {
                               const SizedBox(),
                               oneButton
                                   ? Button(
+                                      enabled: !isClicked,
                                       callback: onButton1Pressed,
                                       content: Center(
                                         child: Row(
@@ -114,6 +117,7 @@ class GamePopup extends StatelessWidget {
                                   : Padding(
                                       padding: const EdgeInsets.only(right: 5),
                                       child: Button(
+                                        enabled: !isClicked,
                                         callback: onButton1Pressed,
                                         content: Center(
                                           child: Row(
@@ -152,6 +156,7 @@ class GamePopup extends StatelessWidget {
                                   : Padding(
                                       padding: const EdgeInsets.only(left: 5),
                                       child: Button(
+                                        enabled: !isClicked,
                                         callback: onButton2Pressed,
                                         content: Center(
                                           child: Row(
@@ -288,6 +293,7 @@ class GamePopup extends StatelessWidget {
                                   const SizedBox(),
                                   oneButton
                                       ? Button(
+                                          enabled: !isClicked,
                                           callback: onButton1Pressed,
                                           content: Center(
                                             child: Row(
@@ -319,6 +325,7 @@ class GamePopup extends StatelessWidget {
                                           padding:
                                               const EdgeInsets.only(right: 5),
                                           child: Button(
+                                            enabled: !isClicked,
                                             callback: onButton1Pressed,
                                             content: Center(
                                               child: Row(
@@ -361,6 +368,7 @@ class GamePopup extends StatelessWidget {
                                           padding:
                                               const EdgeInsets.only(left: 5),
                                           child: Button(
+                                            enabled: !isClicked,
                                             callback: onButton2Pressed,
                                             content: Center(
                                               child: Row(
@@ -493,6 +501,7 @@ class GamePopup extends StatelessWidget {
                                   const SizedBox(),
                                   oneButton
                                       ? Button(
+                                          enabled: !isClicked,
                                           callback: onButton1Pressed,
                                           content: Center(
                                             child: Row(
@@ -524,6 +533,7 @@ class GamePopup extends StatelessWidget {
                                           padding:
                                               const EdgeInsets.only(right: 5),
                                           child: Button(
+                                            enabled: !isClicked,
                                             callback: onButton1Pressed,
                                             content: Center(
                                               child: Row(
@@ -566,6 +576,7 @@ class GamePopup extends StatelessWidget {
                                           padding:
                                               const EdgeInsets.only(left: 5),
                                           child: Button(
+                                            enabled: !isClicked,
                                             callback: onButton2Pressed,
                                             content: Center(
                                               child: Row(

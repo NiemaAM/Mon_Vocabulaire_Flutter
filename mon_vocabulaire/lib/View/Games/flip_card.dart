@@ -99,11 +99,13 @@ class _FlipCardGameState extends State<FlipCardGame>
     if (duration > 0) {
       _controllerConfetti.play();
     }
+    bool isClicked = false;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return GamePopup(
+          isClicked: isClicked,
           price: 10,
           onButton1Pressed: () {
             Navigator.pop(context);
@@ -111,26 +113,29 @@ class _FlipCardGameState extends State<FlipCardGame>
           },
           onButton2Pressed: () {
             getCoins();
-            if (coins >= 10) {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FlipCardGame(
-                    user: widget.user,
+            isClicked = true;
+            Timer(const Duration(seconds: 1), () {
+              if (coins >= 10) {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FlipCardGame(
+                      user: widget.user,
+                    ),
                   ),
-                ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                duration: Duration(seconds: 2),
-                backgroundColor: Palette.indigo,
-                content: Text(
-                  'Tu n\'as pas assez de pièces pour jouer.',
-                  style: TextStyle(color: Palette.white, fontSize: 18),
-                ),
-              ));
-            }
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  duration: Duration(seconds: 2),
+                  backgroundColor: Palette.indigo,
+                  content: Text(
+                    'Tu n\'as pas assez de pièces pour jouer.',
+                    style: TextStyle(color: Palette.white, fontSize: 18),
+                  ),
+                ));
+              }
+            });
           },
           win: duration > 0,
         );

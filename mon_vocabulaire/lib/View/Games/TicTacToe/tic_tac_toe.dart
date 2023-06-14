@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
 import 'dart:math';
@@ -181,8 +181,17 @@ class _TicTacToeState extends State<TicTacToe> {
     return true; // game is a draw
   }
 
+  int coins = 0;
+  Future<void> getCoins() async {
+    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+    setState(() {
+      coins = _coins;
+    });
+  }
+
   bool endGame = false;
   void showAlertDialog() {
+    bool isClicked = false;
     if (checkWin(widget.player)) {
       setState(() {
         win++;
@@ -200,9 +209,11 @@ class _TicTacToeState extends State<TicTacToe> {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return GamePopup(
+              isClicked: isClicked,
               price: 20,
               oneButton: true,
               onButton1Pressed: () {
+                isClicked = true;
                 Navigator.pop(context);
                 setState(() {
                   partie++;
@@ -227,9 +238,11 @@ class _TicTacToeState extends State<TicTacToe> {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return GamePopup(
+              isClicked: isClicked,
               price: 20,
               oneButton: true,
               onButton1Pressed: () {
+                isClicked = true;
                 Navigator.pop(context);
                 setState(() {
                   partie++;
@@ -248,28 +261,46 @@ class _TicTacToeState extends State<TicTacToe> {
       if (win > lose) {
         _controllerConfetti.play();
       }
+
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return GamePopup(
+            isClicked: isClicked,
             price: 20,
             onButton1Pressed: () {
               Navigator.pop(context);
               Navigator.pop(context);
             },
             onButton2Pressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TicTacToe(
-                    user: widget.user,
-                    player: widget.player,
-                    AIplayer: widget.AIplayer,
-                  ),
-                ),
-              );
+              isClicked = true;
+              getCoins();
+              isClicked = true;
+              Timer(const Duration(seconds: 1), () {
+                if (coins >= 20) {
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TicTacToe(
+                        user: widget.user,
+                        player: widget.player,
+                        AIplayer: widget.AIplayer,
+                      ),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    duration: Duration(seconds: 2),
+                    backgroundColor: Palette.indigo,
+                    content: Text(
+                      'Tu n\'as pas assez de pièces pour jouer.',
+                      style: TextStyle(color: Palette.white, fontSize: 18),
+                    ),
+                  ));
+                }
+              });
             },
             win: win > lose,
             tie: win == lose,
