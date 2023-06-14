@@ -397,6 +397,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  list_wheel_scroll_view_nls:
+    dependency: "direct main"
+    description:
+      name: list_wheel_scroll_view_nls
+      sha256: "47a6c27dac35768f2bcd0db05a31f04347ea116faf3529131d937cf130c36e91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   matcher:
     dependency: transitive
     description:
@@ -641,7 +649,7 @@ packages:
       sha256: "53e943d4206a5e30df338fd4c6e7a077e02254531b138a15aec3bd143c1a8b3c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.1"
+    version: "1.10.0"
   sqflite:
     dependency: "direct main"
     description:

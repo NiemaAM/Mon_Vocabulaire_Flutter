@@ -3,7 +3,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:list_wheel_scroll_view_nls/list_wheel_scroll_view_nls.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
@@ -135,7 +137,6 @@ class _LessonPathState extends State<LessonPath> {
     Sfx.play("audios/sfx/pop.mp3", 1);
   }
 
-  final PageController _pageController = PageController();
   int _currentIndex = 0;
 
   @override
@@ -440,50 +441,22 @@ class _LessonPathState extends State<LessonPath> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: height / 2.2,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: elements.length,
-                      onPageChanged: (index) {
-                        setState(() {
-                          _currentIndex = index;
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        double scale =
-                            max(0.85, 1 - (index - _currentIndex).abs() * 0.15);
-                        double opacity =
-                            max(0.5, 1 - (index - _currentIndex).abs() * 0.5);
-
-                        // Adjust the padding based on the current index
-                        EdgeInsets padding = EdgeInsets.only(
-                          left: index == _currentIndex ? 0 : 5,
-                          right: index == _currentIndex ? 0 : 5,
-                        );
-
-                        // Adjust the alignment based on the current index
-                        Alignment alignment = index == _currentIndex
-                            ? Alignment.center
-                            : index > _currentIndex
-                                ? Alignment.centerLeft
-                                : Alignment.centerRight;
-
-                        return Padding(
-                          padding: padding,
-                          child: Align(
-                            alignment: alignment,
-                            child: Transform.scale(
-                              scale: scale,
-                              child: Opacity(
-                                opacity: opacity,
-                                child: elements[_currentIndex],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                      height: height / 2.2,
+                      child: ListWheelScrollViewX(
+                        scrollDirection: Axis.horizontal,
+                        perspective: 0.0001,
+                        onSelectedItemChanged: (index) {
+                          setState(() {
+                            _currentIndex = index;
+                          });
+                        },
+                        itemExtent: 210,
+                        children: [
+                          elements[0],
+                          elements[1],
+                          elements[2],
+                        ],
+                      )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(elements.length, (index) {

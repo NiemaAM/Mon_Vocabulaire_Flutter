@@ -51,6 +51,7 @@ dependencies:
   maze: ^3.0.0
   ionicons: ^0.2.2
   sqflite: ^2.2.8+4
+  list_wheel_scroll_view_nls: ^0.0.3
 
 dev_dependencies:
   flutter_test:
