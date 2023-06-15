@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
@@ -36,7 +37,15 @@ class _TicTacToeState extends State<TicTacToe> {
   late ConfettiController _controllerConfetti;
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
+    getUser();
     super.initState();
     DatabaseHelper().substractCoins(widget.user.id!, 20);
     startNewGame();
@@ -181,11 +190,13 @@ class _TicTacToeState extends State<TicTacToe> {
     return true; // game is a draw
   }
 
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
     setState(() {
-      coins = _coins;
+      coins = user!.coins;
     });
   }
 
@@ -275,7 +286,7 @@ class _TicTacToeState extends State<TicTacToe> {
             },
             onButton2Pressed: () {
               isClicked = true;
-              getCoins();
+
               isClicked = true;
               Timer(const Duration(seconds: 1), () {
                 if (coins >= 20) {

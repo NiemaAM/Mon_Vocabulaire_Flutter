@@ -1,7 +1,6 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+// ignore_for_file: no_leading_underscores_for_local_identifiers, use_build_context_synchronously
 
 import 'dart:async';
-
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
@@ -22,7 +21,14 @@ import '../../Widgets/Appbars/quiz_app_bar.dart';
 class DragAndDrop extends StatefulWidget {
   final int subTheme;
   final User user;
-  const DragAndDrop({super.key, required this.user, required this.subTheme});
+  final bool finished;
+  final int part;
+  const DragAndDrop(
+      {super.key,
+      required this.user,
+      required this.subTheme,
+      required this.finished,
+      required this.part});
 
   @override
   State<DragAndDrop> createState() => _DragAndDropState();
@@ -43,6 +49,13 @@ class _DragAndDropState extends State<DragAndDrop> {
   int size = 9;
   bool quizEnded = false;
   late ConfettiController _controllerConfetti;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   getTheme() {
     switch (widget.subTheme) {
@@ -136,20 +149,69 @@ class _DragAndDropState extends State<DragAndDrop> {
   }
 
   bool finished = false;
-  Future<void> getFinished() async {
+  int part = -1;
+  getFinished(bool win) async {
     bool _finished =
         await DatabaseHelper().getFinished(widget.user.id!, widget.subTheme);
+    int _part =
+        await DatabaseHelper().getPart(widget.user.id!, widget.subTheme);
     setState(() {
       finished = _finished;
+      part = _part;
     });
+    if (part != -1) {
+      if (win) {
+        if (finished) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return SubThemeDonePopup(
+                  subThemeId: widget.subTheme,
+                  user: widget.user,
+                );
+              });
+        } else {
+          Navigator.pop(context);
+          Navigator.of(context).pushReplacement(
+            SlideRight(
+              page: LessonPage(
+                subTheme: widget.subTheme,
+                user: widget.user,
+                finished: finished,
+                part: part,
+              ),
+            ),
+          );
+        }
+      } else {
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LessonPage(
+              subTheme: widget.subTheme,
+              user: widget.user,
+              finished: finished,
+              part: widget.part,
+            ),
+          ),
+        );
+      }
+      setState(() {
+        part = -1;
+      });
+    }
   }
 
   bool first = true;
   int words = 0;
   getQuestions() async {
     List<PropositionLettres> quest =
-        await quizModel.getRandomPropositionsLettres(
-            theme, subTheme, widget.user, widget.subTheme);
+        await quizModel.getRandomPropositionsLettres(theme, subTheme,
+            widget.user, widget.subTheme, widget.finished, widget.part);
     setState(() {
       questions = quest;
     });
@@ -199,8 +261,9 @@ class _DragAndDropState extends State<DragAndDrop> {
 
   int duration = 60;
   int time = 30;
+  late Timer timer;
   void startTimer() {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (questions.isNotEmpty) {
         setState(() {
           if (duration > 0) {
@@ -236,6 +299,7 @@ class _DragAndDropState extends State<DragAndDrop> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return QuizPopup(
+            part: widget.part,
             chances: chances,
             user: widget.user,
             words: words,
@@ -247,44 +311,10 @@ class _DragAndDropState extends State<DragAndDrop> {
               Navigator.pop(context);
             },
             onButton2Pressed: () {
-              getFinished();
-              Timer(const Duration(seconds: 3), () {
-                if (finished) {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return SubThemeDonePopup(
-                          subThemeId: widget.subTheme,
-                          user: widget.user,
-                        );
-                      });
-                } else {
-                  Navigator.pop(context);
-                  Navigator.of(context).pushReplacement(
-                    SlideRight(
-                      page: LessonPage(
-                        subTheme: widget.subTheme,
-                        user: widget.user,
-                      ),
-                    ),
-                  );
-                }
-              });
+              getFinished(true);
             },
             onButton3Pressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LessonPage(
-                    subTheme: widget.subTheme,
-                    user: widget.user,
-                  ),
-                ),
-              );
+              getFinished(false);
             },
           );
         },
@@ -299,6 +329,7 @@ class _DragAndDropState extends State<DragAndDrop> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return QuizPopup(
+            part: widget.part,
             chances: chances,
             user: widget.user,
             words: words,
@@ -310,44 +341,10 @@ class _DragAndDropState extends State<DragAndDrop> {
               Navigator.pop(context);
             },
             onButton2Pressed: () {
-              getFinished();
-              Timer(const Duration(seconds: 3), () {
-                if (finished) {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return SubThemeDonePopup(
-                          subThemeId: widget.subTheme,
-                          user: widget.user,
-                        );
-                      });
-                } else {
-                  Navigator.pop(context);
-                  Navigator.of(context).pushReplacement(
-                    SlideRight(
-                      page: LessonPage(
-                        subTheme: widget.subTheme,
-                        user: widget.user,
-                      ),
-                    ),
-                  );
-                }
-              });
+              getFinished(true);
             },
             onButton3Pressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LessonPage(
-                    subTheme: widget.subTheme,
-                    user: widget.user,
-                  ),
-                ),
-              );
+              getFinished(false);
             },
           );
         },
@@ -400,6 +397,7 @@ class _DragAndDropState extends State<DragAndDrop> {
     super.dispose();
     Sfx.play("audios/sfx/pop.mp3", 1);
     AudioBK.playBK();
+    timer.cancel();
   }
 
   @override
@@ -407,6 +405,7 @@ class _DragAndDropState extends State<DragAndDrop> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     AudioBK.pauseBK();
+
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,

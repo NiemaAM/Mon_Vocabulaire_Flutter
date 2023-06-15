@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Home/home.dart';
@@ -19,19 +19,32 @@ class AccountBloc extends StatefulWidget {
 
 class _AccountBlocState extends State<AccountBloc> {
   int _words = 0;
+  RealtimeDataController controller = RealtimeDataController();
 
-  Future<void> calculateResult() async {
-    DatabaseHelper();
-    int words = await DatabaseHelper().getAllProgression(widget.user.id);
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  calculateResult() async {
+    await controller.getAllWords(widget.user.id!);
+    int? totalWords = controller.words;
     setState(() {
-      _words = words;
+      _words = totalWords!;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    calculateResult();
   }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    calculateResult();
     return Align(
       alignment: Alignment.center,
       child: Button(
@@ -55,7 +68,9 @@ class _AccountBlocState extends State<AccountBloc> {
                   child: Row(
                     children: [
                       Text(
-                        "${widget.user.coins.toString()} ",
+                        widget.user.coins < 999
+                            ? "${widget.user.coins.toString()} "
+                            : "999 ",
                         style: TextStyle(
                             color: const Color.fromARGB(255, 241, 158, 4),
                             fontSize: width > 500 ? 18 : 18,
@@ -117,7 +132,10 @@ class _AccountBlocState extends State<AccountBloc> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              widget.user.name,
+                              widget.user.name.replaceFirst(
+                                widget.user.name.characters.first,
+                                widget.user.name.characters.first.toUpperCase(),
+                              ),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Palette.indigo,

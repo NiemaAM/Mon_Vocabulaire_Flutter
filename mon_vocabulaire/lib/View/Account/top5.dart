@@ -1,10 +1,9 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
-import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
@@ -30,28 +29,39 @@ class _Top5State extends State<Top5> {
   List<User> users = [];
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
     fetchUsers(); // Fetch users when the widget is initialized
   }
 
-  Future<void> fetchUsers() async {
+  RealtimeDataController controller = RealtimeDataController();
+  fetchUsers() async {
     // Fetch users from the database
-    List<User> fetchedUsers = await DatabaseHelper().getUsersTop5();
-
+    await controller.getAllUsers();
+    List<User> fetchedUsers = controller.users;
     setState(() {
       users = fetchedUsers;
       for (int i = 0; i < fetchedUsers.length; i++) {
-        names[i] = fetchedUsers[i].name;
+        names[i] = fetchedUsers[i].name.replaceFirst(
+              fetchedUsers[i].name.characters.first,
+              fetchedUsers[i].name.characters.first.toUpperCase(),
+            );
         images[i] = fetchedUsers[i].image;
         lvls[i] = "Niveau ${fetchedUsers[i].currentLevel}";
       }
     });
 
-    List<int> _stars = [];
+    List<int> _stars = [0, 0, 0, 0, 0];
     for (int i = 0; i < users.length; i++) {
       int userStars = await DatabaseHelper().getStars(users[i].id);
-      _stars.add(userStars);
+      _stars[i] = userStars;
     }
     setState(() {
       stars[0] = _stars[0];

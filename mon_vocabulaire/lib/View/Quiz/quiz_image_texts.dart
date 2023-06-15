@@ -18,7 +18,14 @@ import '../../Widgets/Appbars/quiz_app_bar.dart';
 class QuizImageTexts extends StatefulWidget {
   final int subTheme;
   final User user;
-  const QuizImageTexts({super.key, required this.subTheme, required this.user});
+  final bool finished;
+  final int part;
+  const QuizImageTexts(
+      {super.key,
+      required this.subTheme,
+      required this.user,
+      required this.finished,
+      required this.part});
 
   @override
   State<QuizImageTexts> createState() => _QuizImageTextsState();
@@ -41,6 +48,13 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
   String response = '';
   bool quizEnded = false;
   late ConfettiController _controllerConfetti;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   getTheme() {
     switch (widget.subTheme) {
@@ -122,8 +136,9 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
 
   int duration = 45;
   int time = 0;
+  late Timer timer;
   void startTimer() {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (questions.isNotEmpty) {
         setState(() {
           if (duration > 0 && !quizEnded) {
@@ -151,8 +166,8 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
 
   bool first = true;
   getQuestions() async {
-    List<Proposition> quest = await quizModel.getRandomPropositions(
-        theme, subTheme, widget.user, widget.subTheme);
+    List<Proposition> quest = await quizModel.getRandomPropositions(theme,
+        subTheme, widget.user, widget.subTheme, widget.finished, widget.part);
     setState(() {
       questions = quest;
     });
@@ -218,6 +233,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return QuizPopup(
+            part: widget.part,
             chances: chances,
             user: widget.user,
             words: size,
@@ -235,6 +251,8 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                   page: DragAndDrop(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: widget.finished,
+                    part: widget.part,
                   ),
                 ),
               );
@@ -247,6 +265,8 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                   builder: (context) => LessonPage(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: widget.finished,
+                    part: widget.part,
                   ),
                 ),
               );
@@ -264,6 +284,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return QuizPopup(
+            part: widget.part,
             chances: chances,
             user: widget.user,
             words: size,
@@ -281,6 +302,8 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                   page: DragAndDrop(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: widget.finished,
+                    part: widget.part,
                   ),
                 ),
               );
@@ -293,6 +316,8 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                   builder: (context) => LessonPage(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: widget.finished,
+                    part: widget.part,
                   ),
                 ),
               );
@@ -348,6 +373,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
     super.dispose();
     Sfx.play("audios/sfx/pop.mp3", 1);
     AudioBK.playBK();
+    timer.cancel();
   }
 
   @override

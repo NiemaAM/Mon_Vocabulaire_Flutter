@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
@@ -32,6 +33,13 @@ class _PuzzleState extends State<Puzzle> {
   Timer? _timer;
   int _duration = 0;
   bool viewVisible = true;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   void getIamge() {
     int randomNumber = Random().nextInt(233) + 1;
@@ -513,11 +521,13 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
   }
 
   bool dialogShown = false;
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
     setState(() {
-      coins = _coins;
+      coins = user!.coins;
     });
   }
 
@@ -540,7 +550,7 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            getCoins();
+            getUser();
             isClicked = true;
             Timer(const Duration(seconds: 1), () {
               if (coins >= 10) {

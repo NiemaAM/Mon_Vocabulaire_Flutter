@@ -14,7 +14,14 @@ import '../../Widgets/button.dart';
 class LessonPage extends StatefulWidget {
   final int subTheme;
   final User user;
-  const LessonPage({super.key, required this.subTheme, required this.user});
+  final bool finished;
+  final int part;
+  const LessonPage(
+      {super.key,
+      required this.subTheme,
+      required this.user,
+      required this.finished,
+      required this.part});
 
   @override
   State<LessonPage> createState() => _LessonPage();
@@ -29,6 +36,14 @@ class _LessonPage extends State<LessonPage> {
   List<Lesson> lesson = [];
   int index = 0;
   int size = 10;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   getTheme() {
     switch (widget.subTheme) {
       case 1:
@@ -108,12 +123,12 @@ class _LessonPage extends State<LessonPage> {
   }
 
   getLesson() async {
-    List<Lesson> les = await quizModel.getLesson(
-        theme, subTheme, widget.user, widget.subTheme);
+    List<Lesson> les = await quizModel.getLesson(theme, subTheme, widget.user,
+        widget.subTheme, widget.finished, widget.part);
     setState(() {
       lesson = les;
       if (quizModel.getSize() >= 10) {
-        size = 9;
+        size = quizModel.getSize() - 1;
       } else {
         size = quizModel.getSize() - 1;
       }
@@ -313,6 +328,8 @@ class _LessonPage extends State<LessonPage> {
                                                 page: QuizTextImages(
                                                   subTheme: widget.subTheme,
                                                   user: widget.user,
+                                                  finished: widget.finished,
+                                                  part: widget.part,
                                                 ),
                                               ),
                                             );

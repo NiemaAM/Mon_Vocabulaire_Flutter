@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/View/Account/avatars.dart';
@@ -30,6 +31,13 @@ class _EditAccountState extends State<EditAccount> {
   final ImagePicker _picker = ImagePicker();
   File? _image;
   String path_image = '';
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   Future<String> saveimage(File imageFile) async {
     final directory = await getApplicationDocumentsDirectory();
@@ -56,19 +64,19 @@ class _EditAccountState extends State<EditAccount> {
       // Save the image file and get the saved path
       imagePath = await saveimage(_image!);
     } else if (_image == null) {
-      getImage();
       imagePath = image;
     }
     DatabaseHelper().editUser(widget.user.id!, _TextController.text, imagePath);
   }
 
-  String image = 'assets/images/avatars/user.png';
+  String image = '';
   String name = '';
-  Future<void> getImage() async {
-    DatabaseHelper();
-    User user = await DatabaseHelper().getUser(widget.user.id!);
+  RealtimeDataController controller = RealtimeDataController();
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
     setState(() {
-      image = user.image;
+      image = user!.image;
       name = user.name;
     });
   }
@@ -76,7 +84,6 @@ class _EditAccountState extends State<EditAccount> {
   @override
   void initState() {
     super.initState();
-    getImage();
     setState(() {
       _TextController = TextEditingController(text: widget.user.name);
     });
@@ -84,7 +91,7 @@ class _EditAccountState extends State<EditAccount> {
 
   @override
   Widget build(BuildContext context) {
-    getImage();
+    getUser();
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,

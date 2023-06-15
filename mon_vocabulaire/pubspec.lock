@@ -89,14 +89,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  awesome_dialog:
-    dependency: "direct main"
-    description:
-      name: awesome_dialog
-      sha256: ac08268b991f228fc6b8880b68ec030d2941bcc8df8b6a6551fb79f2bd36b7da
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -293,14 +285,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.4"
-  graphs:
-    dependency: transitive
-    description:
-      name: graphs
-      sha256: f9e130f3259f52d26f0cfc0e964513796dafed572fa52e45d2f8d6ca14db39b2
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.0"
   http:
     dependency: transitive
     description:
@@ -565,11 +549,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.5"
-  rive:
-    dependency: transitive
+  scroll_snap_list:
+    dependency: "direct main"
     description:
-      name: rive
-      sha256: "22e3755b75f4ea4492d2fecf4fc2acf1c8d0073df39781d290a20cbfe74c3760"
+      name: scroll_snap_list
+      sha256: "8009ad9030f680b93f3107b29b1ea31284d867aa4972868d2970c6d61fe9e59f"
       url: "https://pub.dev"
     source: hosted
     version: "0.9.1"

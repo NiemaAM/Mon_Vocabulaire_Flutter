@@ -55,14 +55,14 @@ class DatabaseHelper {
   }
 
   Future<List<User>> getUsersTop5() async {
-    Database database = await initDatabase();
-    List<Map<String, dynamic>> userMaps = await database.rawQuery('''
+    final Database db = await database;
+    List<Map<String, dynamic>> userMaps = await db.rawQuery('''
     SELECT User.*, SUM(Progression.stars) AS total_stars
     FROM User
     JOIN Progression ON User.user_id = Progression.user_id
     GROUP BY User.user_id
     ORDER BY total_stars DESC
-    ''');
+  ''');
 
     List<User> users = [];
     for (var userMap in userMaps) {
@@ -75,12 +75,14 @@ class DatabaseHelper {
 
   Future<User> getUser(int userId) async {
     final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'User',
-      where: 'user_id = ?',
-      whereArgs: [userId],
-      limit: 1,
-    );
+    final List<Map<String, dynamic>> maps = await db.transaction((txn) async {
+      return await txn.query(
+        'User',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        limit: 1,
+      );
+    });
     return User(
       id: maps.first['user_id'],
       name: maps.first['name'],
@@ -92,23 +94,27 @@ class DatabaseHelper {
 
   Future<int> getCoins(int userId) async {
     final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'User',
-      where: 'user_id = ?',
-      whereArgs: [userId],
-      limit: 1,
-    );
+    final List<Map<String, dynamic>> maps = await db.transaction((txn) async {
+      return await txn.query(
+        'User',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        limit: 1,
+      );
+    });
     return maps.first['coins'];
   }
 
   Future<String> getImage(int userId) async {
     final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'User',
-      where: 'user_id = ?',
-      whereArgs: [userId],
-      limit: 1,
-    );
+    final List<Map<String, dynamic>> maps = await db.transaction((txn) async {
+      return await txn.query(
+        'User',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        limit: 1,
+      );
+    });
     return maps.first['profil_img'];
   }
 
@@ -119,52 +125,83 @@ class DatabaseHelper {
     return insertedId;
   }
 
-  Future<void> updateUser(User user) async {
+  Future updateUser(User user) async {
     final Database db = await database;
-    await db.update('User', user.toMap(),
+    var batch = db.batch();
+    batch.update('User', user.toMap(),
         where: 'user_id = ?', whereArgs: [user.id]);
+    await batch.commit(noResult: true);
   }
 
-  Future<void> editUser(int userId, String name, String image) async {
+  Future editUser(int userId, String name, String image) async {
     final Database db = await database;
-    await db.transaction((txn) async {
-      await txn.rawUpdate(
-        'UPDATE User SET name = ?, profil_img = ? WHERE user_id = ?',
-        [name, image, userId],
+    var batch = db.batch();
+    batch.rawUpdate(
+      'UPDATE User SET name = ?, profil_img = ? WHERE user_id = ?',
+      [name, image, userId],
+    );
+    await batch.commit(noResult: true);
+  }
+
+  Future addCoins(int userId, int coins) async {
+    final Database db = await database;
+    var batch = db.batch();
+    batch.rawUpdate(
+      'UPDATE User SET coins = coins + ? WHERE user_id = ?',
+      [coins, userId],
+    );
+    await batch.commit(noResult: true);
+  }
+
+  Future substractCoins(int userId, int coins) async {
+    final Database db = await database;
+    var batch = db.batch();
+    batch.rawUpdate(
+      'UPDATE User SET coins = coins - ? WHERE user_id = ?',
+      [coins, userId],
+    );
+    await batch.commit(noResult: true);
+  }
+
+  Future deleteUser(int id) async {
+    final Database db = await database;
+    var batch = db.batch();
+    batch.delete('User', where: 'user_id = ?', whereArgs: [id]);
+    await batch.commit(noResult: true);
+  }
+
+//Progression
+  Future<List<Progression>> getAllProgression(int userId) async {
+    final Database db = await database;
+    final List<Map<String, dynamic>> maps = await db.transaction((txn) async {
+      return await txn.query('Progression',
+          where: 'user_id = ?',
+          whereArgs: [userId],
+          groupBy: 'subTheme_id',
+          orderBy: 'subTheme_id');
+    });
+    return List.generate(maps.length, (i) {
+      return Progression(
+        userId: maps[i]['user_id'],
+        subThemeId: maps[i]['subTheme_id'],
+        quiz: maps[i]['quiz'],
+        part: maps[i]['part'],
+        stars: maps[i]['stars'],
+        mots: maps[i]['words'],
       );
     });
   }
 
-  Future<void> addCoins(int userId, int coins) async {
-    final Database db = await database;
-    await db.rawUpdate(
-      'UPDATE User SET coins = coins + ? WHERE user_id = ?',
-      [coins, userId],
-    );
-  }
-
-  Future<void> substractCoins(int userId, int coins) async {
-    final Database db = await database;
-    await db.rawUpdate(
-      'UPDATE User SET coins = coins - ? WHERE user_id = ?',
-      [coins, userId],
-    );
-  }
-
-  Future<void> deleteUser(int id) async {
-    final Database db = await database;
-    await db.delete('User', where: 'user_id = ?', whereArgs: [id]);
-  }
-
-//Progression
   Future<Progression> getProgression(int userId, int subThemeId) async {
     final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'Progression',
-      where: 'user_id = ? AND subTheme_id = ?',
-      whereArgs: [userId, subThemeId],
-      limit: 1,
-    );
+    final List<Map<String, dynamic>> maps = await db.transaction((txn) async {
+      return await txn.query(
+        'Progression',
+        where: 'user_id = ? AND subTheme_id = ?',
+        whereArgs: [userId, subThemeId],
+        limit: 1,
+      );
+    });
     return Progression(
       userId: maps.first['user_id'],
       subThemeId: maps.first['subTheme_id'],
@@ -177,14 +214,12 @@ class DatabaseHelper {
 
   Future<bool> getFinished(int userId, int subThemeId) async {
     final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'Progression',
-      where: 'user_id = ? AND subTheme_id = ?',
-      whereArgs: [userId, subThemeId],
-      limit: 1,
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      'SELECT * FROM Progression WHERE user_id = ? AND subTheme_id = ? LIMIT 1',
+      [userId, subThemeId],
     );
-    if (maps.first['finished'] == 1) {
-      return true;
+    if (maps.isNotEmpty) {
+      return maps.first['finished'] == 1;
     } else {
       return false;
     }
@@ -192,33 +227,29 @@ class DatabaseHelper {
 
   Future<int> getPart(int userId, int subThemeId) async {
     final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'Progression',
-      where: 'user_id = ? AND subTheme_id = ?',
-      whereArgs: [userId, subThemeId],
-      limit: 1,
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      'SELECT * FROM Progression WHERE user_id = ? AND subTheme_id = ? LIMIT 1',
+      [userId, subThemeId],
     );
     return maps.first['part'];
   }
 
   Future<int> getQuiz(int userId, int subThemeId) async {
     final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'Progression',
-      where: 'user_id = ? AND subTheme_id = ?',
-      whereArgs: [userId, subThemeId],
-      limit: 1,
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      'SELECT * FROM Progression WHERE user_id = ? AND subTheme_id = ? LIMIT 1',
+      [userId, subThemeId],
     );
     return maps.first['quiz'];
   }
 
-  Future<int> getAllProgression(int? userId) async {
+  Future<int> getAllWords(int? userId) async {
     final Database db = await database;
-    List<Map<String, dynamic>> result = await db.rawQuery('''
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
     SELECT SUM(words) as total
     FROM Progression
     WHERE user_id = $userId
-    ''');
+  ''');
     if (result.isNotEmpty) {
       return result.first['total'];
     } else {
@@ -228,11 +259,11 @@ class DatabaseHelper {
 
   Future<int> getStars(int? userId) async {
     final Database db = await database;
-    List<Map<String, dynamic>> result = await db.rawQuery('''
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
     SELECT SUM(stars) as total
     FROM Progression
     WHERE user_id = $userId
-    ''');
+  ''');
     if (result.isNotEmpty) {
       return result.first['total'];
     } else {
@@ -240,96 +271,104 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> addProgression(Progression progression) async {
+  Future addProgression(Progression progression) async {
     final Database db = await database;
-    await db.insert('Progression', progression.toMap());
+    var batch = db.batch();
+    batch.insert('Progression', progression.toMap());
+    await batch.commit(noResult: true);
   }
 
-  Future<void> addAllProgression(int userId) async {
-    addProgression(Progression(
-        userId: userId, subThemeId: 1, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 2, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 3, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 4, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 5, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 6, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 7, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 8, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 9, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 10, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 11, quiz: 0, part: 1, stars: 0, mots: 0));
-    addProgression(Progression(
-        userId: userId, subThemeId: 12, quiz: 0, part: 1, stars: 0, mots: 0));
+  Future addAllProgression(int userId) async {
+    final db = await database;
+    var batch = db.batch();
+
+    for (int i = 1; i <= 12; i++) {
+      batch.insert(
+          'Progression',
+          Progression(
+                  userId: userId,
+                  subThemeId: i,
+                  quiz: 0,
+                  part: 1,
+                  stars: 0,
+                  mots: 0)
+              .toMap());
+    }
+
+    await batch.commit(noResult: true);
   }
 
-  Future<void> updateProgression(
+  Future updateProgression(
       int userId, int subThemeId, Progression progression) async {
-    final Database db = await database;
-
-    await db.update(
+    final db = await database;
+    var batch = db.batch();
+    batch.update(
       'Progression',
       progression.toMap(),
       where: 'user_id = ? AND subTheme_id = ?',
       whereArgs: [userId, subThemeId],
     );
+    await batch.commit(noResult: true);
   }
 
-  Future<void> updateFinished(int userId, int subThemeId, bool finished) async {
-    final Database db = await database;
-    await db.rawUpdate(
+  Future updateFinished(int userId, int subThemeId, bool finished) async {
+    final db = await database;
+    var batch = db.batch();
+    batch.rawUpdate(
       'UPDATE Progression SET finished = ? WHERE user_id = ? AND subTheme_id = ?',
       [finished, userId, subThemeId],
     );
+    await batch.commit(noResult: true);
   }
 
-  Future<void> updatePart(int userId, int subThemeId, int part) async {
+  Future updatePart(int userId, int subThemeId, int part) async {
     final Database db = await database;
-    await db.rawUpdate(
+    var batch = db.batch();
+    batch.rawUpdate(
       'UPDATE Progression SET part = ? WHERE user_id = ? AND subTheme_id = ?',
       [part, userId, subThemeId],
     );
+    await batch.commit(noResult: true);
   }
 
-  Future<void> updateQuiz(int userId, int subThemeId, int quiz) async {
+  Future updateQuiz(int userId, int subThemeId, int quiz) async {
     final Database db = await database;
-    await db.rawUpdate(
+    var batch = db.batch();
+    batch.rawUpdate(
       'UPDATE Progression SET quiz = ? WHERE user_id = ? AND subTheme_id = ?',
       [quiz, userId, subThemeId],
     );
+    await batch.commit(noResult: true);
   }
 
-  Future<void> addWords(int userId, int words, int subThemeId) async {
+  Future addWords(int userId, int words, int subThemeId) async {
     final Database db = await database;
-    await db.rawUpdate(
+    var batch = db.batch();
+    batch.rawUpdate(
       'UPDATE Progression SET words = words + ? WHERE user_id = ? AND subTheme_id = ?',
       [words, userId, subThemeId],
     );
+    await batch.commit(noResult: true);
   }
 
-  Future<void> addStars(int userId, int subThemeId, int stars) async {
+  Future addStars(int userId, int subThemeId, int stars) async {
     final Database db = await database;
-    await db.rawUpdate(
+    var batch = db.batch();
+    batch.rawUpdate(
       'UPDATE Progression SET stars = stars + ? WHERE user_id = ? AND subTheme_id = ?',
       [stars, userId, subThemeId],
     );
+    await batch.commit(noResult: true);
   }
 
-  Future<void> deleteProgression(int userId, int subThemeId) async {
+  Future deleteProgression(int userId, int subThemeId) async {
     final Database db = await database;
-    await db.delete(
+    var batch = db.batch();
+    batch.delete(
       'Progression',
       where: 'user_id = ? AND subTheme_id = ?',
       whereArgs: [userId, subThemeId],
     );
+    await batch.commit(noResult: true);
   }
 }

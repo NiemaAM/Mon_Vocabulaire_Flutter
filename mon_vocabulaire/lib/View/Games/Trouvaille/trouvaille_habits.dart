@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:mon_vocabulaire/Widgets/message_mascotte.dart';
@@ -57,6 +57,24 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
     'Des lunettes': "186.mp3",
   };
 
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
+    setState(() {
+      coins = user!.coins;
+    });
+  }
+
   String randomElementFunc() {
     dressing.shuffle();
 
@@ -106,7 +124,6 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        getCoins();
                         isClicked = true;
                         Timer(const Duration(seconds: 1), () {
                           if (coins >= 30) {
@@ -146,14 +163,6 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
     }
   }
 
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
-    setState(() {
-      coins = _coins;
-    });
-  }
-
   void endGame() {
     _timer2.cancel();
     _timer.cancel();
@@ -173,7 +182,6 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            getCoins();
             isClicked = true;
             Timer(const Duration(seconds: 1), () {
               if (coins >= 30) {
@@ -206,6 +214,7 @@ class _HabitsState extends State<Habits> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    getUser();
     super.initState();
     randomElementFunc();
     WidgetsBinding.instance.addObserver(this);

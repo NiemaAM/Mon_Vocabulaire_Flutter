@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/View/Account/avatars.dart';
@@ -25,10 +26,18 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   final TextEditingController _TextController = TextEditingController();
+  RealtimeDataController controller = RealtimeDataController();
   int size = 0;
   final ImagePicker _picker = ImagePicker();
   File? _image;
   String path_image = '';
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   Future<String> saveimage(File imageFile) async {
     final directory = await getApplicationDocumentsDirectory();

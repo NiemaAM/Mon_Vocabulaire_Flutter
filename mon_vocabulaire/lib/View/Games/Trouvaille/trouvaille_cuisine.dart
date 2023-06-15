@@ -2,7 +2,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -57,6 +57,25 @@ class _CuisineState extends State<Cuisine> with WidgetsBindingObserver {
     'Une casserole',
     'Un balai'
   ];
+
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
+    setState(() {
+      coins = user!.coins;
+    });
+  }
+
   String randomcuisineFunc() {
     cuisine_.shuffle();
 
@@ -105,7 +124,6 @@ class _CuisineState extends State<Cuisine> with WidgetsBindingObserver {
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        getCoins();
                         isClicked = true;
                         Timer(const Duration(seconds: 1), () {
                           if (coins >= 30) {
@@ -145,14 +163,6 @@ class _CuisineState extends State<Cuisine> with WidgetsBindingObserver {
     }
   }
 
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
-    setState(() {
-      coins = _coins;
-    });
-  }
-
   void endGame() {
     _timer2.cancel();
     _timer.cancel();
@@ -172,7 +182,6 @@ class _CuisineState extends State<Cuisine> with WidgetsBindingObserver {
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            getCoins();
             isClicked = true;
             Timer(const Duration(seconds: 1), () {
               if (coins >= 30) {
@@ -205,6 +214,7 @@ class _CuisineState extends State<Cuisine> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    getUser();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     randomcuisineFunc();

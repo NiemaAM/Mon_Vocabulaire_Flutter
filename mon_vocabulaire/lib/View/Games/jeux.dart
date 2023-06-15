@@ -1,7 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/View/Games/TicTacToe/choose_xo.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:mon_vocabulaire/View/Games/flip_card.dart';
@@ -23,18 +23,27 @@ class Games extends StatefulWidget {
 
 class _GamesState extends State<Games> {
   int coins = -1;
-  Future<void> getCoins() async {
-    DatabaseHelper();
-    User _user = await DatabaseHelper().getUser(widget.user.id!);
+  RealtimeDataController controller = RealtimeDataController();
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
     setState(() {
-      coins = _user.coins;
+      coins = user!.coins;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    getCoins();
+    getUser();
     return Scaffold(
         backgroundColor: Palette.lightBlue,
         appBar: CustomAppBarGames(

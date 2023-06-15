@@ -19,6 +19,13 @@ class _SplashScreenState extends State<SplashScreen> {
   double _opacity = 0;
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -28,12 +35,19 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
+  late Timer timer;
   void goHome() {
-    Timer(const Duration(seconds: 3), () {
+    timer = Timer(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         SlideButtom(page: const FirstSceen()),
       );
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 
   @override

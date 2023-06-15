@@ -6,6 +6,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:maze/maze.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
@@ -25,6 +26,13 @@ class _MazePuzzleState extends State<MazePuzzle> {
   late ConfettiController _controllerConfetti;
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
     DatabaseHelper().substractCoins(widget.user.id!, 20);
@@ -32,11 +40,13 @@ class _MazePuzzleState extends State<MazePuzzle> {
         ConfettiController(duration: const Duration(seconds: 1));
   }
 
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
     setState(() {
-      coins = _coins;
+      coins = user!.coins;
     });
   }
 
@@ -111,7 +121,7 @@ class _MazePuzzleState extends State<MazePuzzle> {
                               Navigator.pop(context);
                             },
                             onButton2Pressed: () {
-                              getCoins();
+                              getUser();
                               isClicked = true;
                               Timer(const Duration(seconds: 1), () {
                                 if (coins >= 20) {

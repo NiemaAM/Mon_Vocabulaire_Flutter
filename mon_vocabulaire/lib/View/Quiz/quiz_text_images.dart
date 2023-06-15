@@ -19,7 +19,14 @@ import '../../Widgets/button.dart';
 class QuizTextImages extends StatefulWidget {
   final int subTheme;
   final User user;
-  const QuizTextImages({super.key, required this.subTheme, required this.user});
+  final bool finished;
+  final int part;
+  const QuizTextImages(
+      {super.key,
+      required this.subTheme,
+      required this.user,
+      required this.finished,
+      required this.part});
 
   @override
   State<QuizTextImages> createState() => _QuizTextImagesState();
@@ -42,6 +49,13 @@ class _QuizTextImagesState extends State<QuizTextImages> {
   String response = '';
   bool quizEnded = false;
   late ConfettiController _controllerConfetti;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   getTheme() {
     switch (widget.subTheme) {
@@ -123,8 +137,10 @@ class _QuizTextImagesState extends State<QuizTextImages> {
 
   int duration = 30;
   int time = 30;
+  late Timer timer;
+  late Timer timer2;
   void startTimer() {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (questions.isNotEmpty) {
         setState(() {
           if (duration > 0 && !quizEnded) {
@@ -152,8 +168,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
 
   bool first = true;
   getQuestions() async {
-    List<Proposition> quest = await quizModel.getRandomPropositions(
-        theme, subTheme, widget.user, widget.subTheme);
+    List<Proposition> quest = await quizModel.getRandomPropositions(theme,
+        subTheme, widget.user, widget.subTheme, widget.finished, widget.part);
     setState(() {
       questions = quest;
     });
@@ -223,6 +239,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return QuizPopup(
+            part: widget.part,
             chances: chances,
             subThemeId: widget.subTheme,
             words: size,
@@ -239,6 +256,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                   page: QuizImageTexts(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: widget.finished,
+                    part: widget.part,
                   ),
                 ),
               );
@@ -251,6 +270,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                   builder: (context) => LessonPage(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: widget.finished,
+                    part: widget.part,
                   ),
                 ),
               );
@@ -269,6 +290,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return QuizPopup(
+            part: widget.part,
             chances: chances,
             user: widget.user,
             words: size,
@@ -286,6 +308,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                   page: QuizImageTexts(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: widget.finished,
+                    part: widget.part,
                   ),
                 ),
               );
@@ -298,6 +322,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                   builder: (context) => LessonPage(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: widget.finished,
+                    part: widget.part,
                   ),
                 ),
               );
@@ -339,10 +365,10 @@ class _QuizTextImagesState extends State<QuizTextImages> {
 
   @override
   void initState() {
-    super.initState();
-    AudioBK.pauseBK();
     getTheme();
     getQuestions();
+    super.initState();
+    AudioBK.pauseBK();
     startTimer();
     _controllerConfetti =
         ConfettiController(duration: const Duration(seconds: 1));
@@ -353,6 +379,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
     super.dispose();
     Sfx.play("audios/sfx/pop.mp3", 1);
     AudioBK.playBK();
+    timer.cancel();
+    timer2.cancel();
   }
 
   @override
@@ -540,7 +568,8 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                       ),
                                     ));
                                     Sfx.play("audios/sfx/ding.mp3", 1);
-                                    Timer(const Duration(seconds: 1), () {
+                                    timer2 =
+                                        Timer(const Duration(seconds: 1), () {
                                       nextQuestion();
                                       setState(() {
                                         duration = 30;

@@ -6,6 +6,7 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
@@ -47,6 +48,13 @@ class _FlipCardGameState extends State<FlipCardGame>
 
   late ConfettiController _controllerConfetti;
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   List<int> getRandomCards() {
     List<int> cardImage = [];
     while (cardImage.length < 12) {
@@ -87,11 +95,13 @@ class _FlipCardGameState extends State<FlipCardGame>
     }
   }
 
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
     setState(() {
-      coins = _coins;
+      coins = user!.coins;
     });
   }
 
@@ -112,7 +122,7 @@ class _FlipCardGameState extends State<FlipCardGame>
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            getCoins();
+            getUser();
             isClicked = true;
             Timer(const Duration(seconds: 1), () {
               if (coins >= 10) {

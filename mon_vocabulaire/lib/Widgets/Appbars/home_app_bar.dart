@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/View/Account/profil.dart';
@@ -30,29 +30,26 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
   bool state = false;
 
   int _words = 0;
-  String image = 'assets/images/avatars/user.png';
-  Future<void> getImage() async {
-    DatabaseHelper();
-    String _image = await DatabaseHelper().getImage(widget.user.id!);
-    setState(() {
-      image = _image;
-    });
-  }
-
-  Future<void> calculateResult() async {
-    DatabaseHelper();
-    int words = await DatabaseHelper().getAllProgression(widget.user.id);
-    setState(() {
-      _words = words;
-    });
-  }
-
   int coins = 0;
-  Future<void> getCoins() async {
-    DatabaseHelper();
-    User _user = await DatabaseHelper().getUser(widget.user.id!);
+  String image = 'assets/images/avatars/user.png';
+  RealtimeDataController controller = RealtimeDataController();
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
+    await controller.getAllWords(widget.user.id!);
+    int? totalWords = controller.words;
     setState(() {
-      coins = _user.coins;
+      image = user!.image;
+      coins = user.coins;
+      _words = totalWords!;
     });
   }
 
@@ -68,11 +65,14 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    calculateResult();
-    getCoins();
-    getImage();
+    getUser();
     return Stack(
       children: [
         const SizedBox(
@@ -107,7 +107,7 @@ class _CustomAppBarHomeState extends State<CustomAppBarHome> {
                   child: SizedBox(),
                 ),
                 Text(
-                  "${coins.toString()} ",
+                  coins < 999 ? "${coins.toString()} " : "999 ",
                   style: const TextStyle(
                       color: Palette.white,
                       fontSize: 16,

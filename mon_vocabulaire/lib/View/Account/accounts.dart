@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 
 import 'package:mon_vocabulaire/View/Account/create_account.dart';
@@ -20,21 +20,20 @@ class Accounts extends StatefulWidget {
 
 class _AccountsState extends State<Accounts> {
   List<User> users = []; // List to store retrieved users
+  RealtimeDataController controller = RealtimeDataController();
 
   @override
-  void initState() {
-    super.initState();
-    fetchUsers(); // Fetch users when the widget is initialized
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
   }
 
   Future<void> fetchUsers() async {
-    // Fetch users from the database
-    List<User> fetchedUsers = await DatabaseHelper().getAllUsers();
+    await controller.getAllUsers();
+    List<User> allUsers = controller.users;
     setState(() {
-      users = fetchedUsers;
-      // Update the state with the fetched users
-      // You can assign the fetched users to a class variable for further use
-      // For example: this.users = users;
+      users = allUsers;
     });
   }
 

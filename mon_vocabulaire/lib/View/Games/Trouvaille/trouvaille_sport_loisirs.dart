@@ -1,9 +1,8 @@
 // ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
@@ -61,6 +60,24 @@ class _SportLoisirsState extends State<SportLoisirs>
     'Un ping pong',
     'Un vélo'
   ];
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
+    setState(() {
+      coins = user!.coins;
+    });
+  }
+
   String randomcuisineFunc() {
     sport_.shuffle();
 
@@ -110,7 +127,6 @@ class _SportLoisirsState extends State<SportLoisirs>
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        getCoins();
                         isClicked = true;
                         Timer(const Duration(seconds: 1), () {
                           if (coins >= 30) {
@@ -150,14 +166,6 @@ class _SportLoisirsState extends State<SportLoisirs>
     }
   }
 
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
-    setState(() {
-      coins = _coins;
-    });
-  }
-
   void endGame() {
     _timer2.cancel();
     _timer.cancel();
@@ -177,7 +185,6 @@ class _SportLoisirsState extends State<SportLoisirs>
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            getCoins();
             isClicked = true;
             Timer(const Duration(seconds: 1), () {
               if (coins >= 30) {
@@ -210,6 +217,7 @@ class _SportLoisirsState extends State<SportLoisirs>
 
   @override
   void initState() {
+    getUser();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     randomcuisineFunc();

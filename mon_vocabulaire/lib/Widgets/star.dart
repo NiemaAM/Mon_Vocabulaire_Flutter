@@ -12,35 +12,43 @@ class Star extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        width: width > 500 ? 100 : 80,
-        height: width > 500 ? 50 : 40,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(50),
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 20, bottom: 5),
+        child: Container(
+          width: width > 500 ? 100 : 50,
+          height: width > 500 ? 50 : 50,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+            color: Palette.yellow,
           ),
-          color: Palette.yellow,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Expanded(child: SizedBox()),
-            Icon(
-              Icons.star_rounded,
-              color: const Color.fromARGB(255, 241, 152, 0),
-              size: width < 500 ? 30 : 45,
-            ),
-            Text(
-              " $nbStar",
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: Color.fromARGB(255, 241, 152, 0)),
-            ),
-            const Expanded(flex: 2, child: SizedBox()),
-          ],
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Icon(
+                  Icons.star_rounded,
+                  color: const Color.fromARGB(255, 241, 152, 0),
+                  size: width < 500 ? 50 : 45,
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Text(
+                    "$nbStar",
+                    style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: Palette.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

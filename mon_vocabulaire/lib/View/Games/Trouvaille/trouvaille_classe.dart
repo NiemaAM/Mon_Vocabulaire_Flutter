@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -57,6 +57,25 @@ class _ClassRoomState extends State<ClassRoom> with WidgetsBindingObserver {
     'Une chaise': "21.mp3",
     'Une table': "14.mp3",
   };
+
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
+    setState(() {
+      coins = user!.coins;
+    });
+  }
+
   String randomElementFunc() {
     School.shuffle();
 
@@ -106,7 +125,6 @@ class _ClassRoomState extends State<ClassRoom> with WidgetsBindingObserver {
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        getCoins();
                         isClicked = true;
                         Timer(const Duration(seconds: 1), () {
                           if (coins >= 30) {
@@ -146,14 +164,6 @@ class _ClassRoomState extends State<ClassRoom> with WidgetsBindingObserver {
     }
   }
 
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
-    setState(() {
-      coins = _coins;
-    });
-  }
-
   void endGame() {
     _timer2.cancel();
     _timer.cancel();
@@ -173,7 +183,6 @@ class _ClassRoomState extends State<ClassRoom> with WidgetsBindingObserver {
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            getCoins();
             isClicked = true;
             Timer(const Duration(seconds: 1), () {
               if (coins >= 30) {
@@ -206,6 +215,7 @@ class _ClassRoomState extends State<ClassRoom> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    getUser();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     randomElementFunc();

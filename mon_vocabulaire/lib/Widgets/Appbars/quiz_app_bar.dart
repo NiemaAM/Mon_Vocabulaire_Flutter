@@ -1,7 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -28,17 +28,25 @@ class QuizAppBar extends StatefulWidget {
 
 class _QuizAppBarState extends State<QuizAppBar> {
   int coins = 0;
-  Future<void> getCoins() async {
-    DatabaseHelper();
-    User _user = await DatabaseHelper().getUser(widget.user.id!);
+  RealtimeDataController controller = RealtimeDataController();
+  getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
     setState(() {
-      coins = _user.coins;
+      coins = user!.coins;
     });
   }
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    getCoins();
+    getUser();
     return Stack(
       children: [
         Align(
@@ -119,7 +127,7 @@ class _QuizAppBarState extends State<QuizAppBar> {
                   Row(
                     children: [
                       Text(
-                        coins.toString(),
+                        coins < 999 ? "${coins.toString()} " : "999 ",
                         style: const TextStyle(
                             color: Palette.indigo,
                             fontSize: 18,

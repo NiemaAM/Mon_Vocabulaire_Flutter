@@ -1,16 +1,15 @@
 // ignore_for_file: deprecated_member_use, no_leading_underscores_for_local_identifiers
-
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/View/Quiz/lesson.dart';
 import 'package:mon_vocabulaire/View/Quiz/quiz_text_images.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/palette.dart';
+import 'package:scroll_snap_list/scroll_snap_list.dart';
 import '../../Services/sfx.dart';
 import '../Quiz/drag_and_drop.dart';
 import '../Quiz/quiz_image_texts.dart';
@@ -30,19 +29,41 @@ class _LessonPathState extends State<LessonPath> {
   String title = "";
   String image = "";
   int userProg = -1;
+  int _currentIndex = 0;
+  RealtimeDataController controller = RealtimeDataController();
 
-  Future<void> getQuiz() async {
-    Progression _userProg =
-        await DatabaseHelper().getProgression(widget.user.id!, widget.subTheme);
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  getQuiz() async {
+    await controller.getProgression(widget.user.id!, widget.subTheme);
+    Progression? progression = controller.progression;
     setState(() {
-      userProg = _userProg.quiz;
+      userProg = progression!.quiz;
+    });
+  }
+
+  bool finished = false;
+  int part = -1;
+  Future getFinished() async {
+    bool _finished =
+        await DatabaseHelper().getFinished(widget.user.id!, widget.subTheme);
+    int _part =
+        await DatabaseHelper().getPart(widget.user.id!, widget.subTheme);
+    setState(() {
+      finished = _finished;
+      part = _part;
     });
   }
 
   @override
   void initState() {
+    getFinished();
     super.initState();
-    getQuiz();
     switch (widget.subTheme) {
       case 1:
         image = "assets/images/themes/elements.png";
@@ -126,14 +147,12 @@ class _LessonPathState extends State<LessonPath> {
     Sfx.play("audios/sfx/pop.mp3", 1);
   }
 
-  final PageController _pageController = PageController();
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     getQuiz();
+    getFinished();
     List<Widget> elements = [
       // Element 1
       Column(
@@ -147,6 +166,8 @@ class _LessonPathState extends State<LessonPath> {
                   builder: (context) => QuizTextImages(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: finished,
+                    part: part,
                   ),
                 ),
               );
@@ -210,6 +231,8 @@ class _LessonPathState extends State<LessonPath> {
                   builder: (context) => QuizImageTexts(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: finished,
+                    part: part,
                   ),
                 ),
               );
@@ -273,6 +296,8 @@ class _LessonPathState extends State<LessonPath> {
                   builder: (context) => DragAndDrop(
                     subTheme: widget.subTheme,
                     user: widget.user,
+                    finished: finished,
+                    part: part,
                   ),
                 ),
               );
@@ -326,7 +351,7 @@ class _LessonPathState extends State<LessonPath> {
     ];
 
     return Scaffold(
-      body: userProg == -1
+      body: userProg == -1 || part == -1
           ? Stack(
               children: [
                 SvgPicture.asset(
@@ -371,6 +396,8 @@ class _LessonPathState extends State<LessonPath> {
                               builder: (context) => LessonPage(
                                 subTheme: widget.subTheme,
                                 user: widget.user,
+                                finished: finished,
+                                part: part,
                               ),
                             ),
                           );
@@ -408,6 +435,8 @@ class _LessonPathState extends State<LessonPath> {
                                         builder: (context) => LessonPage(
                                           subTheme: widget.subTheme,
                                           user: widget.user,
+                                          finished: finished,
+                                          part: part,
                                         ),
                                       ),
                                     );
@@ -457,47 +486,23 @@ class _LessonPathState extends State<LessonPath> {
                       children: [
                         SizedBox(
                           height: height / 2.2,
-                          child: PageView.builder(
-                            controller: _pageController,
-                            itemCount: elements.length,
-                            onPageChanged: (index) {
-                              setState(() {
-                                _currentIndex = index;
-                              });
-                            },
-                            itemBuilder: (context, index) {
-                              double scale = max(0.85,
-                                  1 - (index - _currentIndex).abs() * 0.15);
-                              double opacity = max(
-                                  0.5, 1 - (index - _currentIndex).abs() * 0.5);
-
-                              // Adjust the padding based on the current index
-                              EdgeInsets padding = EdgeInsets.only(
-                                left: index == _currentIndex ? 0 : 5,
-                                right: index == _currentIndex ? 0 : 5,
-                              );
-
-                              // Adjust the alignment based on the current index
-                              Alignment alignment = index == _currentIndex
-                                  ? Alignment.center
-                                  : index > _currentIndex
-                                      ? Alignment.centerLeft
-                                      : Alignment.centerRight;
-
-                              return Padding(
-                                padding: padding,
-                                child: Align(
-                                  alignment: alignment,
-                                  child: Transform.scale(
-                                    scale: scale,
-                                    child: Opacity(
-                                      opacity: opacity,
-                                      child: elements[_currentIndex],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                          child: Center(
+                            child: ScrollSnapList(
+                              duration: 1000,
+                              onItemFocus: (index) {
+                                setState(() {
+                                  _currentIndex = index;
+                                });
+                              },
+                              itemSize: 200,
+                              itemBuilder: (BuildContext context, int index) {
+                                return elements[index];
+                              },
+                              initialIndex: userProg.toDouble() - 1,
+                              dynamicItemSize: true,
+                              shrinkWrap: true,
+                              itemCount: elements.length,
+                            ),
                           ),
                         ),
                         Row(

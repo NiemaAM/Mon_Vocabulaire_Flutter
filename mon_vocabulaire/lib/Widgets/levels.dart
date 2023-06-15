@@ -13,9 +13,17 @@ class Levels extends StatefulWidget {
 
 class _LevelsState extends State<Levels> {
   int result = 0;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   int calculateResult() {
     DatabaseHelper();
-    DatabaseHelper().getAllProgression(widget.user.id);
+    DatabaseHelper().getAllWords(widget.user.id);
     return result;
   }
 

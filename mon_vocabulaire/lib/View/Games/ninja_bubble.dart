@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
@@ -69,6 +70,13 @@ class _NinjaBubbleState extends State<NinjaBubble>
 
   final List<String> _bubbleImages =
       List.generate(241, (index) => '${index + 1}.png');
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   void initState() {
@@ -246,11 +254,13 @@ class _NinjaBubbleState extends State<NinjaBubble>
     );
   }
 
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
     setState(() {
-      coins = _coins;
+      coins = user!.coins;
     });
   }
 
@@ -269,7 +279,7 @@ class _NinjaBubbleState extends State<NinjaBubble>
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            getCoins();
+            getUser();
             isClicked = true;
             Timer(const Duration(seconds: 1), () {
               if (coins >= 30) {

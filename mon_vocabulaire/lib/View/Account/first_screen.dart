@@ -20,10 +20,6 @@ class _FirstSceenState extends State<FirstSceen> {
   Color color = Palette.white;
   Color color2 = Palette.white;
   List<String> titles = ["", ""];
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

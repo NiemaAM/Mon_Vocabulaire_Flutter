@@ -42,7 +42,6 @@ dependencies:
   flutter_svg: ^2.0.5
   audioplayers: ^4.0.1
   provider: ^6.0.5
-  awesome_dialog: ^3.0.2
   confetti: ^0.7.0
   animator: ^3.2.0
   flip_card: ^0.7.0
@@ -51,6 +50,7 @@ dependencies:
   maze: ^3.0.0
   ionicons: ^0.2.2
   sqflite: ^2.2.8+4
+  scroll_snap_list: ^0.9.1
 
 dev_dependencies:
   flutter_test:

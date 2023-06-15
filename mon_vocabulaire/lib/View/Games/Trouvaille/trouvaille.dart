@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
 import 'package:mon_vocabulaire/Services/sfx.dart';
 import 'package:mon_vocabulaire/Services/voice.dart';
@@ -38,6 +38,14 @@ class _TrouvailleState extends State<Trouvaille> with WidgetsBindingObserver {
     "assets/images/themes/sports_et_loisirs.png",
   ];
   int random = 10;
+  RealtimeDataController controller = RealtimeDataController();
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   void initState() {
@@ -108,7 +116,7 @@ class _TrouvailleState extends State<Trouvaille> with WidgetsBindingObserver {
                   } else {
                     random = (index * 2) + rnd.nextInt(2);
                   }
-                  DatabaseHelper().substractCoins(widget.user.id!, 30);
+                  controller.substractCoins(widget.user.id!, 30);
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => pages[random]),

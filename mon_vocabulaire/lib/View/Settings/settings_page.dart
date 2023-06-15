@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Themes/theme_provider.dart';
 import 'package:mon_vocabulaire/Services/local_notification_service.dart';
 import 'package:mon_vocabulaire/View/Account/first_screen.dart';
@@ -49,6 +50,13 @@ class _SettingsPageState extends State<SettingsPage> {
       LocalNotificationService();
 
   ThemeProvider theme = ThemeProvider();
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   Future<void> getTheme() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -206,7 +214,6 @@ class _SettingsPageState extends State<SettingsPage> {
     getVoiceVolume();
     getTheme();
     loadCaptchaData();
-    getUser();
   }
 
   @override
@@ -218,12 +225,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
   String image = '';
   String name = '';
+  RealtimeDataController controller = RealtimeDataController();
   Future<void> getUser() async {
-    DatabaseHelper();
-    User _user = await DatabaseHelper().getUser(widget.user.id!);
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
     setState(() {
-      image = _user.image;
-      name = _user.name;
+      image = user!.image;
+      name = user.name;
     });
   }
 

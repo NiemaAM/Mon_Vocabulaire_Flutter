@@ -28,9 +28,16 @@ class LevelBloc extends StatefulWidget {
 class _LevelBlocState extends State<LevelBloc> {
   int result = 0;
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   Future<void> calculateResult() async {
     DatabaseHelper();
-    int _words = await DatabaseHelper().getAllProgression(widget.user.id);
+    int _words = await DatabaseHelper().getAllWords(widget.user.id);
     setState(() {
       result = _words;
     });

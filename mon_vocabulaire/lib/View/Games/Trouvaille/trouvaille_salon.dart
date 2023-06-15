@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
@@ -55,6 +55,24 @@ class _SalonState extends State<Salon> with WidgetsBindingObserver {
     "Une maman": "63.mp3",
     "Un bébé": "55.mp3",
   };
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
+    setState(() {
+      coins = user!.coins;
+    });
+  }
+
   String randomElementFunc() {
     Room.shuffle();
 
@@ -104,7 +122,6 @@ class _SalonState extends State<Salon> with WidgetsBindingObserver {
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        getCoins();
                         isClicked = true;
                         Timer(const Duration(seconds: 1), () {
                           if (coins >= 30) {
@@ -144,14 +161,6 @@ class _SalonState extends State<Salon> with WidgetsBindingObserver {
     }
   }
 
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
-    setState(() {
-      coins = _coins;
-    });
-  }
-
   void endGame() {
     _timer2.cancel();
     _timer.cancel();
@@ -171,7 +180,6 @@ class _SalonState extends State<Salon> with WidgetsBindingObserver {
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            getCoins();
             isClicked = true;
             Timer(const Duration(seconds: 1), () {
               if (coins >= 30) {
@@ -204,6 +212,7 @@ class _SalonState extends State<Salon> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    getUser();
     super.initState();
     randomElementFunc();
     WidgetsBinding.instance.addObserver(this);

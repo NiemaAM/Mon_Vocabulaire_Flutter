@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/View/Games/Trouvaille/trouvaille.dart';
 
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -46,6 +46,24 @@ class _FermeState extends State<Ferme> with WidgetsBindingObserver {
     'Une poule': "127.mp3",
     'Un mouton': "144.mp3"
   };
+
+  int coins = -1;
+  RealtimeDataController controller = RealtimeDataController();
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
+    setState(() {
+      coins = user!.coins;
+    });
+  }
 
   String randomElementFunc() {
     animals.shuffle();
@@ -95,7 +113,6 @@ class _FermeState extends State<Ferme> with WidgetsBindingObserver {
                         Navigator.pop(context);
                       },
                       onButton2Pressed: () {
-                        getCoins();
                         isClicked = true;
                         Timer(const Duration(seconds: 1), () {
                           if (coins >= 30) {
@@ -135,14 +152,6 @@ class _FermeState extends State<Ferme> with WidgetsBindingObserver {
     }
   }
 
-  int coins = 0;
-  Future<void> getCoins() async {
-    int _coins = await DatabaseHelper().getCoins(widget.user.id!);
-    setState(() {
-      coins = _coins;
-    });
-  }
-
   void endGame() {
     _timer2.cancel();
     _timer.cancel();
@@ -162,7 +171,6 @@ class _FermeState extends State<Ferme> with WidgetsBindingObserver {
             Navigator.pop(context);
           },
           onButton2Pressed: () {
-            getCoins();
             isClicked = true;
             Timer(const Duration(seconds: 1), () {
               if (coins >= 30) {
@@ -195,6 +203,7 @@ class _FermeState extends State<Ferme> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    getUser();
     super.initState();
     randomElementFunc();
     WidgetsBinding.instance.addObserver(this);

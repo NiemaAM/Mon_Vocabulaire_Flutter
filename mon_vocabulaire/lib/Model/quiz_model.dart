@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 
 class Lesson {
@@ -65,20 +64,31 @@ class QuizModel {
   List<String> lettresProposition = [];
   List<String> lettresQuestion = [];
   int part = 1;
+  bool finished = false;
 
-  Future<List<Lesson>> getLesson(
-      String theme, String subtheme, User user, int subThemeId) async {
-    int _part = await DatabaseHelper().getPart(user.id!, subThemeId);
-    part = _part;
-    // Load the JSON data from the asset file
-    String jsonStr = await rootBundle.loadString('assets/data/data.json');
+//LESSON
+  Future<List<Lesson>> getLesson(String theme, String subtheme, User user,
+      int subThemeId, bool _finished, int _part) async {
+    Map<String, dynamic> elementsMap;
+    if (_finished) {
+      // Load the JSON data from the asset file
+      String jsonStr =
+          await rootBundle.loadString('assets/data/data_no_part.json');
+      // Parse the JSON string to a map
+      Map<String, dynamic> jsonMap = json.decode(jsonStr);
+      // Get the map of elements
+      elementsMap = jsonMap[theme][subtheme];
+      size = elementsMap.length;
+    } else {
+      // Load the JSON data from the asset file
+      String jsonStr = await rootBundle.loadString('assets/data/data.json');
+      // Parse the JSON string to a map
+      Map<String, dynamic> jsonMap = json.decode(jsonStr);
+      // Get the map of elements
+      elementsMap = jsonMap[theme][subtheme]["p$_part"];
+      size = elementsMap.length;
+    }
 
-    // Parse the JSON string to a map
-    Map<String, dynamic> jsonMap = json.decode(jsonStr);
-
-    // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$_part"];
-    size = elementsMap.length;
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
         elementsMap.values.map((valueMap) => valueMap['mot']).toList();
@@ -105,19 +115,28 @@ class QuizModel {
     return lesson;
   }
 
+//QUIZ 3
   Future<PropositionLettres> getRandomLettres(
       String theme, String subtheme, User user, int subThemeId) async {
-    int _part = await DatabaseHelper().getPart(user.id!, subThemeId);
-    part = _part;
-    // Load the JSON data from the asset file
-    String jsonStr = await rootBundle.loadString('assets/data/data.json');
-
-    // Parse the JSON string to a map
-    Map<String, dynamic> jsonMap = json.decode(jsonStr);
-
-    // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$_part"];
-    size = elementsMap.length;
+    Map<String, dynamic> elementsMap;
+    if (finished) {
+      // Load the JSON data from the asset file
+      String jsonStr =
+          await rootBundle.loadString('assets/data/data_no_part.json');
+      // Parse the JSON string to a map
+      Map<String, dynamic> jsonMap = json.decode(jsonStr);
+      // Get the map of elements
+      elementsMap = jsonMap[theme][subtheme];
+      size = elementsMap.length;
+    } else {
+      // Load the JSON data from the asset file
+      String jsonStr = await rootBundle.loadString('assets/data/data.json');
+      // Parse the JSON string to a map
+      Map<String, dynamic> jsonMap = json.decode(jsonStr);
+      // Get the map of elements
+      elementsMap = jsonMap[theme][subtheme]["p$part"];
+      size = elementsMap.length;
+    }
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
         elementsMap.values.map((valueMap) => valueMap['mot']).toList();
@@ -176,7 +195,14 @@ class QuizModel {
   }
 
   Future<List<PropositionLettres>> getRandomPropositionsLettres(
-      String theme, String subtheme, User user, int subThemeId) async {
+      String theme,
+      String subtheme,
+      User user,
+      int subThemeId,
+      bool _finished,
+      int _part) async {
+    finished = _finished;
+    part = _part;
     List<PropositionLettres> prop = [];
     Set<String> uniqueValues = <String>{};
     PropositionLettres prop1;
@@ -193,88 +219,33 @@ class QuizModel {
     return prop;
   }
 
-  Future<void> getRandomWords(
-      String theme, String subtheme, User user, int subThemeId) async {
-    int _part = await DatabaseHelper().getPart(user.id!, subThemeId);
-    part = _part;
-    // Load the JSON data from the asset file
-    String jsonStr = await rootBundle.loadString('assets/data/data.json');
-
-    // Parse the JSON string to a map
-    Map<String, dynamic> jsonMap = json.decode(jsonStr);
-
-    // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$_part"];
-
-    // Get a list of the 'mot' values from the elements map
-    List<dynamic> motList =
-        elementsMap.values.map((valueMap) => valueMap['mot']).toList();
-
-    // Get a list of the 'article' values from the elements map
-    List<dynamic> articleList =
-        elementsMap.values.map((valueMap) => valueMap['article']).toList();
-
-    // Get a list of the 'code' values from the elements map
-    List<dynamic> codeList =
-        elementsMap.values.map((valueMap) => valueMap['code']).toList();
-
-    Random random = Random();
-    Set<int> randomNumbers = {};
-    while (randomNumbers.length < 4) {
-      randomNumbers.add(random.nextInt(motList.length));
-    }
-    List<int> randomNumberList = randomNumbers.toList();
-    int randomNumber1 = randomNumberList[0];
-    int randomNumber2 = randomNumberList[1];
-    int randomNumber3 = randomNumberList[2];
-    int randomNumber4 = randomNumberList[3];
-
-    propositions[0] = motList[randomNumber1];
-    propositions[1] = motList[randomNumber2];
-    propositions[2] = motList[randomNumber3];
-    propositions[3] = motList[randomNumber4];
-    List<int> code = [
-      codeList[randomNumber1],
-      codeList[randomNumber2],
-      codeList[randomNumber3],
-      codeList[randomNumber4]
-    ];
-    List<String> articles = [
-      articleList[randomNumber1],
-      articleList[randomNumber2],
-      articleList[randomNumber3],
-      articleList[randomNumber4]
-    ];
-    propositionsImages[0] = "assets/images/pics/${code[0]}.png";
-    propositionsImages[1] = "assets/images/pics/${code[1]}.png";
-    propositionsImages[2] = "assets/images/pics/${code[2]}.png";
-    propositionsImages[3] = "assets/images/pics/${code[3]}.png";
-
-    int randomNumber5 = random.nextInt(4);
-    reponse[0] = "audios/voices/${code[randomNumber5]}.mp3";
-    reponse[1] = "assets/images/pics/${code[randomNumber5]}.png";
-    reponse[2] = articles[randomNumber5];
-    reponse[3] = propositions[randomNumber5];
-  }
-
+//QUIZ 1 & 2
   Future<Proposition> getRandomProps(
       String theme, String subtheme, User user, int subThemeId) async {
-    int _part = await DatabaseHelper().getPart(user.id!, subThemeId);
-    part = _part;
     Proposition proposition = Proposition(
         propositions: ["", "", "", ""],
         propositionsImages: ["", "", "", ""],
         reponse: ["", "", "", ""]);
-    // Load the JSON data from the asset file
-    String jsonStr = await rootBundle.loadString('assets/data/data.json');
 
-    // Parse the JSON string to a map
-    Map<String, dynamic> jsonMap = json.decode(jsonStr);
-
-    // Get the map of elements
-    Map<String, dynamic> elementsMap = jsonMap[theme][subtheme]["p$_part"];
-
-    size = elementsMap.length;
+    Map<String, dynamic> elementsMap;
+    if (finished) {
+      // Load the JSON data from the asset file
+      String jsonStr =
+          await rootBundle.loadString('assets/data/data_no_part.json');
+      // Parse the JSON string to a map
+      Map<String, dynamic> jsonMap = json.decode(jsonStr);
+      // Get the map of elements
+      elementsMap = jsonMap[theme][subtheme];
+      size = elementsMap.length;
+    } else {
+      // Load the JSON data from the asset file
+      String jsonStr = await rootBundle.loadString('assets/data/data.json');
+      // Parse the JSON string to a map
+      Map<String, dynamic> jsonMap = json.decode(jsonStr);
+      // Get the map of elements
+      elementsMap = jsonMap[theme][subtheme]["p$part"];
+      size = elementsMap.length;
+    }
 
     // Get a list of the 'mot' values from the elements map
     List<dynamic> motList =
@@ -335,8 +306,10 @@ class QuizModel {
     return proposition;
   }
 
-  Future<List<Proposition>> getRandomPropositions(
-      String theme, String subtheme, User user, int subThemeId) async {
+  Future<List<Proposition>> getRandomPropositions(String theme, String subtheme,
+      User user, int subThemeId, bool _finished, int _part) async {
+    finished = _finished;
+    part = _part;
     List<Proposition> prop = [];
     Set<String> uniqueValues = <String>{};
     Proposition prop1;

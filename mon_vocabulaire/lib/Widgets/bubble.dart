@@ -48,6 +48,7 @@ class _BubbleState extends State<Bubble> {
       children: [
         SizedBox(
           height: width > 500 ? 230 : 155,
+          width: width < 500 ? width / 2.2 : 220,
           child: Stack(
             children: [
               Align(

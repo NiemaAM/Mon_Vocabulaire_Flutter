@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mon_vocabulaire/Controller/db_new.dart';
+import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
 import 'package:mon_vocabulaire/Widgets/levels.dart';
@@ -16,21 +16,24 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
-  String image = 'assets/images/avatars/user.png';
+  String image = '';
   String name = '';
-  Future<void> getUser() async {
-    DatabaseHelper();
-    User user = await DatabaseHelper().getUser(widget.user.id!);
-    setState(() {
-      image = user.image;
-      name = user.name;
-    });
-  }
+  RealtimeDataController controller = RealtimeDataController();
 
   @override
-  void initState() {
-    super.initState();
-    getUser();
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  Future<void> getUser() async {
+    await controller.getUser(widget.user.id!);
+    User? user = controller.user;
+    setState(() {
+      image = user!.image;
+      name = user.name;
+    });
   }
 
   @override

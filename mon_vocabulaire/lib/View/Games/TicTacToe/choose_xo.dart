@@ -3,21 +3,16 @@ import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/View/Games/TicTacToe/tic_tac_toe.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/game_app_bar.dart';
 
-class ChooseXO extends StatefulWidget {
+class ChooseXO extends StatelessWidget {
   final User user;
   const ChooseXO({super.key, required this.user});
 
-  @override
-  State<ChooseXO> createState() => _ChooseXOState();
-}
-
-class _ChooseXOState extends State<ChooseXO> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: CustomAppBarGames(
-        user: widget.user,
+        user: user,
         background: true,
       ),
       body: Center(
@@ -25,7 +20,7 @@ class _ChooseXOState extends State<ChooseXO> {
           children: [
             const Expanded(child: SizedBox()),
             Image.asset(
-              widget.user.image,
+              user.image,
               scale: 2,
             ),
             const Expanded(child: SizedBox()),
@@ -39,7 +34,7 @@ class _ChooseXOState extends State<ChooseXO> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => TicTacToe(
-                            user: widget.user,
+                            user: user,
                             player: 'X',
                             AIplayer: 'O',
                           ),
@@ -68,7 +63,7 @@ class _ChooseXOState extends State<ChooseXO> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => TicTacToe(
-                            user: widget.user,
+                            user: user,
                             player: 'O',
                             AIplayer: 'X',
                           ),
