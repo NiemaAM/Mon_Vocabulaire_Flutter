@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
 import 'package:mon_vocabulaire/Widgets/button.dart';
 import 'package:mon_vocabulaire/Widgets/Appbars/app_bar.dart';
@@ -126,19 +125,15 @@ class _AvatarsState extends State<Avatars> {
                 ))),
           ),
         ),
-        Align(
+        const Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40),
-            child: Text(
-              "Mon Vocabulaire",
-              style: GoogleFonts.acme(
-                textStyle: const TextStyle(
-                  color: Palette.lightBlue,
-                  fontSize: 30,
-                ),
-              ),
-            ),
+            padding: EdgeInsets.symmetric(vertical: 40),
+            child: Text("Mon Vocabulaire",
+                style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w700,
+                    color: Palette.lightBlue)),
           ),
         )
       ]),

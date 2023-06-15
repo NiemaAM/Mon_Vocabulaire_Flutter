@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
@@ -293,19 +292,15 @@ class _CreateAccountState extends State<CreateAccount> {
               ),
             )
           ]),
-          Align(
+          const Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40),
-              child: Text(
-                "Mon Vocabulaire",
-                style: GoogleFonts.acme(
-                  textStyle: const TextStyle(
-                    color: Palette.lightBlue,
-                    fontSize: 30,
-                  ),
-                ),
-              ),
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: Text("Mon Vocabulaire",
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      color: Palette.lightBlue)),
             ),
           )
         ],

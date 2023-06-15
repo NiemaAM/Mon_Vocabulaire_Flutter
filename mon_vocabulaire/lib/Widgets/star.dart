@@ -16,11 +16,11 @@ class Star extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(right: 20, bottom: 5),
         child: Container(
-          width: width > 500 ? 100 : 50,
-          height: width > 500 ? 50 : 50,
-          decoration: const BoxDecoration(
+          width: width > 500 ? 60 : 50,
+          height: width > 500 ? 60 : 50,
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
-              Radius.circular(20),
+              Radius.circular(width > 500 ? 25 : 20),
             ),
             color: Palette.yellow,
           ),
@@ -31,7 +31,7 @@ class Star extends StatelessWidget {
                 child: Icon(
                   Icons.star_rounded,
                   color: const Color.fromARGB(255, 241, 152, 0),
-                  size: width < 500 ? 50 : 45,
+                  size: width < 500 ? 50 : 55,
                 ),
               ),
               Align(

@@ -320,7 +320,7 @@ class _DragAndDropState extends State<DragAndDrop> {
         },
       );
     }
-    if (index == size && chances != 0) {
+    if (index == size && chances != 0 && isCorrect) {
       setState(() {
         quizEnded = true;
       });
@@ -598,7 +598,6 @@ class _DragAndDropState extends State<DragAndDrop> {
                                   endQuiz();
                                 }
                                 if (!question.contains("??")) {
-                                  endQuiz();
                                   setState(() {
                                     isCorrect = true;
                                     duration = 60;
@@ -620,11 +619,12 @@ class _DragAndDropState extends State<DragAndDrop> {
                                     });
                                   }
                                   Timer(const Duration(seconds: 1), () {
-                                    setState(() {
-                                      isCorrect = false;
-                                    });
                                     nextQuestion();
+                                    setState(() {
+                                      isCorrect = index == size;
+                                    });
                                   });
+                                  endQuiz();
                                 }
                               } else {
                                 endQuiz();

@@ -153,14 +153,28 @@ class DatabaseHelper {
     await batch.commit(noResult: true);
   }
 
-  Future substractCoins(int userId, int coins) async {
+  Future<void> substractCoins(int userId, int coins) async {
     final Database db = await database;
-    var batch = db.batch();
-    batch.rawUpdate(
-      'UPDATE User SET coins = coins - ? WHERE user_id = ?',
-      [coins, userId],
+
+    // Fetch the current user's coins
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+      'SELECT coins FROM User WHERE user_id = ?',
+      [userId],
     );
-    await batch.commit(noResult: true);
+
+    if (result.isNotEmpty) {
+      final int currentCoins = result.first['coins'];
+
+      // Check if user has enough coins
+      if (currentCoins - coins >= 0) {
+        var batch = db.batch();
+        batch.rawUpdate(
+          'UPDATE User SET coins = coins - ? WHERE user_id = ?',
+          [coins, userId],
+        );
+        await batch.commit(noResult: true);
+      }
+    }
   }
 
   Future deleteUser(int id) async {

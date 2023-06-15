@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mon_vocabulaire/Model/user_models.dart';
 import 'package:mon_vocabulaire/View/Games/TicTacToe/tic_tac_toe.dart';
@@ -19,9 +21,20 @@ class ChooseXO extends StatelessWidget {
         child: Column(
           children: [
             const Expanded(child: SizedBox()),
-            Image.asset(
-              user.image,
-              scale: 2,
+            ClipOval(
+              child: user.image.startsWith("assets")
+                  ? Image.asset(
+                      user.image,
+                      fit: BoxFit.cover,
+                      width: width / 2.5,
+                      height: width / 2.5,
+                    )
+                  : Image.file(
+                      File(user.image),
+                      fit: BoxFit.cover,
+                      width: width / 2.5,
+                      height: width / 2.5,
+                    ),
             ),
             const Expanded(child: SizedBox()),
             Center(

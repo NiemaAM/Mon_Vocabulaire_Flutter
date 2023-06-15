@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:confetti/confetti.dart';
@@ -379,9 +380,20 @@ class _TicTacToeState extends State<TicTacToe> {
                           Padding(
                             padding:
                                 EdgeInsets.only(left: width > 500 ? 50 : 0),
-                            child: Image.asset(
-                              widget.user.image,
-                              height: height / 8,
+                            child: ClipOval(
+                              child: widget.user.image.startsWith("assets")
+                                  ? Image.asset(
+                                      widget.user.image,
+                                      fit: BoxFit.cover,
+                                      width: height / 8,
+                                      height: height / 8,
+                                    )
+                                  : Image.file(
+                                      File(widget.user.image),
+                                      fit: BoxFit.cover,
+                                      width: height / 8,
+                                      height: height / 8,
+                                    ),
                             ),
                           ),
                           const Expanded(child: SizedBox()),

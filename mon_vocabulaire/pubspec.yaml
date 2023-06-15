@@ -46,7 +46,6 @@ dependencies:
   animator: ^3.2.0
   flip_card: ^0.7.0
   image: ^4.0.17
-  google_fonts: ^4.0.4
   maze: ^3.0.0
   ionicons: ^0.2.2
   sqflite: ^2.2.8+4

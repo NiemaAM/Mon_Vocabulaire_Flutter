@@ -156,6 +156,8 @@ class _LessonPathState extends State<LessonPath> {
     List<Widget> elements = [
       // Element 1
       Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Button(
             callback: () {
@@ -221,6 +223,8 @@ class _LessonPathState extends State<LessonPath> {
 
       // Element 2
       Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Button(
             callback: () {
@@ -286,6 +290,8 @@ class _LessonPathState extends State<LessonPath> {
 
       // Element 3
       Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Button(
             callback: () {
@@ -494,7 +500,7 @@ class _LessonPathState extends State<LessonPath> {
                                   _currentIndex = index;
                                 });
                               },
-                              itemSize: 200,
+                              itemSize: width > 500 ? 330 : 200,
                               itemBuilder: (BuildContext context, int index) {
                                 return elements[index];
                               },

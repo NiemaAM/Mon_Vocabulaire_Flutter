@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mon_vocabulaire/Controller/db_new.dart';
 import 'package:mon_vocabulaire/Controller/realtime_data_controller.dart';
 import 'package:mon_vocabulaire/Services/audio_background.dart';
@@ -114,15 +113,11 @@ class _PuzzleState extends State<Puzzle> {
         appBar: CustomAppBarGames(
           user: widget.user,
           background: true,
-          widgetCenter: Text(
-            timerText,
-            style: GoogleFonts.acme(
-              textStyle: const TextStyle(
-                color: Palette.white,
-                fontSize: 30,
-              ),
-            ),
-          ),
+          widgetCenter: Text(timerText,
+              style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  color: Palette.white)),
         ),
         body: Stack(children: [
           Center(
@@ -360,13 +355,11 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
                                     child: Opacity(
                                       opacity: success ? 0 : 0.5,
                                       child: Text(
-                                        "${puzzleObject.indexDefault}",
-                                        style: GoogleFonts.acme(
-                                          textStyle: const TextStyle(
-                                            fontSize: 35,
-                                          ),
-                                        ),
-                                      ),
+                                          "${puzzleObject.indexDefault}",
+                                          style: const TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.w700,
+                                              color: Palette.white)),
                                     ),
                                   ),
                                 ],

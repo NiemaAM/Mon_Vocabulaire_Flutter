@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'package:animator/animator.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Account/first_screen.dart';
 import 'package:mon_vocabulaire/Widgets/Palette.dart';
@@ -95,19 +94,15 @@ class _SplashScreenState extends State<SplashScreen> {
           const CircularProgressIndicator(
             color: Palette.lightBlue,
           ),
-          Align(
+          const Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40),
-              child: Text(
-                "Mon Vocabulaire",
-                style: GoogleFonts.acme(
-                  textStyle: const TextStyle(
-                    color: Palette.lightBlue,
-                    fontSize: 30,
-                  ),
-                ),
-              ),
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: Text("Mon Vocabulaire",
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      color: Palette.lightBlue)),
             ),
           )
         ],

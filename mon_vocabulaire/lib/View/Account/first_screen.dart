@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mon_vocabulaire/Services/animation_route.dart';
 import 'package:mon_vocabulaire/View/Account/accounts.dart';
 import 'package:mon_vocabulaire/View/Account/top5.dart';
@@ -136,19 +135,15 @@ class _FirstSceenState extends State<FirstSceen> {
                 ),
               ],
             ),
-            Align(
+            const Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
-                child: Text(
-                  "Mon Vocabulaire",
-                  style: GoogleFonts.acme(
-                    textStyle: const TextStyle(
-                      color: Palette.white,
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
+                padding: EdgeInsets.symmetric(vertical: 40),
+                child: Text("Mon Vocabulaire",
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                        color: Palette.white)),
               ),
             )
           ],
