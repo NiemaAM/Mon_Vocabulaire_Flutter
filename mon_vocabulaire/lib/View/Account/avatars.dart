@@ -22,7 +22,7 @@ class _AvatarsState extends State<Avatars> {
     'assets/images/avatars/girl4.png',
   ];
 
-  String selectedImagePath = 'assets/images/avatars/avatar_boy.png';
+  String selectedImagePath = 'assets/images/avatars/boy1.png';
 
   @override
   Widget build(BuildContext context) {

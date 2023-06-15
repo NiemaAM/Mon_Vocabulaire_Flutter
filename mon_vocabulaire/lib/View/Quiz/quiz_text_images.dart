@@ -534,7 +534,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                           String value = images[index];
                           return Center(
                             child: Button(
-                              enabled: !didResponse,
+                              enabled: !didResponse && !quizEnded,
                               content: Padding(
                                 padding: const EdgeInsets.all(12),
                                 child: Image.asset(

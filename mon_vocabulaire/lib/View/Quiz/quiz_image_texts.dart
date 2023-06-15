@@ -501,7 +501,7 @@ class _QuizImageTextsState extends State<QuizImageTexts> {
                                 children: [
                                   Center(
                                     child: Button(
-                                      enabled: !didResponse,
+                                      enabled: !didResponse && !quizEnded,
                                       content: Center(
                                         child: Text(key,
                                             style: const TextStyle(

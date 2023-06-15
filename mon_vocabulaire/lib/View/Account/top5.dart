@@ -46,9 +46,15 @@ class _Top5State extends State<Top5> {
     // Fetch users from the database
     await controller.getAllUsers();
     List<User> fetchedUsers = controller.users;
+    int size = 5;
     setState(() {
+      if (fetchedUsers.length > 5) {
+        size = 5;
+      } else {
+        size = fetchedUsers.length;
+      }
       users = fetchedUsers;
-      for (int i = 0; i < fetchedUsers.length; i++) {
+      for (int i = 0; i < size; i++) {
         names[i] = fetchedUsers[i].name.replaceFirst(
               fetchedUsers[i].name.characters.first,
               fetchedUsers[i].name.characters.first.toUpperCase(),
@@ -59,7 +65,7 @@ class _Top5State extends State<Top5> {
     });
 
     List<int> _stars = [0, 0, 0, 0, 0];
-    for (int i = 0; i < users.length; i++) {
+    for (int i = 0; i < size; i++) {
       int userStars = await DatabaseHelper().getStars(users[i].id);
       _stars[i] = userStars;
     }
