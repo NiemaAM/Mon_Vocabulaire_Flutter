@@ -33,18 +33,9 @@ class _DonePopupState extends State<DonePopup> {
       quiz = _quiz;
     });
     if (quiz != -1) {
-      if (widget.subThemeId == 1 ||
-          widget.subThemeId == 3 ||
-          widget.subThemeId == 6 ||
-          widget.subThemeId == 7 ||
-          widget.subThemeId == 8 ||
-          widget.subThemeId == 9 ||
-          widget.subThemeId == 10 ||
-          widget.subThemeId == 12) {
-        if (quiz == 0) {
+      if (quiz == 0) {
           DatabaseHelper().updateQuiz(widget.user.id!, widget.subThemeId, 1);
         }
-      }
     }
   }
 

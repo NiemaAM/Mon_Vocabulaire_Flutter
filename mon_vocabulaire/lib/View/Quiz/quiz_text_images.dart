@@ -469,6 +469,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: Button(
+                                      enabled: !quizEnded,
                                       color: Palette.pink,
                                       content: const Icon(
                                         Icons.volume_up,
@@ -493,6 +494,7 @@ class _QuizTextImagesState extends State<QuizTextImages> {
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: Button(
+                                      enabled: !quizEnded,
                                       content: Image.asset(
                                           "assets/images/themes/snail.png"),
                                       color: Palette.blue,
